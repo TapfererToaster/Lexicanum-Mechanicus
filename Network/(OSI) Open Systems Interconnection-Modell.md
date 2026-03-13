@@ -113,6 +113,17 @@ In *contention-based multiple access networks*, all nodes are operating in half-
 #### Carrier sense multiple access with collision detection (CSMA/CD)
 This control method was used by legacy Ethernet LANs where hubs were employed.
 The workings behind it are, that a computer determines if a device is currently transmitting data, by checking if the signal amplitude is higher than normal on the media or the NIC compares data transmitted with data received.
+1. **Carrier Sense**
+A device that wants to transmit data first listens if another is currently sending data  
+2. **Multiple Access**
+If no data is currently transmitted the device will begin to send data over the network, but it is possible that other devices also began to send data
+3. **Collision Detection**
+If multiple devices are sending data simultaneously a data collision will occur; the device that registers that collision will stop sending data and transmit a *jam signal*.
+4. After a random amount of time (a few milliseconds) the device will begin to transmit its data.
+
+>[!note]
+>The random amount of time is important to minimize the chance that multiple devices will transmit at the same time.
+
 #### Carrier sense multiple access with collision avoidance (CSMA/CA)
 This control method is used by [[WLAN]] and attempts to avoid collisions.
 Each device that transmits includes the time duration that it needs for the transmission and all other wireless devices receive this information and know how long the the medium will be unavailable, and wait until it is available.

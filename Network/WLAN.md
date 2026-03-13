@@ -78,6 +78,18 @@ The channels of the 5 GHz band do not overlap and can be combined to support hig
 The 6 GHz band was adopted in 2020 in the 802.11ax (Wi-Fi 6E) and 802.11be (Wi-Fi 7) standards, it ranges from 5.925 GHz to 7.125 GHz. It provides more non-overlapping channels than the 5GHz band and can also be combined to form wider channels, enhancing data transfer rates.
 ![[6 GHz band channels.png]]
 
+### Methods of Transmission
+- *Frequency Hopping Spread Spectrum (FHSS)*
+Die Frequenzen wechseln nach einem zufälligen Muster
+- *Direct Sequence Spread Spectrum (DSSS)*
+Die Verteilung erfolgt nach einem komplexen mathematischen Verfahren auf mehrere Einzelfrequenzen
+- *High Rate / Direct Sequence Spread Spectrum (HR/DSSS)*
+DSSS mit Erweiterungen zur höheren Datenübertragung
+- *Orthogonal Frequency Division Multiplexing (OFDM)*
+Jeder Kanal wird in mehrere Teilkanäle unterteilt und Signale werden über diese parallel übertragen. 
+OFDM hat die höchste Datenübertragungsrate ist, aber auch das aufwendigste.
+- *Multiple Input / Multiple Output (MIMO)*
+
 # IEEE 802.11 standards
 ![[IEEE 802.11 standards.png]]
 
