@@ -18,6 +18,9 @@ The communication could be a web browser communicating with a web server.
 
 In IEEE 802.3 [[Ethernet]] defines connectors and cable types, as well as how data should be encoded into electrical or light signals among other minutiae about how to communicate.
 [[WLAN#IEEE 802.11 standards|IEEE 802.11]] defines what radio waves should be modulated to encode data, etc.
+
+>[!note]
+>Scheinbar ist diese Schicht streng genommen nicht teil von dem TCP/IP Stack 
 ## Data Link Layer
 >[!definition] Definition
 >The **Data Link Layer** defines how data is addressed and is responsible for *hop-to-hop* delivery of messages, with the use of MAC addresses.
@@ -32,7 +35,9 @@ At each hop, the MAC address is changed to the MAC address of the next hop and s
 
 ![[Data-Link-Layer Hop-to-Hop.png]]
 
-## Network Layer
+This layer does technically not define the network access as in the OSI Model, but  specifies how the IP-Protocol interacts with 
+
+## Network / Internet Layer
 >[!definition]
 >The **Network Layer** uses IP addresses to provide *end-to-end* delivery of messages.
 >

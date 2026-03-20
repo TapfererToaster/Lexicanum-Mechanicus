@@ -14,6 +14,27 @@ Both IPv4 and IPv6 are used today and will be for the near future so the IETF cr
 # Packets
 [Cisco Networking Academy](https://www.netacad.com/launch?id=75cbc2e3-bab4-484c-a925-ad839c127c20&tab=curriculum&view=43f9c41c-73eb-5d8e-afef-3b78facacf9f)
 # IPv6 Addresses
+## Structure 
+The IPv6 address consists of 8 x 16 bit blocks, written in hexadecimal and separated by a `:`.
+Additionally it can be divided into two parts:
+- *Prefix*; first 64 bits 
+- *Interface Identifier (Interface ID)*; last 64 bits
+
+The prefix does not inform about the network to which the address belongs, it informs about the address type:
+
+| Prefix       | use                                        |
+| ------------ | ------------------------------------------ |
+| `0::0/8`     | reserved for special use                   |
+| `200::0/7`   | NSAP-Addresses                             |
+| `400::0/7`   | IPX-Addresses                              |
+| `2000::0/3`  | Global unique addresses                    |
+| `FD00::/8`   | Unique Local addresses                     |
+| `FE80::0/10` | Link-local addresses                       |
+| `FEC0::0/10` | Site-local unicast address<br>(deprecated) |
+| `FF00::0/8`  | Multicast addresses                        |
+>[!note]
+>The Loopback address for IPv6 is: 
+>`0000:0000:0000:0001` or `::1`.
 ## Unicast
 - **Global Unicast Address (GUA)** - This is similar to a public IPv4 address. These are globally unique, internet-routable addresses. GUAs can be configured statically or assigned dynamically.
 - **Link-local Address (LLA)** - This is required for every IPv6-enabled device. LLAs are used to communicate with other devices on the same local link. With IPv6, the term link refers to a subnet. LLAs are confined to a single link. Their uniqueness must only be confirmed on that link because they are not routable beyond the link. In other words, routers will not forward packets with a link-local source or destination address.

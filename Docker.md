@@ -98,7 +98,7 @@ Docker maintains [SDKs for Python and Ruby](https://dockr.ly/2wxCHnx) and there 
 >In these cases it is easier to use the client libraries or the command-line tool
 
 ### Container Networking
-The default networking configuration is the so called *bridge mode*. 
+The default network configuration is the so called *bridge mode*. 
 The Docker server acts like a bridge between the "outside world" and the containers, which could be thought of as hosts on a mini virtual network.
 Each container has a virtual Ethernet interface and an IP address allocated to it, which is connected to the Docker server.
 Docker lets you bind and expose individual or groups of ports on the host to the container so the outside world can reach the containers on those ports.
@@ -119,28 +119,6 @@ The virtual subnet of the containers is bridged to the local network of the host
 
 >[!hint]
 >There are a lot of ways to configure Docker's network layer and you can find the details of Docker networking in the [documentation](https://dockr.ly/2otp461)
-## Getting the Most from Docker
->[!abstract]
->All Tools have a number of great use cases and others that are not so good. 
->You can, for example, open a glass bottle with a hammer. But that has its downsides.
->
-
-Docker's architecture is aimed at applications that are either stateless or where the state ist externalized into data stores like databases or caches.
-Databases that run well in Docker are now often deployed this way, but it is not the simple path. 
-Applications like web frontends, backend APIs and short running tasks like maintenance scripts that might normally be handled by `cron`.
-### Containers are not Virtual Machines
-Linux containers can be thought of as very lightweight wrappers around a single Unix process, which might spawn other processes, but one statically compiled binary can also be all that is inside a container.
-
-Virtual machines are designed as stand-ins for real hardware and have a long(er)-lived nature than containers, which can exist for months or run a task for a minute and then be destroyed.
-
->[!note]
->If you run Docker on a mac or Windows system, you leverage a Linux virtual machine to run the Docker server `dockerd`.
->On Linux, `dockerd` can be run natively and do not need a virtual machine to be run.
-
-### Limited Isolation
-Containers are isolated from one another, but the default container configuration has them all sharing CPU and memory on the host system, as they are colocated Unix processes. Unless you constrain them, containers can compete for resources.
-Limits on CPU and memory use are encouraged through Docker, but are not the default.
-Containers often share one or more common filesystem layers, but that means if you update a shared image, you may need to rebuild and redeploy containers that are using the older image.
 
 ## The Docker Workflow
 ### Filesystem Layers

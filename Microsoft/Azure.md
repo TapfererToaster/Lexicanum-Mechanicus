@@ -554,3 +554,4 @@ Azure Managed Disks are the recommended disk storage for Azure VMs.
 ## Storage Accounts
 Storage accounts are Azure resources that act as repositories and boundaries to store all your data objects and can be considered management plane consoles.
 They are used to define  the settings and configurations that can be applied to the data held in the storage account, such as tiering, redundancy, security, access control, protection, monitoring and so on.
+

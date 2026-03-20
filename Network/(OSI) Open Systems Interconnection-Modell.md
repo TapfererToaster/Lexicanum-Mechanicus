@@ -127,6 +127,9 @@ If multiple devices are sending data simultaneously a data collision will occur;
 #### Carrier sense multiple access with collision avoidance (CSMA/CA)
 This control method is used by [[WLAN]] and attempts to avoid collisions.
 Each device that transmits includes the time duration that it needs for the transmission and all other wireless devices receive this information and know how long the the medium will be unavailable, and wait until it is available.
+1.  A device sends an Request to send (*RTS*) and waits for a Clear to send (*CTS*) from the destination device
+2. The device starts to send its data and other devices wait 
+3. The destination device sends an ACK-message and the next device can send 
 ### Controlled access
 In a *controlled-based multiple access network*, each node has its own time to use the medium. These deterministic types of legacy networks are inefficient because a device must wait its turn to access the medium.
 Networks that use this access control are:

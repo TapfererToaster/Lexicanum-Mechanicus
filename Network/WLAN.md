@@ -84,17 +84,20 @@ Die Frequenzen wechseln nach einem zufälligen Muster
 - *Direct Sequence Spread Spectrum (DSSS)*
 Die Verteilung erfolgt nach einem komplexen mathematischen Verfahren auf mehrere Einzelfrequenzen
 - *High Rate / Direct Sequence Spread Spectrum (HR/DSSS)*
-DSSS mit Erweiterungen zur höheren Datenübertragung
+Verbesserung von DSSS mit höherer Datenübertragung
 - *Orthogonal Frequency Division Multiplexing (OFDM)*
 Jeder Kanal wird in mehrere Teilkanäle unterteilt und Signale werden über diese parallel übertragen. 
 OFDM hat die höchste Datenübertragungsrate ist, aber auch das aufwendigste.
 - *Multiple Input / Multiple Output (MIMO)*
-
+Verbesserung von OFDM mit höherer Datenübertragungsrate, gleichzeitiger Datenübertragung über mehrere Frequenzbänder
+- *Multi-User MIMO (MU-MIMO)*
+Neuere Variante von MIMO; begünstigt den gleichzeitigen Netzwerkzugriff mehrerer User durch komplexe Signalverarbeitung
 # IEEE 802.11 standards
 ![[IEEE 802.11 standards.png]]
 
 >[!note]
->In the 802.11 standard the term station is used for wireless devices connected to the WLAN, instead of clients.
+>In the 802.11 standard the term "station" is used for wireless devices connected to the WLAN, instead of clients.
+>Most WLAN Hardware is based on 802.11ac, 802.11n, 802.11b and 802.11g, as of 2022.
 
 ## Frame Format
 >[!note]

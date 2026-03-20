@@ -151,9 +151,9 @@ The *Total Length* field indicates the length of the packet -the IPv4 header and
 These three fields are used together to support packet fragmentation and are 32 bits in total length.
 
 >[!info] Fragmentation
->IPv4 uses *maximum transmission unit (MTU)*, packets larger than the MTU will be fragmented and reassembled at the destination host.
+>IPv4 uses *maximum transmission unit (MTU)*, which can be configured on some network interfaces, packets larger than the MTU will be fragmented and reassembled at the destination host. 
 >
->The typical MTU is 1500 bytes
+>The typical MTU is 1500 bytes.
 
 ### Identification Field
 This field is 16 bits in length and is used to identify which original packet a fragment belongs to When a packet is fragmented, all of its fragments must have the same value in this field.
@@ -310,3 +310,11 @@ For these P2P connection there are 2 options:
 
 Both options are valid.
 ![[VLSM WAN.png]]
+
+# Supernetting
+Bei Supernetting werden mehrere einzelne Netze zu einem größeren Netz zusammengefügt. 
+**Beispiel**
+Die vier Subnetze 192.168.0.0/24 bis 192.168.3.0/24 sollen zu einem Netz verbunden werden.
+- Für die Zusammenfassung der Netze werden zwei Bits benötigt (4= 2^2), die nach links verschoben werden
+- Somit wird die Subnetzmaske von `11111111 11111111 11111111 00000000` zu `11111111 11111111 11111100 00000000` 
+- Das neue Netz hat die Adresse 192.168.0.0/22
