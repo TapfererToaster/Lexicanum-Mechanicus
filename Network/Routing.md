@@ -35,6 +35,7 @@ To specify the IP address of the interface, a local route uses a `/32` prefix le
 >A route to a single destination IP address (a single host) is called a *host route*.
 
 ### Cisco CLI example
+#Cisco_CLI 
 We configure the the interface g0/0 on a router
 ```
 R1# configure terminal

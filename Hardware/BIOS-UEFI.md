@@ -1,6 +1,6 @@
 Das *Basic Input / Output System (BIOS)*, sowie das moderne *Enhanced Firmware Interface (EFI)* und das das standardisierte *Unified EFI (UEFI)* ist ein *ROM*-Chip der die *Firmware* enthält und sich auf dem Motherboard befindet.
 
-Auf diesem Chip ist ein Programm in Maschinensprache, das beim Einschalten des Rechners automatisch auf eine bestimmte Adresse im Arbeitsspeicher abgebildet und ausgeführt.
+Auf diesem Chip ist ein Programm in Maschinensprache, das beim Einschalten des Rechners automatisch auf eine bestimmte Adresse im [[Arbeitsspeicher]] abgebildet und ausgeführt.
 Dieses Programm führt den *Power-on Self Test* durch, um die Funktionalität der Hardware zu überprüfen:
 - zuerst wird die Grafikkarte überprüft
 - dann RAM
@@ -8,7 +8,7 @@ Dieses Programm führt den *Power-on Self Test* durch, um die Funktionalität de
 - Tastatur und Maus werden überprüft 
 
 Sollten größere Probleme auftreten wird eine Abfolge von Signaltönen ausgegeben.
-Nach dem erfolgreichen POST wird die Kontrolle über den Rechner an den Datenträger übergeben von dem aus OS gestartet werden soll. Der im *Master Boot Record* des Datenträgers enthaltene *Bootloader* für ein bestimmtes OS oder ein *Bootmanager* für eine Auswahl zwischen mehreren Systemen wird daraufhin gestartet.
+Nach dem erfolgreichen POST wird die Kontrolle über den Rechner an den Datenträger übergeben von dem aus ein [[Betriebssysteme|Betriebssystem]] gestartet werden soll. Der im *Master Boot Record* des Datenträgers enthaltene *Bootloader* für ein bestimmtes OS oder ein *Bootmanager* für eine Auswahl zwischen mehreren Systemen wird daraufhin gestartet.
 # ROM
 *Read-only Memory (ROM)* sind Speicher deren Inhalt man nicht oder nicht mit normalen Speicherzugriffen durch das OS ändern kann. Zusätzlich bleibt der Inhalt erhalten, selbst wenn die Stromversorgung zum Speicher beendet wird.
 Die verschiedenen Arten von ROM sind:

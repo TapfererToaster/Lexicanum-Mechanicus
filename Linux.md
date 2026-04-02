@@ -9,7 +9,7 @@ The kernel is between the hardware and software that the user is running. It int
 - Management of character devices and device drivers
 
 >[!note] User and Kernel mode
->The user or kernel mode refers to how privileged the access to hardware and restricted the abstraction is.
+>The user or [[Betriebssysteme#Kernelmodus|kernel mode]] refers to how privileged the access to hardware and restricted the abstraction is.
 >*User mode*: slower but safer access and convenient abstraction
 >*Kernel mode*: fast access and code execution with limited abstraction; important  only for kernel developers
 
@@ -21,7 +21,7 @@ The kernel is between the hardware and software that the user is running. It int
 
 *Task*
 The basis of implementing processes and threads is the data structure task_struct, defined in *shed.h*. This structure captures scheduling information, identifiers such as *Process ID (PID)*, signal handlers and other information about performance and security.
-All other units are based on tasks, but tasks themself are not exposed outside of the kernel.
+All other units are based on tasks, but tasks them self are not exposed outside of the kernel.
 
 *Threads*
 As there is no dedicated data structure representing a thread, they are implemented by the kernel as a process that shares resources, like memory or signal handlers, with other processes.
@@ -30,6 +30,9 @@ Threads are identified via *thread IDs (TID)* and *thread group ID (TGID)*. A sh
 *Process*
 A process is an abstraction that groups multiple resources (like address space, on or more threads, sockets, etc.) and is exposed to the user via */proc/self* for the current process.
 Processes are identified by a *process ID (PID)*.
+
+>[!note]
+>Every process has also a User ID (UID) and Group ID (GID) assigned, belonging to the user that owns the process and the group the user belongs to.
 
 *Process groups*
 Contains on or more processes, with at most one process group in a session as the foreground process group.
@@ -41,39 +44,58 @@ Contains one or more process groups and represent a high-level user-facing unit 
 >[!note] Process states 
 >![[Process States.png|297x186]]
 
+### Processmodel
+- The first process that is executed on a device is called `init`, has the PID 1 and creates all other processes whether direct or indirect.
+- Processes run in [[Betriebssysteme#Kernelmodus|Usermode or Kernelmode]], the mode cannot be changed afterwards; application programms are not enabled to start a process in kernelmode, sys calls are used to componsate for this. 
+- New processes are created with the `fork()` sys call, creating a copy of the current proccess with a different PID, to execute a new task
+- Every process has a parent process, the process that called it; if the parent process is terminated before the child process, the child will be assigned to `init` to ensure child processes always have a parent process
+- If a child process is terminated, it is not completely removed from storage and the process table, it enters the `defunct` status and waits until the parent process calls `waitpid()` (also called Reaping), this way the parent process can examine the exit status of the child
+- Processes react to different signals, which are numerated, but also have Names defined in the OS-library, Signals are send to processes with the `kill()` syscall, if no other signal is attached it prompts the process to terminate, other signals are:
+	- `SIGTERM`: finish the process
+	- `SIGKILL`: force the process to finish
+	- `SIGHUP`: (Hangup), notifies the process that a connection (f.e. network) was interrupted
+	- `SIGALRM`: indicates that a timer alarm is activated; this can be used by programmers to wake a process after a specific time
+- A process only reacts to signals coming from a process with the same UID and GID as his
+- A process can release control by calling `pause()` and can be waked up by a signal
+- When a process is interrupted, the process registers, flags and a list of all used files have to be saved, so when the process returns it can start where it left 
 ## Memory Management
 Memory management is about how to effectively provide each process with virtual memory and the illusion it exists while using existing RAM optimally.
 Every process gets virtual memory. Both physical memory and virtual memory are divided into fixed length-blocks called *pages*. Multiple pages can point to the same physical page via their respective process-level page tables.
 Every time the CPU accesses a process's virtual page, the CPU would have to translate the virtual address a process uses to the corresponding physical address.
 Modern CPU architectures support *translation lookaside buffer (TLB)* to speed up the process of translating the virtual address of the virtual page to the corresponding physical address.
 # Filesystem
-The Linux filesystem is hierarchical single-root filesystem meaning at the top level is a single root directory `/`. All other directories are subdirectories of the root directory `/`. Under the root directory no individual files are stored, these are kept in the different subdirectories.
+The Linux [[Betriebssysteme#Dateisysteme|filesystem]] is hierarchical single-root filesystem meaning at the top level is a single root directory `/`. All other directories are subdirectories of the root directory `/`. Under the root directory no individual files are stored, these are kept in the different subdirectories.
 
 >[!note]
 >System files are protected from user modification and can only be modified by the root user.
 >Users can only modify their own home directories, the `/tmp` directory and shared directories specifically created and modified by the admin.
 
-| Directory | Description                                                         |
-| --------- | ------------------------------------------------------------------- |
-| `/`       | root filesystem, only contains other directories                    |
-| `/bin`    | binaries directory, contains executable files. Points to `/usr/bin` |
-| `/dev`    | device directory, contains device files to address periherals       |
-| `/etc`    | Contains system and configuration files for users / services        |
-| `/home`   | Users' home directories                                             |
-| `/lib`    | System libraries files, points to `/usr/lib`                        |
-| `/media`  | Directory for mounting media (USB drives, DVD disks, ...)           |
-| `/mnt`    | mount directory for mounting remote filesystems                     |
-| `/opt`    | Directory in which third-party software is installed                |
-| `/proc`   | virtual filesystem that tracks system processes                     |
-| `/root`   | Root user's home directory                                          |
-| `/run`    | Variable and volatile runtime data                                  |
-| `/sbin`   | System binary (executable) files                                    |
-| `/srv`    | Might contain data from system services                             |
-| `/sys`    | Contains kernel information                                         |
-| `/tmp`    | Directory for storing session information and temporary files       |
-| `/usr`    | Programs and libraries for users and user-related programs          |
-| `/var`    | Variable files such as logs, spools and queues                      |
+| Directory | Description                                                                                                                      |
+| --------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| `/`       | root filesystem, only contains other directories                                                                                 |
+| `/bin`    | binaries directory, contains executable files and [[Betriebssysteme#Systemprogramme\|Systemprogramme]]. Points to `/usr/bin`<br> |
+| `/dev`    | device directory, contains device files to address periherals                                                                    |
+| `/etc`    | Contains system and configuration files for users / services                                                                     |
+| `/home`   | Users' home directories                                                                                                          |
+| `/lib`    | System libraries files, points to `/usr/lib`                                                                                     |
+| `/media`  | Directory for mounting media (USB drives, DVD disks, ...)                                                                        |
+| `/mnt`    | mount directory for mounting remote filesystems                                                                                  |
+| `/opt`    | Directory in which third-party software is installed                                                                             |
+| `/proc`   | virtual filesystem that tracks system processes                                                                                  |
+| `/root`   | Root user's home directory                                                                                                       |
+| `/run`    | Variable and volatile runtime data                                                                                               |
+| `/sbin`   | System binary (executable) files                                                                                                 |
+| `/srv`    | Might contain data from system services                                                                                          |
+| `/sys`    | Contains kernel information                                                                                                      |
+| `/tmp`    | Directory for storing session information and temporary files                                                                    |
+| `/usr`    | Programs and libraries for users and user-related programs                                                                       |
+| `/var`    | Variable files such as logs, spools and queues                                                                                   |
+File and foldernames are seen as different based on capitalization, meaning `text.txt` and `Text.txt` are two different files. Files that begin with a `.` are hidden in the directory view.
 
+Intern werden die Dateien auf dem Datenträger nicht durch Namen dargestellt, sondern durch eine *Inode*, eine ganzzahlige Nummer. Verweise auf diese Inodes werden in einem Verzeichnis eingetragen. Mehrere Verzeichniseinträge können dabei auf die selbe Inode zeigen, *Hard Links* sind Verzeichniseinträge die fest auf eine bestimmte Inode zeigen. *Symlinks* sind Verzeichniseinträge die nicht auf Inodes zeigen, sondern auf andere Verzeichniseinträge und können auch auf Dateien auf anderen Partiotionen oder Datenträgern zeigen.
+
+>[!note]
+>Eine Datei wird erst gelöscht, wenn alle Verzeichniseinträge entfernt, die auf die Inode zeigen.
 ## Manipulating Files and Directories
 ### Creating files and directories
  - Create a **file**: 
@@ -108,11 +130,11 @@ The Linux filesystem is hierarchical single-root filesystem meaning at the top l
 >Use `rm -i` to interactively ask for permission before deleting a file or directory.
 ### Moving, copying and renaming files and directories
 - **Move** a file or directory:
-  ```
+  ```bash
   $ mv /source/path /destination/path
   ```
 - **Copy** a file or directory:
-  ```
+  ```bash
   $ cp /source/path /destination/path
   ```
 Ctrl +c copy esc + . paste
@@ -120,6 +142,84 @@ Ctrl +c copy esc + . paste
 # Command Line Interface (CLI)
 With the CLI you can interact with the system using commands that are entered with a keyboard or *standard input (stdin)*. The source from stdin can be a file redirection, programs and other sources. 
 The output to these commands are displayed on the screen or *standard output (stdout)* and when an error occurs you receive a *standard error (stderr)*.
+
+## Shells
+The program you interact with through the CLI is called a *shell*.
+There is no one single shell, but multiple shell programs, with the standard shell for Linux being *bash*.
+
+> [!NOTE]
+> To find out which shell your system is using enter `echo $0` into the CLI
+
+- *sh* oder *bsh*
+  *Bourne Shell* sie ursprüngliche Shell von Bell-Labs-Linux, besitzt die kleinste Menge von Fähigkeiten 
+- *csh* und *tcsh*
+  *C-Shells* deren Funktionen von [[C]] beeinflusst wurden und der C-Programmierung eignet.
+- *bash*
+  *Bourne Again Shell*, GNU Weiterentwicklung von bsh mit weiteren Funktionen
+- *zsh* 
+  *Z-Shell* wurde 1990 an der Princeton University entwickelt, bessere Automatisierung als bei bash
+- *pdksh*
+  *Public Domain Korn Shell*, freie Variante der von AT&T, als Nachfolger von bsh, entwickelten Korn Shell
+- *sash*
+  *Stand-alone-shell*
+  geeignet für Fehlerbehebung, POSIX-Tools sind direkt eingebaut und ist ideal für Rettungssysteme die von einem USB Stick starten
+
+>[!note]
+>Der größte Unterschied zwischen den Shells ist sind nicht die Prompts, sondern wie die Shells  die Funktionen der [[Betriebssysteme#Systemprogramme|Systemprogramme]] erweitern können.
+
+Die Konfiguration mit der die Shell ausgeführt wird heißt *Environment*, diese besteht aus der User und Group ID, dem aktuellen Arbeitsverzeichnis und Umgebungsvariablen.
+Diese werden aus Konfigurationsdateien gelesen:
+- */etc/profile*
+  zentrale Konfigurationsdatei für alle Shells und User
+  >[!warning]
+  >Diese Datei sollte nicht editiert werden, stattdessen sollte `~/.bashrc` geändert werden oder eine benutzerspezifische Konfigurationsdatei in `~/profile.local` erstellen
+  >
+- */etc/profile.d/*
+  Directory für Konfigurationsdateien für bestimmte Aspekte einzelner Shells
+- *~/.bashrc*
+  bash Konfigurationen für einen einzelnen User Account im jeweiligen Home Verzeichnis
+
+## PATH
+Wenn der Name eines Programms in die CLI eingegeben wird, sucht die Shell in den Verzeichnissen die in der *PATH* Umgebungsvariable festgelegt wurden. 
+Der Wert von PATH besteht aus einer Liste von absoluten Pfadangaben die mit Doppelpunkten getrennt sind, z.B. `/bin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/share/bin`
+
+## Piping und Umleitungen
+- `Befehl >Dateiname`
+  Die Ausgabe wird in die angegebene Datei umgeleitet, ihr Inhalt wird dabei überschrieben
+- `Befehl >>Dateiname`
+  Die Ausgabe wird in die angegebene Datei umgeleitet, ihr Inhalt wird nicht überschrieben, sondern die Ausgabe wird an das Ende angehängt
+- `Befehl <Dateiname`
+  Der Inhalt der Datei wird als Eingabe gelesen, statt von der Tastatur
+- `Befehl1 | Befehl2`
+  *Pipe*, leitet die Ausgabe von `Befehl1` als Eingabe an `Befehl2` weiter 
+  Pipes können auch benutzt werden um mit `grep` Ausgaben zu filtern
+  ```bash
+  $ ls | grep txt
+  ```
+## Verkettung von Befehlen
+Mehrere Befehle können durch Semikolons getrennt eingegeben und dann nacheinander ausgeführt werden
+```bash
+# ./configure [Optionen]; make; make install
+```
+Jedoch wird dabei Versucht den nächsten Befehl auszuführen selbst wenn der vorherige fehlschlägt.
+Man kann jedoch auch die Befehle mit `&&` verketten und somit wird der nächste Befehl nur bei erfolgreichem ausführen des Vorherigen ausgeführt. 
+```bash
+# ./configure [Optionen] && make && make install
+```
+
+Mit `||` können Befehle so verknüpft werden, dass der nächste Befehl nur ausgeführt wird wenn der vorherige fehlschlägt
+```bash
+$ ls does_not_exist || echo "Die Datei/Verzeichnis gibt es nicht"
+> ls: does_not_exist: No such file or directory 
+> Die Datei/Verzeichnis gibt es nicht
+```
+
+Zusätzlich ist es möglich mit ` `` ` einen Befehl einzuschließen um die Ausgabe in anderen Kontexten zu benutzen
+```bash
+$ echo "Zurzeit ist `whoami` angemeldet."
+> Zurzeit ist user angemeldet.
+``` 
+## Commands
  Basic Commands:
  - `pwd`: "print working directory"
    displays where you currently are on the filesystem
@@ -182,6 +282,132 @@ $ fileName
 >```
 >$ echo $PATH
 >```
+
+# Scripting and Automation
+
+> [!tip]
+> Scripts for various tasks can be found online. You can adapt those scripts to your need, but it is important that you understand what these scripts do.
+> 
+> It is also important to learn the basics of scripting such as:
+> - reading/writing a file
+> - grepping
+> - piping
+> - redirecting
+> - looping
+> - calling other scripts from within a script
+
+## Bash scripts
+Every script starts with the *shebang*, which points to the location of bash itself. On most Linux distrobutions it can be found under `/usr/bin/bash` so the shebang is `#!/usr/bin/bash`.
+
+### Creating Scripts
+#### Script for Bridge and interface configuration
+**Outline of the script:**
+- Create the bridge
+- Move the IP address from the physical interface to the bridge 
+  (Remember that physical interfaces that are part of the bridge do not participate in IP-based traffic)
+- Add the physical interface to the bridge
+
+```bash
+#!/usr/bin/bash
+
+# Create the bridge interface
+ip link add name br0 type bridge
+
+# Remove the route and IP address from the physical interface
+ip addr del 192.168.100.10/24 dev eth0
+
+# Add the IP address to the bridge
+ip addr add 192.168.100.10/24 dev br0
+
+# Add the physical interface to the bridge
+ip link set eth0 master br0
+```
+
+Script with piping:
+```bash
+# Get the first IP address from the physical interface
+IP_ADDR=$(ip --brief addr list eth0 | awk '{print $3}')
+
+# Remove the route and IP address from the physical interface
+ip addr del $IP_ADDR dev eth0
+
+# Add the IP address to the bridge
+ip addr add $IP_ADDR dev br0
+
+# Add the physical interface to the bridge
+ip link set eth0 master br0
+```
+#### Script for backup
+Before writing a script it is important to outline what the script should do. 
+For example a backup script outline could be:
+- Create a tar file of the `/etc` directory
+- Compress the file
+- Transfer the fiel to server `archive`
+
+Now you can write your script, for example:
+```
+#!/bin/bash
+
+#Create a tar file of /etc
+sudo tar cvf server1_etc.tar /etc
+
+# Compress the tar file
+gzip -9 server1_etc.tar
+
+# Transfer the file to archive into the /server1/backups directory
+scp server1_etc.tar.gz archive:/server1/backups 
+```
+
+After saving the file give it execute permission.
+
+It is advised to create a *backup and restore (bur)* user and set the target directory (`/server1/backups`) as executable and writable only to that user. The user should be created on all systems and passwordless SSH key files should be configured for them.
+## Scheduling Tasks with cron
+The `cron` utility is available on all Linux systems and is used to schedule commands to run at specific times.
+The syntax for `cron` is:
+![[cron syntax.png|409x135]]
+
+- If you want that a script is executed every five minutes the `cron` entry would be:
+	```
+	0,5,10,15,20,25,30,35,40,45,50,55 * * * * /path/to/scriptsh
+	```
+- If a script should run every Monday, Wednesday and Friday at 2:00 p.m. the schedule task would be:
+	```
+	0 14 * * 1,3,5 /path/to/script.sh
+	```
+- If a script should be run at 6 a.m. on the 15th of every month se:
+	```
+	  0 6 15 * * /path/to/script.sh
+	```
+
+## Preventing Time Drift with Network Time Protocol
+It is important that when using scripts and automated tasks that operate on multiple machines and need to execute tasks in a specific order, to ensure that the internal time of the machines is synchronized.
+To keep the time synchronized among all systems you can use a reference to an internet time server plus a time server inside the network.
+Install `ntp` or `chrony` to allow your system to synchronize with an external (internet) time server.
+```
+$ sudo apt install chrony
+$ sudo systemctl enable chronyd
+$sudo systemctl start chronyd
+```
+
+You can also configure `chrony` as a time server for your local network by uncommenting the following two lines in the `chrony.conf`:
+```
+# Allow NTP client access from local network
+allow 192.168.0.0/16 (change to your subnet)
+
+# Serve time even if not synchronized to a time source
+local stratum 10
+```
+
+Then restart the `chronyd`:
+```
+sudo systemctl restart chronyd
+```
+
+After setting the time server with `chrony`, switch to the client systems and add the following line into the `chrony.conf` file:
+```
+server serverIP prefer iburst
+```
+
 # Regular and Privileged Accounts
 ## Regular User
 Regular user have almost unrestricted power in their own home directory to create, modify, remove and manipulate files, but outside of their directory they have almost no power. 
@@ -587,8 +813,9 @@ $ ip link set eth0 down
 
 - To delete an IP address from an interface use `ip addr del address dev interface`:
   ```
-	$ ip addr del 192.168.0.1/24 dev ens3
-	```
+  $ ip addr del 192.168.0.1/24 dev ens3 
+  ```
+
 ### Interface configuration via configuration files
 Another way to configure interfaces are via configuration files. While console commands are consistent across Linux distributions, config files and their location can be different.
 
@@ -713,13 +940,14 @@ $ /usr/sbin/sysctl net.ipv6.conf
 The `0` value indicates that IP forwarding is disabled, you can enable it
 - nonpersistently with: 
   ```
-	$ sysctl -w net.ipv4.ip_forward=1
-	```
+  $ sysctl -w net.ipv4.ip_forward=1
+  ```
+	
 - persistently by editing the `/etc/sysctl.conf` file:
   ```
-  net.ipv4.ip_forward = 1
+  net.ipv4.ip_forward = 1 
   net.ipv6.conf.all.forwarding = 1
-	```
+  ```
 	Then reboot  the Linux host or run  `$ sysctl -p path/to/config`
 
 After enabling IP forwarding the host acts as a router, but can only perform static routing so you need to use the `ip route` to configure routes.
@@ -1056,12 +1284,12 @@ Before accessing a disk on Linux you have to mount it on a directory or *mount p
 For example if you want to access a disk identified by the system as `/dev/ssd1` you have to create a directory such as `opt/software` and mount it with the `sudo mount` command.
 - create a directory
   ```
-	$ sudo mkdir opt/software
-	```
+  $ sudo mkdir opt/software
+  ```
 - mount the drive
   ```
-	$ sudo mount /dev/ssd1 /opt/software
-	```
+  $ sudo mount /dev/ssd1 /opt/software
+  ```
 
 > [!NOTE]
 > The generic mount point `/mnt` can be used to temporarily mount disks, but it should not be used as a permanent mount point.
@@ -1120,7 +1348,7 @@ $ sudo mount /dev/sdb1 /opt/software
  Check if the disk is mounted:
  ```
  $ mount | grep sdb1
-```
+ ```
 Edit the `/etc/fstab` to permanently mount the disk
 On Ubuntu use:
 ```
@@ -1188,14 +1416,14 @@ You can also enable `tmp.mount`, which creates a *temporary filesystem (tmpfs)* 
 The steps to enable `tmp.mount` are:
 1. Check the `/tmp` directory to see if you need to configure `tmp.mount`
    ```
-	$ df -h /tmp
- 	```
+   $ df -h /tmp
+   ```
 	 If the directory is a  mounted on `/` enable `tmp.mount`
 2. Enable and start `tmp.mount`
    ```
-	$ sudo systemctl enable tmp.mount
-	$ sudo systemctl start tmp.mount
-	```
+   $ sudo systemctl enable tmp.mount
+   $ sudo systemctl start tmp.mount
+   ```
 ## Preventing /home from filling up
 If `/home` is on the same filesystem as `/`, users could fill `/` and cause system problems, but as of the nature of the files contained in `/home` it can not be replaced by a volatile filesystem.
 To prevent this there are two approaches:
@@ -1217,24 +1445,22 @@ The steps for the seconf approach are as following:
 	
 2. Create a new partition
    ```
-	$ sudo fdisk /dev/sdc
-	```	
-	Verify that the partition exists
-	```
-	$ lsblk | grep sdc
+   $ sudo fdisk /dev/sdc
+   Verify that the partition exists
+   $ lsblk | grep sdc
+   ```
 3. Make the filesystem
    For the `/home` directory format the filesystem as `ext4`
    ```
-	$ sudo mkfs.ext4 /dev/sdc1 
-	```
-	Verify that the `ext4` filesystem was correctly created
+   $ sudo mkfs.ext4 /dev/sdc1 
+   Verify that the `ext4` filesystem was correctly created
+   $ lsblk -o NAME,FSTYPE,SIZE | grep sdc
    ```
-	$ lsblk -o NAME,FSTYPE,SIZE | grep sdc   
-	```
 4. Mount the new filesystem on `/mnt`
    ```
-	$ sudo mount /dev/sdc1 /mnt 
-	```
+   $ sudo mount /dev/sdc1 /mnt 
+   ```
+
 	>[!warning]
 	>`/mnt` is the temporary mounting point so you can copy all files from `/home` to the disk before mounting it on `/home`. Mounting a disk on an nonempty directory makes the files inaccessible
 	
@@ -1248,23 +1474,23 @@ The steps for the seconf approach are as following:
 	```
 6. Remove all files from `/home`
    ```
-	$ sudo rm -rf /home/*
-	```
+   $ sudo rm -rf /home/*
+   ```
+	
 	>[!note]
 	>Removing all files from the original `/home` releases disk space back to the `/` filesystem
 	>
 7. Unmount the new partition from `/mnt`
    ```
-	$ sudo unmount /mnt
-	```
+   $ sudo unmount /mnt
+   ```
 8. Mount the new partition on `/home`
    ```
-	$ sudo mount /dev/sdc1 /home
-	```
+   $ sudo mount /dev/sdc1 /home
+   ```
 9. Add an entry for `/home` in `/etc/fstab`
-    ```
-    /dev/sdc1 /home ext4 defaults 0 0
-	```	
+```/dev/sdc1 /home ext4 defaults 0 0```	
+
 ## Decluttering Shared Directories
 ## Deduplicating Files with fdupes
 With `fdupes` you can search for duplicate files, remove them  and provide a link to one file, or delete them.
@@ -1349,133 +1575,6 @@ The package contains:
 - `mpstat`: displays multi-processor statistics
 - `pidstat`: reports statistics by process ID
 - `cifsiostat`: CIFS (Samba/SMB) I/O statistics utility
-
-# Scripting and Automation
-
-> [!tip]
-> Scripts for various tasks can be found online. You can adapt those scripts to your need, but it is important that you understand what these scripts do.
-> 
-> It is also important to learn the basics of scripting such as:
-> - reading/writing a file
-> - grepping
-> - piping
-> - redirecting
-> - looping
-> - calling other scripts from within a script
-
-## Bash scripts
-Every script starts with the *shebang*, which points to the location of bash itself. On most Linux distrobutions it can be found under `/usr/bin/bash` so the shebang is `#!/usr/bin/bash`.
-
-### Piping
-In scripts you can use the pipe character `|` to use the output of one command as the input of the next command. 
-### Creating Scripts
-#### Script for Bridge and interface configuration
-**Outline of the script:**
-- Create the bridge
-- Move the IP address from the physical interface to the bridge 
-  (Remember that physical interfaces that are part of the bridge do not participate in IP-based traffic)
-- Add the physical interface to the bridge
-
-```bash
-#!/usr/bin/bash
-
-# Create the bridge interface
-ip link add name br0 type bridge
-
-# Remove the route and IP address from the physical interface
-ip addr del 192.168.100.10/24 dev eth0
-
-# Add the IP address to the bridge
-ip addr add 192.168.100.10/24 dev br0
-
-# Add the physical interface to the bridge
-ip link set eth0 master br0
-```
-
-Script with piping:
-```bash
-# Get the first IP address from the physical interface
-IP_ADDR=$(ip --brief addr list eth0 | awk '{print $3}')
-
-# Remove the route and IP address from the physical interface
-ip addr del $IP_ADDR dev eth0
-
-# Add the IP address to the bridge
-ip addr add $IP_ADDR dev br0
-
-# Add the physical interface to the bridge
-ip link set eth0 master br0
-```
-#### Script for backup
-Before writing a script it is important to outline what the script should do. 
-For example a backup script outline could be:
-- Create a tar file of the `/etc` directory
-- Compress the file
-- Transfer the fiel to server `archive`
-
-Now you can write your script, for example:
-```
-#!/bin/bash
-
-#Create a tar file of /etc
-sudo tar cvf server1_etc.tar /etc
-
-# Compress the tar file
-gzip -9 server1_etc.tar
-
-# Transfer the file to archive into the /server1/backups directory
-scp server1_etc.tar.gz archive:/server1/backups 
-```
-
-After saving the file give it execute permission.
-
-It is advised to create a *backup and restore (bur)* user and set the target directory (`/server1/backups`) as executable and writable only to that user. The user should be created on all systems and passwordless SSH key files should be configured for them.
-## Scheduling Tasks with cron
-The `cron` utility is available on all Linux systems and is used to schedule commands to run at specific times.
-The syntax for `cron` is:
-![[cron syntax.png|409x135]]
-
-- If you want that a script is executed every five minutes the `cron` entry would be:
-	```
-	0,5,10,15,20,25,30,35,40,45,50,55 * * * * /path/to/scriptsh
-	```
-- If a script should run every Monday, Wednesday and Friday at 2:00 p.m. the schedule task would be:
-	```
-	0 14 * * 1,3,5 /path/to/script.sh
-	```
-- If a script should be run at 6 a.m. on the 15th of every month se:
-	```
-	  0 6 15 * * /path/to/script.sh
-	```
-
-## Preventing Time Drift with Network Time Protocol
-It is important that when using scripts and automated tasks that operate on multiple machines and need to execute tasks in a specific order, to ensure that the internal time of the machines is synchronized.
-To keep the time synchronized among all systems you can use a reference to an internet time server plus a time server inside the network.
-Install `ntp` or `chrony` to allow your system to synchronize with an external (internet) time server.
-```
-$ sudo apt install chrony
-$ sudo systemctl enable chronyd
-$sudo systemctl start chronyd
-```
-
-You can also configure `chrony` as a time server for your local network by uncommenting the following two lines in the `chrony.conf`:
-```
-# Allow NTP client access from local network
-allow 192.168.0.0/16 (change to your subnet)
-
-# Serve time even if not synchronized to a time source
-local stratum 10
-```
-
-Then restart the `chronyd`:
-```
-sudo systemctl restart chronyd
-```
-
-After setting the time server with `chrony`, switch to the client systems and add the following line into the `chrony.conf` file:
-```
-server serverIP prefer iburst
-```
 
 # Deploying Samba for Windows Compatibility
 Samba enables Windows interoperability for Linux and Unix, which provides secure, stable, file and print services for non-Windows systems using the Server Message Block/Common Internet File System (SMB/CIFS) protocol and its own authentication structure (permissions and passwords).

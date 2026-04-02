@@ -98,7 +98,7 @@ Neuere Variante von MIMO; begünstigt den gleichzeitigen Netzwerkzugriff mehrere
 >[!note]
 >In the 802.11 standard the term "station" is used for wireless devices connected to the WLAN, instead of clients.
 >Most WLAN Hardware is based on 802.11ac, 802.11n, 802.11b and 802.11g, as of 2022.
-
+>The letters at the end of the standards are selected in order of the alphabet; if the standard is at the end "z", the next standard starts again at "a" and a anoter letter is added which is incremented.
 ## Frame Format
 >[!note]
 >[[TCP-IP Modell#Protocol Data Units (PDU)|Frames]] are the Protocol Data Units (PDU) of Layer 2.

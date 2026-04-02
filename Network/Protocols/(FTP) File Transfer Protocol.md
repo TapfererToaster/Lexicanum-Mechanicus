@@ -8,6 +8,7 @@ Commands used by the FTP are:
 # Connecting to the Server
 ```
 ftp ip-address
+ftp www.example.com
 ```
 
 After the connection was successful you are prompted to enter a username and a password.

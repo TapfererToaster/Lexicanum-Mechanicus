@@ -35,7 +35,7 @@ At each hop, the MAC address is changed to the MAC address of the next hop and s
 
 ![[Data-Link-Layer Hop-to-Hop.png]]
 
-This layer does technically not define the network access as in the OSI Model, but  specifies how the IP-Protocol interacts with 
+This layer does technically not define the network access as in the OSI Model, but  specifies how the IP-Protocol interacts with other protocols.
 
 ## Network / Internet Layer
 >[!definition]

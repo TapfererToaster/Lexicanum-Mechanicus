@@ -28,9 +28,6 @@ The ports are split into three categories:
 >IP packets contain the source and destination ports as well as the source and destination IP addresses. 
 >The combination of the source/ destination IP address and source/ destination port is known as a *socket*.
 
-# Header
-![[bilder/tcp/TCP Header.png]]
-
 | Port | Protocol    |
 | ---- | ----------- |
 | 20   | FTP data    |
@@ -44,5 +41,33 @@ The ports are split into three categories:
 | 143  | IMAP        |
 | 443  | HTTPS       |
 
-
+- *Sequence Number*
+Gibt an zu welchem Byte der zu übertragenden Sequenz das erste Nutzdatenbyte des Pakets entspricht; Ist die SYN-Flag gesetzt wird die *Initial Sequence Number (ISN)* angegeben.
+- *Acknowledgement Number*
+Startbyte der nächsten erwarteten Pakets; nur bei gesetztem ACK-Bit von Bedeutung
+- *Header Length* / *Offset*
+Anzahl der 32-Bit-Wörtern aus denen der Header besteht; 
+- *Reserved*
+Reserviert für zukünftige Anwendungen; muss Wert 0 haben
+- *Control Bits* / *Flags*
+	- *URG (Urgent Data)* 
+	  Gesendete Daten sind Urgent Data; der Urgent-Pointer muss beachtet werden
+	- *ACK (Acknowledgement)* 
+	  die Acknowledgement Number muss beachtet werden
+	- *PSH (Push)*
+	  Pufferung des Pakets wird verhindert; es wird unmittelbar gesendet
+	- *RST (Reset)*
+	  Verbindung zurücksetzen
+	- *SYN (Synchronize)*
+	  Sequenznummer synchronisieren
+	- *FIN (Finish)*
+	  Ende der Sequenz; keine weiteren Daten vom Absender
+- *Window*
+Anzahl von Datenbytes die der Absender bereit ist; kann durch  *Maximum Transmission Unit (MTU)* bei manchen Schnittstellen konfiguriert werden
+- *Checksum*
+Wird benutzt um die Korrektheit der Daten zu sichern
+- *Urgent-Pointer*
+Zeigt auf das Byte der aktuellen Sequenz das Urgent Data enthält
+- *Optionen*
+Enthält verschiedene hersteller- und implementierungsabhängige Zusatzinformationen; (immer ein vielfaches von 8 Bit lang)
 

@@ -18,6 +18,8 @@ Both IPv4 and IPv6 are used today and will be for the near future so the IETF cr
 The IPv6 address consists of 8 x 16 bit blocks, written in hexadecimal and separated by a `:`.
 Additionally it can be divided into two parts:
 - *Prefix*; first 64 bits 
+  - external Routing Prefix (48 bit)
+	- Site-Topology (16 bit)
 - *Interface Identifier (Interface ID)*; last 64 bits
 
 The prefix does not inform about the network to which the address belongs, it informs about the address type:
@@ -91,11 +93,14 @@ If another device responds with a NA message the address is not unique and the O
 # Header
 ![[IPv6 Header.png]]
 - **Version** - This field contains a 4-bit binary value set to 0110 that identifies this as an IP version 6 packet.
-- **Traffic Class** - This 8-bit field is equivalent to the IPv4 Differentiated Services (DS) field.
-- **Flow Label** - This 20-bit field suggests that all packets with the same flow label receive the same type of handling by routers.
+- **Traffic Class** - This 8-bit field is equivalent to the IPv4 Differentiated Services (DS) field and specifies the priority of the datagramm.
+- **Flow Label** - This 20-bit field suggests that all packets with the same flow label receive the same type of handling by routers and is used for Quality of Service (QoS).
 - **Payload Length** - This 16-bit field indicates the length of the data portion or payload of the IPv6 packet. This does not include the length of the IPv6 header, which is a fixed 40-byte header.
 - **Next Header** - This 8-bit field is equivalent to the IPv4 Protocol field. It indicates the data payload type that the packet is carrying, enabling the network layer to pass the data to the appropriate upper-layer protocol.
 - **Hop Limit** - This 8-bit field replaces the IPv4 TTL field. This value is decremented by a value of 1 by each router that forwards the packet. When the counter reaches 0, the packet is discarded, and an ICMPv6 Time Exceeded message is forwarded to the sending host,. This indicates that the packet did not reach its destination because the hop limit was exceeded. Unlike IPv4, IPv6 does not include an IPv6 Header Checksum, because this function is performed at both the lower and upper layers. This means the checksum does not need to be recalculated by each router when it decrements the Hop Limit field, which also improves network performance.
 - **Source IPv6 Address** - This 128-bit field identifies the IPv6 address of the sending host.
 - **Destination IPv6 Address** - This 128-bit field identifies the IPv6 address of the receiving host.
 
+| Header | Next-Header-Code | Beschreibung |
+| ------ | ---------------- | ------------ |
+|        |                  |              |

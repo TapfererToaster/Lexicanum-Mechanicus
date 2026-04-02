@@ -29,6 +29,8 @@ Der CPU wird auf der Hauptplatine (Motherboard) in einem Sockel aufgesteckt. Jed
 **Arbeitsspeicher - Random Access Memory (RAM)**
 Der [[Arbeitsspeicher]] wird zur Speicherung von Programmen, die ausgeführt werden, und den Daten die von ihnen verarbeitet werden, benutzt.
 Früher wurden der RAM mit derselben Taktfrequenz wie das motherboard betrieben. Bei modernen PCs jedoch mit einem vielfachen des motherboards.
+>[!note]
+> Falls der Arbeitsspeicher nicht ausreicht, um die Daten der aktuell geladenen Programme zu speichern, werden Daten die nicht dringend benötigt werden aus dem RAM auf die Festplatte verschoben. Dies wird je nach Betriebssystem *Swapping* oder *Paging* genannt. Moderne Prozessoren unterstützen diese Speicherverwaltung durch eine *Memory Management Unit (MMU)*.  
 
 ## Cache
 Caches werden als kleine, aber sehr schnelle Zwischenspeicher benutzt, in denen Daten oder Befehle gespeichert werden können um sie kurz danach zu benutzen. Sie werden verwendet um den großen Unterschied der Taktfrequenz von Arbeitsspeicher und CPU zu überbrücken.
@@ -132,4 +134,4 @@ JE X
 ```
 
 # Threading
-Beim *Threading* werden mehrere Aufgaben (*Threads*) parallel von einem Prozessor bearbeitet. 
+Beim *Threading* werden mehrere Aufgaben ([[Betriebssysteme#Threads|Threads]]) parallel von einem Prozessor bearbeitet.

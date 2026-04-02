@@ -1,6 +1,6 @@
 # Connecting to ports
-The *telnet* protocol is a network protocol for remote terminal connection, meaning we can use the `telnet` command to connect and communicate with remote systems that listens on TCP ports and issue text commands.
-Examples for services that could be running and how to connect with them_
+The *telnet* protocol is a network protocol for remote terminal connection, meaning we can use the `telnet` command to connect and communicate with remote systems that listens on TCP ports and issue text commands. Unlike SSH Telnet does not encrypt data, meaning if captured data including usernames and passwords are readable.
+Examples for services that could be running and how to connect with them:
 - **Echo server**: echoes everything you send; listens on port 7  
 ```
 telnet ip-address 7
@@ -12,6 +12,7 @@ telnet ip-address 13
 - **Web (HTTP) server**: serves web pages; listens on port 80
 ```
 telnet ip-address 80
+telnet example.com 80
 ...
 GET / HTTP/1.1
 Host: telnet.thm
