@@ -142,7 +142,6 @@ Ctrl +c copy esc + . paste
 # Command Line Interface (CLI)
 With the CLI you can interact with the system using commands that are entered with a keyboard or *standard input (stdin)*. The source from stdin can be a file redirection, programs and other sources. 
 The output to these commands are displayed on the screen or *standard output (stdout)* and when an error occurs you receive a *standard error (stderr)*.
-
 ## Shells
 The program you interact with through the CLI is called a *shell*.
 There is no one single shell, but multiple shell programs, with the standard shell for Linux being *bash*.
@@ -178,11 +177,9 @@ Diese werden aus Konfigurationsdateien gelesen:
   Directory für Konfigurationsdateien für bestimmte Aspekte einzelner Shells
 - *~/.bashrc*
   bash Konfigurationen für einen einzelnen User Account im jeweiligen Home Verzeichnis
-
 ## PATH
 Wenn der Name eines Programms in die CLI eingegeben wird, sucht die Shell in den Verzeichnissen die in der *PATH* Umgebungsvariable festgelegt wurden. 
 Der Wert von PATH besteht aus einer Liste von absoluten Pfadangaben die mit Doppelpunkten getrennt sind, z.B. `/bin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/share/bin`
-
 ## Piping und Umleitungen
 - `Befehl >Dateiname`
   Die Ausgabe wird in die angegebene Datei umgeleitet, ihr Inhalt wird dabei überschrieben
@@ -197,7 +194,7 @@ Der Wert von PATH besteht aus einer Liste von absoluten Pfadangaben die mit Dopp
   $ ls | grep txt
   ```
 ## Verkettung von Befehlen
-Mehrere Befehle können durch Semikolons getrennt eingegeben und dann nacheinander ausgeführt werden
+Mehrere Befehle können durch *Semikolons* `;` getrennt eingegeben und dann nacheinander ausgeführt werden
 ```bash
 # ./configure [Optionen]; make; make install
 ```
@@ -219,6 +216,20 @@ Zusätzlich ist es möglich mit ` `` ` einen Befehl einzuschließen um die Ausga
 $ echo "Zurzeit ist `whoami` angemeldet."
 > Zurzeit ist user angemeldet.
 ``` 
+
+## Muster
+- `*`: beliebig viele verschiedene Zeichen
+  `h*o`-> hello, hallo, ho, heiho
+- `?`: ein beliebiges Zeichen
+  `te?t`-> text, test
+- `[*]`: eines der Zeichen die in eckigen Klammern angegeben ist, ist zulässig; Bereiche können mit Bindestrich angegeben werden `a-z`; mehrere Listen können nacheinander angegeben werden.
+  `[a-zA-Z0-9`-> alle Kleinbuchstaben, Großbuchstaben und Ziffern sind gültig
+- `!`: alle außer den angegebenen Zeichen ist gültig
+  `[!Bb]`-> alle Zeichen außer B sind erlaubt
+- `{*,*,*}`: Eine Liste von Zeichenketten in geschweiften Klammern bedeutet, dass diesen gültig sind
+  `[info, hinweis, hilfe}.txt`-> es werden die Dateien `info.txt`, `hinweis.txt` und `hilfe.txt` gesucht
+- `|`: Mit dem Pipe-Zeichen können mehrere Muster mit `ODER` verknüpft werden
+  `b*|info*` es werden alle Dateien gesucht die mit `b` oder `info` beginnen. 
 ## Commands
  Basic Commands:
  - `pwd`: "print working directory"
@@ -297,9 +308,116 @@ $ fileName
 > - calling other scripts from within a script
 
 ## Bash scripts
-Every script starts with the *shebang*, which points to the location of bash itself. On most Linux distrobutions it can be found under `/usr/bin/bash` so the shebang is `#!/usr/bin/bash`.
-
+Scripts sind Textdateien, mit der Endung `.sh`, in denen eine Abfolge von Befehlen stehen, welche nach einander ausgeführt werden.
 ### Creating Scripts
+Every script starts with the *shebang* `#!`, which points to the location of bash itself. On most Linux distributions it can be found under `/usr/bin/bash` so the shebang is `#!/usr/bin/bash`.
+
+**Fallentscheidungen**
+```bash
+if(Bedingung)
+then
+	Anweisung
+fi
+```
+Es ist möglich innerhalb eines Skripts Fallentscheidungen zu implementieren, meistens ist es ein Vergleich, zwischen einer Variablen oder einem Dateinamen und einem bestimmten Wert.
+- `[-e Pfad]`: Pfad existiert
+- `[-f Pfad]`: Pfad ist eine Datei
+- `[-d Pfad]`: Pfad ist ein Verzeichnis
+- `[-s Pfad]`: Pfad ist ein Symlink
+- `[str1 = str2]`: Strings sind identisch
+- `[str1 != str2]`: Strings sind ungleich
+- `[-z string]`: String ist leer
+- `[-n string]`: String hat Inhalt
+- `[expr1 -a expr2]`: Beide Ausdrücke sind wahr (and)
+- `[expr1 -o expr2]`: Mindestens ein Ausdruck ist wahr (or)
+
+Nummerische Vergleiche werden in doppelten runden Klammern geschrieben `((2 < 1))`
+Es ist auch möglich den Erfolg eines Kommandos zu testen, dazu wird der Befehl mit Parametern als Bedingung übergeben, ein Rückgabewert von `0` bedeutet, dass der Befehl erfolgreich ausgeführt wurde, andere Werte weisen auf einen Fehler hin.
+
+Neben `if` ist es auch möglich mit `case` Bedingungen zu entscheiden. Hierfür werden verschiedene Muster aufgeführt, denen eine Variable oder ein String entsprechen kann.
+Die Syntax ist:
+```bash
+case "Bedingung" in
+"Muster1")
+	Anweisung
+	;;
+"Muster2")
+	Anweisung2
+	;;
+*)
+	Anweisung3
+	;;
+esac
+```
+- Nach jedem Muster muss `)` stehen
+- am Ende von einer einer Anweisung und vor dem nächsten case muss `;;` stehen
+- `*)` kann am Schluss stehen um alle anderen Werte zu verarbeiten und kann zur Fehlermeldung benutzt werden.
+
+**Schleifen**
+```bash
+for i in $variable:
+do
+	Anweisung
+done
+
+for ((i = 0; i < max; i++))
+do
+	Anweisung
+done
+```
+
+```bash
+while Bedingung 
+do
+	Anweisung
+done
+```
+
+**Variablen**
+Variablen werden mit einem `$` gekennzeichnet und wird innerhalb von einem komplexen Ausdruck zusätzlich in geschweifte Klammern geschrieben `${var}`.
+Spezielle Variablen:
+- `$0`-`$9` sind für die einzelnen Kommandozeilenparameter
+- `$*` für die gesamte Liste der Parameter zur Verwendung in einer Schleife
+- `$#` für die Anzahl der übergebenen Parameter
+
+```bash
+var = value
+echo &var
+```
+
+**Logging**
+Es ist auch möglich mit dem Befehl `logger` Syslog-Meldungen zu erzeugen
+```bash
+logger [-p [facility]priority] message
+```
+### Examples
+
+```bash
+#!/bin/bash
+echo Hallo, Welt!
+ echo Es ist `date +"%d.%m.%Y, %H:%M"` 
+ echo -n "Wie heißt du? " 
+ read name 
+ echo Hallo, $name!
+```
+
+```bash
+#!/bin/bash
+if (($# < 1))
+then
+	echo "Verwendung. backup Dateimuster"
+	exit 1
+fi
+
+for i in $*
+do
+	 echo "Verarbeite ${i}"
+	 if [-f $i]
+	 then 
+		 cp $i ${i}.tmp
+	 fi
+done
+```
 #### Script for Bridge and interface configuration
 **Outline of the script:**
 - Create the bridge
@@ -345,7 +463,7 @@ For example a backup script outline could be:
 - Transfer the fiel to server `archive`
 
 Now you can write your script, for example:
-```
+```bash
 #!/bin/bash
 
 #Create a tar file of /etc
@@ -362,6 +480,7 @@ After saving the file give it execute permission.
 
 It is advised to create a *backup and restore (bur)* user and set the target directory (`/server1/backups`) as executable and writable only to that user. The user should be created on all systems and passwordless SSH key files should be configured for them.
 ## Scheduling Tasks with cron
+The tasks are scheduled under `/etc/crontab`
 The `cron` utility is available on all Linux systems and is used to schedule commands to run at specific times.
 The syntax for `cron` is:
 ![[cron syntax.png|409x135]]
@@ -379,6 +498,17 @@ The syntax for `cron` is:
 	  0 6 15 * * /path/to/script.sh
 	```
 
+Es sind auch Bereiche gültig in der Form `Start-Ende`
+- If a script should run Monday - Friday hourly form 8 - 18 p.m.  
+  ```
+  0 8-18 * * 1-6 /path/to/script.sh
+  ```
+
+Zusätzlich können Intervalle mit `/` angegeben werden 
+- If a script should run very two hours
+  ```
+  0 */2 * * * /path/to/script.sh
+  ```
 ## Preventing Time Drift with Network Time Protocol
 It is important that when using scripts and automated tasks that operate on multiple machines and need to execute tasks in a specific order, to ensure that the internal time of the machines is synchronized.
 To keep the time synchronized among all systems you can use a reference to an internet time server plus a time server inside the network.
@@ -1533,6 +1663,19 @@ A single security setting or policy is not possible for multiple different syste
 ![[Securing the system summary.png]]
 
 # Monitoring
+## Syslog and Log-Files
+Statusinformationen und Fehlermeldungen des Betriebssystems, Programmen und Daemons werden in *Log-Dateien* geschrieben, dies geschieht automatisch durch `syslogd`, den Syslog-Daemon.
+Diese Meldungen können unter `/var/log` gefunden werden.
+Syslog Meldungen bestehen aus: 
+- *Facility*: Fehlerquelle
+  von welchem Programm oder welcher Systemfunktion der Eintrag kommt
+- *Priority*
+  welche Wichtigkeit der Eintrag hat
+	- *emerg*: Notfall
+	- *error*: normaler Fehler
+	- *warn*: Warnung
+	- *info*: reine Information
+	- *debug*: willkürliche Meldung zur Programmfehlersuche
 ## Monitoring System Health 
 To check performance and format system statistics you can use [`sysstat`](https://github.com/sysstat/sysstat).
  After installing, edit the `/etc/default/systat` file and change `ENABLED=false` to `ENABLED=true`, then restart the service:
@@ -1622,13 +1765,13 @@ To work with daemons you use *systemd*, for more look [here](https://systemd.io/
 	```
 - To top a daemon use: 
   ```
-	$ systemctl stop service-name
-	```
+  $ systemctl stop service-name
+  ```
 - To restart a daemon use:
   ```
-	$ systemctl restart service-name
-	```
-	>[!note]
+  $ systemctl restart service-name
+  ```
+  >[!note]
 	>A less disruptive command is `reload`, which instructs a daemon to reload its configuration.
 	
 >[!tip]
@@ -1642,16 +1785,15 @@ $ systemctl status service-name
 ```
 - To check the configuration of a daemon use:
   ```
-	$ systemctl cat
-	```
+  $ systemctl cat
+  ```
 
 ## Other Commands
 - To show network connections to a daemon use `ss`, which can be used to show listening network sockets to check if the network configuration works properly.
   ```
-	# Show listening TCP sockets
-	$ ss -lnt
+  # Show listening TCP sockets
+  $ ss -lnt# Show listening UDP sockets
+  $ ss -lnu
+  ```
 	
-	# Show listening UDP sockets
-	$ ss -lnu
-	```
 - Use `ps` to show information on the currently running processes
