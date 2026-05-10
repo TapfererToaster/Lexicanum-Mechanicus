@@ -2,7 +2,7 @@
 - http://getpython3.com/diveintopython3/index.html
 - https://scapy.readthedocs.io/en/latest/introduction.html
 
-Python ist eine Multiparadigmen Sprache, hat also Aspekte einer imperativen, obektorientierten und funktionalen Programmiersprache.
+Python ist eine Multiparadigmen Sprache, hat also Aspekte einer imperativen, objektorientierten und funktionalen Programmiersprache.
 Der Quellcode wird während der Laufzeit des Programmes vom *Python-Interpreter* übersetzt. Kompiliert wird der Code durch einen *Just-in-Time* Compiler, bei dem der Code nicht Zeile für Zeile während der Ausführung übersetzt wird, sondern viel schneller und übersetzt im Arbeitsspeicher oder auf einem Datenträger zwischengespeichert.
 
 >[!note]
@@ -209,6 +209,12 @@ Werte können mit `.append()` an das Ende einer Liste hinzugefügt werden
 ```python
 liste.append(6)
 ```
+
+>[!note]
+>Um eine leere Liste zu erzeugen
+>```python
+>liste=[]
+>```
 ### Slices
 Man kann aus einer Liste auch ein *Slice*, eine Teilliste, mithilfe des *Slice-Operator*.
 Die Syntax ist `[StartIndex:EndIndex:Intervall]`
@@ -330,6 +336,9 @@ You can use the `input` function to give a prompt to the user without the `print
 secret = input("Tell me a secret")
 print("Hmmm...", secret, "I will not tell anyone.")
 ```
+
+## Kommandozeilenargumente lesen
+Um Argumente einzulesen die bei der Ausführung des Programms in die Kommandozeile eingegeben werden, benutzt man `argv` aus dem `sys` Modul.
 
 # Operatoren
 
@@ -540,7 +549,46 @@ gefilterte_liste = [ausdruck for element in liste if bedingung]
 evenNumbers = [number for number in numbers if number % 2 == 0]
 >>> [2,4]
 ```
+# Fehler und Ausnahmen
+Bei Fehlern werden *Exceptions* ausgelöst und führen zu einem Programmabsturz, wenn sie nicht abgefangen werden.
+Zum abfangen wird `try-except` benutzt
+```python
+try:
+	Anweisung
+except Errortype:
+	Anweisung bei Fehler
+```
 
+Man kann bei der `except` Anweisung auch spezifische Fehlertypen und sogar mehrere Anweisungen angeben:
+```python
+dividend = 10
+divisor = 0
+try:
+	result = dividend / divisor
+except ZeroDivisionError:
+	print("Divisor darf nicht null sein")
+except: TypeError:
+	print("Operanden müssen Zahlen sein")
+```
+
+In eigenem Code kann man `raise` benutzen um eigene Ausnahmen und Fehlermeldungen auszulösen
+```python
+def function(parameter: int):
+	if type(parameter) is not int:
+		raise TypeError("Argument muss Integer sein")
+	Anweisungen
+```
+
+Zusätzlich kann man eigene Ausnahmeklassen von vorhandenen ableiten
+```python
+class OwnTypeError(TypeError):
+	pass
+	
+def function(parameter):
+	if Bedingung:
+		raise OwnTypeError("Wrong datatype")
+		Anweisungen
+```
 # Mit Dateien arbeiten
 Für den Zugriff auf Dateien werden diese mit `open()` geöffnet, dadurch wird ein Objekt erstellt dessen Methoden zum Lesen und Schreiben in der Datei verwendet wird.
 ```python
@@ -586,7 +634,204 @@ Um in eine Datei zu schreiben wird der Mode `w` benutzt, wobei jeder vorherige I
 file = open("file","w")
 file.write("Das wird in die Datei geschrieben")
 ```
+## Verzeichnisinhalte 
+Um Verzeichnisinhalte zu lesen wird `listdir` aus dem `os` Modul benutzt
+```python
+from os import listdir
+for file in listdir("."):
+	print(file)
+```
 
+Des Weiteren kann man mit `isfile` und `isdir`  überprüfen ob ein Verzeichnisinhalt eine Datei oder ein weiteres Verzeichnis ist.
+```python
+from os import listdir
+from os.path import isfile, isdir
+def ls(path):
+	for entry in listdir(path):
+		is isdir(entry):
+			print("d {}".format(entry))
+		elif isfile(entry):
+			print("f {}".format(entry))
+		else:
+			print("? {}".format(entry))
+```
+
+Mit der Funktion `walk(path)` kann rekursiv ein Verzeichnis ausgelesen werden. Als Rückgabe erhält man ein Tupel mit den relativen Pfadnamen des jeweiligen Verzeichnisses, eine Liste der Unterverzeichnisse und eine Liste der Dateien.
+```python
+from os import walk
+for (dir,subdir,diles) in walk("testdir"):
+	print("Dir: {}, subdirectories: {}, files: {}".format(dir, subdir,files))
+```
 # OOP
 ## Klasse
-Um eine Klasse in Python zu erzeugen benutzt man das Sc  
+Um eine Klasse in Python zu erzeugen benutzt man:
+```python
+class Name:
+	# Konstruktor
+	def __init__(self,x,y):
+		self.x = x
+		self.y = y
+	
+	# String Darstellung
+	def __str__(self):
+		return"{x} {y}".format(x = self.x, y = self.y)
+		
+	# Methode / Funktion definieren
+	def funktion(parameter1, parameter2,...):
+		Anweisungen
+
+# Hauptprogramm
+if __name__ == "__main__":
+	# Instanzen der Klasse erzeugen
+	instanz = Name("x","y")
+	
+	# Aufrufen der String Darstellung
+	print(instanz)
+	
+	# Aufrufen einer Funktion
+	instanz.funktion(parameter1, parameter2)
+	
+	Anweisungen
+```
+
+>[!warning]
+>Anders als in anderen Programmiersprachen gibt es in Python keinen Modifikator für Attribute um diese als `privat` zu setzten und so zu verhindern, dass auf sie von außerhalb der Klasse zugegriffen wird.
+
+> [!NOTE]
+> Das Hauptprogramm wird nur ausgeführt wenn das Skript direkt aufgerufen wird, wird es importiert um die Klassenbibliothek zu benutzten wird es nicht ausgeführt.
+### Klassenkonstanten 
+In Python gibt es keine Konstanten, jedoch ist es Konvention, dass in Großbuchstaben geschriebene Variablen als solche zu behandeln sind.
+Die Konstanten werden nach dem Klassennamen, aber vor den Methoden definiert:
+```python
+class Name:
+	CONST1 = x
+	CONST2 = y
+
+	def methode(self,...):
+		Anweisung
+```
+### Methoden 
+Man kann Parametern Standardwerte zuweisen, wodurch man diesen Parametern beim Aufrufen keine Werte übergeben muss.
+```python
+def funktion(x,y = standardWert):
+	Anweisungen
+```
+
+Man kann auch Funktionen schreiben, die eine Liste oder ein Dictionary als Parameter akzeptieren. Dafür wird `*args` für Listen und `**kwargs` für Dictionaries benutzt:
+```python
+def funktion(*args, **kwargs):
+	Anweisungen
+```
+
+Wenn eine Methode einen Wert zurückgeben soll wird wie üblich `return` benutzt, man muss auch nicht im Funktionskopf den Typ des Rückgabewerts angeben
+```python
+def funktion()
+	return x
+```
+
+**Magic Methods**
+Magic Methods werden in bestimmten Kontexten automatisch ausgeführt und können für Klassen extra definiert werden.
+- https://realpython.com/python-magic-methods/
+- [3. Data model — Python 3.14.4 documentation](https://docs.python.org/3/reference/datamodel.html)
+
+| Operator      | Methode          |
+| ------------- | ---------------- |
+| `+`           | `__add__()`      |
+| `-`           | `__sub__()`      |
+| `*`           | `__mul__()`      |
+| `/`           | `__truediv__()`  |
+| `//`          | `__floordiv__()` |
+| `-`           | `__neg__()`      |
+| `+=`          | `__iadd__()`     |
+| `-=`          | `__isub__()`     |
+| `other+self`  | `__radd__()`     |
+| `orther-self` | `__rsub__()`     |
+| `==`          | `__eq__()`       |
+| `!=`          | `__ne__()`       |
+| `<`           | `__lt__()`       |
+| `<=`          | `__le__()`       |
+| `>`           | `__gt__()`       |
+| `>=`          | `__ge__()`       |
+**Type-Hints**
+Um in Python den Datentyp von Parametern oder Rückgabewerten festzulegen werden *Type-Hints* benutzt.
+Für Parameter wird der Datentyp nach dem Parameternamen und einem Doppelpunkt geschrieben, für Rückgabewerte wird der Datentyp mit einem Pfeil ans Ende des Methodenkopfes geschrieben.
+```python
+def funktion(parameter: datentyp) -> DatentypRückgabe:
+	Anweisungen
+```
+## Vererbung
+```python
+class ChildClass(ParentClass):
+	Definition
+```
+
+Durch die Vererbung erhalten die Child-Klassen auch die Methoden der Eltern-Klasse; mit `super` können die Methoden der Elternklasse aus der Kind-Klasse aufgerufen werden.
+```python
+class Child(Parent):
+	def function(self):
+		super().function()
+```
+
+>[!note]
+>Der Konstruktor der Elternklasse kann ebenfalls mit `super().__init__()` aufgerufen werden.
+
+In Python ist auch eine Mehfachvererbung (*Multiple Inheritance*) möglich, bei der eine Kind-Klasse von mehreren Eltern-Klassen abgeleitet werden kann
+```python
+class Child(Parent1,Parent2,...):
+	Definition
+```
+# Lambda-Funktionen
+Lambda Funktionen sind anonyme Funktionen, die als Objekte dienen und an Variablen oder Funktionen übergeben werden können und auch als Rückgabewert fungieren können.
+```python
+lambda arg1, arg2, ...: ausdruck
+```
+# Module Importieren
+Um Skripte zu importieren wird `import` benutzt, nach dem Schema
+- `import Modulname`
+  importiert alle Klassen des Module unter einem Namensraum
+  Der Aufruf der Klassen erfolgt mit `Modulname.Klasse()`
+- `import Modulname as EigenerName`
+  alle Klassen des Module werden unter dem selbstgewählten `EigenerName` importiert
+  Der Aufruf erfolgt mit `EigenerName.Klasse()`
+- `from Modulname import *` 
+  importiert alle Klassen des Moduls in den Namensraum
+  Der Aufruf erfolgt mit `Klasse()`
+- `from Modulname import Klassenname1, Klassenname2,...`
+  importiert eine oder mehrere Klassen aus dem Modul
+## Python Standard Library
+- Der Großteil der mathematischen Funktionen befinden sich in dem Modul `math`.
+- Das Modul `cmath` stellt die meisten Funktionen auch für komplexe Zahlen bereit
+- `sys` stellt Funktionen zur Interaktion mit dem OS und der Shell
+- `os` ermöglicht den Zugriff auf die hardwarenäheren Teile des Systems
+- `re` ermöglicht das Arbeiten mit [[Reguläre Ausdrücke|regulären Ausdrücken]]
+- `datetime` erlaubt die Arbeit mit Uhrzeit und Datum 
+# Reguläre Ausdrücke
+Man kann mit `re.search(regex, string)` in einem String nach einem Treffer für den [[Reguläre Ausdrücke|regulären Ausdruck]] `regex`.  Sollte ein Treffer gefunden werden wird ein Match-Objekt zurück geliefert, sollte es keinen geben erhält man `None`. 
+```python
+first_vowel = re.search("[aeiou]", "Hello")
+>>> 'e'
+```
+
+Mit `span()` wird ein Tupel zurück geliefert das die Anfangsposition und die erste Position nicht mehr zum Treffer gehört.
+```python
+first_vowel.span()
+>>> (1,2)
+```
+
+- Mit `re.search()` wird in dem gesamten String nach einem Treffer gesucht
+- `re.match()` überprüft nur den Anfang des Strings
+- `re.findall()` liefert ein Tupel von mehreren zutreffenden Strings zurück
+
+# Systemnahe Programmierung
+Mit dem Befehl `fork()` aus dem `os` Modul kann man in Unix Systemen einen neuen [[Betriebssysteme#Prozessverwaltung|Prozess]] erzeugen, der eine identische Kopie eines ursprünglichen Prozesses erstellt. 
+Die Prozesse werden dann eingesetzt um unterschiedliche Aufgaben zu erfüllen, um sie zu unterscheiden gibt `fork()` im ursprünglichen *Parent* Prozess die Prozess ID des *Child* Prozesses zurück und im Child Prozess `0`. 
+```python
+import os
+
+pid = os.fork()
+
+if pid == 0:
+	print("Child process")
+else:
+	print("Parent process. Child: {}".format(pid))
+```

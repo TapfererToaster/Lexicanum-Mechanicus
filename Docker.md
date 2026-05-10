@@ -119,11 +119,18 @@ The virtual subnet of the containers is bridged to the local network of the host
 
 >[!hint]
 >There are a lot of ways to configure Docker's network layer and you can find the details of Docker networking in the [documentation](https://dockr.ly/2otp461)
-
 ## The Docker Workflow
 ### Filesystem Layers
 
 # Dockerfile
+A *Dockerfile* contains instructions on the commands to run and which files to copy, that are used to create a container image.
+## Common Instructions
+- `FROM imageName`: specifies the base image that the build will extend
+- `WORKDIR path/to/dir`: specifies the working directory or the path in the image where files will be copied and commands executed
+- `COPY host/Path image/Path`: tells the builder to copy fiels from the host to the image
+- `RUN command`: tells the builder to tun the specified command
+- 
+
 ## Anatomy of a Dockerfile
 A typical *Dockerfile* could look like the one below, which creates a container for a Node.js-based application:
 ```Dockerfile
@@ -235,7 +242,10 @@ COPY *.js* $AP/
 CMD ["supervisord", "-n"]
 ```
 
-# Working with Images
+# Images
+## Layers
+Each layer of an image contains a set of filesystem changes, additions, deletions and modifications.
+
 ## Building an Image
 1. First we clone a Git repo that contains an example application called "docker-node-hello":
 >[!note]
@@ -674,7 +684,7 @@ By default Docker will randomly generate a name by combining an adjective with t
 $ docker container create --name="awesome-service" ubuntu:latest sleep 120
 ```
 #### Labels
-Labels are key/value pairs that can be applied to Docker images and containers as metadata. When a new Linux containers are created, they automatically inherit all the labels from their parent image.
+Labels are key/value pairs that can be applied to Docker images and containers as metadata. When new Linux containers are created, they automatically inherit all the labels from their parent image.
 You can add new labels to the container to apply metadata that is specific to that single container.
 ```
 $ docker container run --rm -d --name has-some-labels \

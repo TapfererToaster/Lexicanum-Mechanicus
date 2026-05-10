@@ -46,7 +46,8 @@ Aus Treiber-Sicht gibt es zwei Arten von Geräten
 ## Schnittstelle für Anwendungsprogramme
 
 # Prozessverwaltung
-Jede stattfindende Aufgabe wird in den meisten OS durch einen *Prozess* realisiert. Moderne Betriebssysteme sind in der Lage mehrere Prozesse parallel (*Multitasking*) auszuführen.
+Jede stattfindende Aufgabe und Programm wird in den meisten OS durch einen *Prozess* realisiert. Diese Prozesse haben einen eigenen Speicherbereich, sowie Ein- und Ausgabeschnittstellen.
+Moderne Betriebssysteme sind in der Lage mehrere Prozesse parallel (*Multitasking*) auszuführen.
 
 >[!note]
 >Bei Singlecore-Prozessoren wird Multitasking durch schnelles hin- und herschalten zwischen den einzelnen Prozessen realisiert, Multicore-CPUs können jedoch tatsächlich mehrere Prozesse gleichzeitig bearbeiten  
@@ -75,7 +76,9 @@ Um dies zu verhindern sollte:
 - Benötigt der Prozess die Ressource nicht mehr, löst er die Sperre 
 
 ## Threads
-*Threads* werden benutzt um Prozessen die gemeinsam dasselbe Problem bearbeiten ununterbrochen miteinander kommunizieren können. Threads besitzen keine getrennten Speicherbereiche sondern greifen auf einen gemeinsamen Speicherbereich zu.
+*Threads* werden benutzt um Prozessen, die gemeinsam dasselbe Problem bearbeiten, ununterbrochen miteinander kommunizieren können. 
+Zudem kann man mit Threads innerhalb eines Prozesses mehrere Aufgaben parallel erledigen. 
+Threads besitzen keine getrennten Speicherbereiche sondern greifen auf einen gemeinsamen Speicherbereich zu.
 
 # Speicherverwaltung
 Das Betriebssystem ist auch zuständig für die Speicherverwaltung, z.B. dem Verteilen von [[Arbeitsspeicher]] an die einzelnen Prozesse. 
