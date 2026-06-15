@@ -1,7 +1,7 @@
 # Bestandteile
 ## Kernel
 Der Kernel wird beim *Booten* eines Betriebssystem geladen und ausgeführt und ist das grundlegende Computerprogramm, dass unmittelbar vom Prozessor ausgeführt wird und bis zum herunterfahren des Computers permanent im Hintergrund läuft. 
-Er steuert steuert alle anderen Betriebssystemkomponenten, er initialisiert die Zusammenarbeit mit der Hardware durch laden der Gerätetreiber; er ruft alle anderen Programme als Unterprogramme auf und bestimmt durch Rücksprungpunkte wann diese die Kontrolle zurück an den Kernel geben.
+Er steuert alle anderen Betriebssystemkomponenten, initialisiert die Zusammenarbeit mit der Hardware durch laden der Gerätetreiber, ruft alle anderen Programme als Unterprogramme auf und bestimmt durch Rücksprungpunkte wann diese die Kontrolle zurück an den Kernel geben.
 ### Kernelmodus
 Bei der Ausführung von Prozessen ist dabei zwischen *Benutzermodus* und *Kernelmodus* zu unterscheiden. Oft werden diese Modi durch unterschiedliche Modi des Prozessors ausgeführt, die z.B. unterschiedlich stark vor Interrupts geschützt sind.
 
@@ -68,6 +68,8 @@ Bei IPC gibt es zwei Mechanismen
 
 Eine eingeschränkte Kommunikation zwischen Prozessen findet durch *Semaphore* statt, durch den mehrere Prozesse Ressourcen gemeinsam Nutzen können. Es handelt sich um einen Zähler in einem gemeinsamen Speicherbereich, der von verschiedenen Prozessen reserviert oder freigegeben werden kann. Beim reservieren wird der Zähler um 1 reduziert, vorausgesetzt er ist nicht 0, zur Freigabe wird er um 1 erhöht, bis zu einem festgelegten Maximalwert. 
 
+## Pipes
+Eine Pipe verknüpft die Ausgabe eines Prozesses mit der Eingabe eines anderen. Die Pipe besteht aus zwei Datei-Handlern, einer als lesende Seite und einer als schreibende Seite.
 ## Deadlocks
 *Race Condition* ist die Bezeichnung für das Wettrennen von Prozessen um den Zugriff auf Ressourcen, dieses kann zu einem *Deadlock* führen wenn die Prozesse den Zugriff auf dieselbe Datei gegenseitig sperren um selber zugreifen zu können.
 Um dies zu verhindern sollte:

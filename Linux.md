@@ -188,7 +188,7 @@ Der Wert von PATH besteht aus einer Liste von absoluten Pfadangaben die mit Dopp
 - `Befehl <Dateiname`
   Der Inhalt der Datei wird als Eingabe gelesen, statt von der Tastatur
 - `Befehl1 | Befehl2`
-  *Pipe*, leitet die Ausgabe von `Befehl1` als Eingabe an `Befehl2` weiter 
+  [[Betriebssysteme#Pipes|Pipe]], leitet die Ausgabe von `Befehl1` als Eingabe an `Befehl2` weiter 
   Pipes können auch benutzt werden um mit `grep` Ausgaben zu filtern
   ```bash
   $ ls | grep txt

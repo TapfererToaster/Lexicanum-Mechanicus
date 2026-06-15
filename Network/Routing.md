@@ -1,6 +1,6 @@
 # The Basics of Routing
 ![[Routing Basic.png]]
-When a router receives a frame that is addressed to its MAC address it de-encapsulates it and inspects it IP address. If the  destination IP address in the packet is its own the router will continue to de-encapsulate the message as it is a message for the router itself.
+When a router receives a frame that is addressed to its MAC address it de-encapsulates it and inspects its IP address. If the destination IP address in the packet is its own the router will continue to de-encapsulate the message as it is a message for the router itself.
 
 If the destination IP address is not its own the router will try to route the packet to forward it to its destination. To do that it looks up the destination IP address in a routing table to find a suitable route. If one is found the packet will be forwarded, if not the router will discard the packet 
 ## Routing Table

@@ -1,5 +1,5 @@
 # Openflow
-The Openflow protocol served as the first major protocol of the *Software Defined Network (SDN)* movement, but 
+The Openflow protocol served as the first major protocol of the *Software Defined Network (SDN)* movement
 It was developed by Martin Casado and allows the decoupling of a network device's control plane and data plane.
 
 >[!note]

@@ -76,55 +76,6 @@ ansible_user=vagrant
 ansible_private_key_file=.vagrant.d/insecure_private_key 
 ```
 
-## Creating Multiple VMs with Vagrant
-To create multiple Vagrant machines create a new Vagrantfile:
-```
-Vagrant.configure("2") do |config|
-# Use the same key for each machine
-  config.ssh.insert_key = false
-  config.vm.define "vagrant1" do |vagrant1|
-	vagrant1.vm.box = "ubuntu/focal64"
-	vagrant1.vm.network "forwarded_port", guest: 80, host: 8080
-	vagrant1.vm.network "forwarded_port", guest: 443, host: 8443
-  end
-  config.vm.define "vagrant2" do |vagrant2|
-	vagrant2.vm.box = "ubuntu/focal64"
-	vagrant2.vm.network "forwarded_port", guest: 80, host: 8081
-	vagrant2.vm.network "forwarded_port", guest: 443, host: 8444
-  end
-  config.vm.define "vagrant3" do |vagrant3|
-	vagrant3.vm.box = "centos/8"
-	vagrant3.vm.network "forwarded_port", guest: 80, host: 8082
-	vagrant3.vm.network "forwarded_port", guest: 443, host: 8445
-  end
-end
-```
-
-After we started the VMs with `vagrant up` we inspect the ssh settings of them with:
-```
-$ vagrant ssh-config
-```
-
-We now modify the file `~/.ssh.config`
-```
-Host vagrant*
- Hostname 127.0.0.1
- User vagrant
- UserKnownHostsFile /dev/null
- StrictHostKeyChecking no
- PasswordAuthentication no
- IdentityFile ~/.vagrant.d/insecure_private_key
- IdentitiesOnly yes
- LogLevel FATAL
-```
-
-We also modify the inventory file `vagrant.ini` and add the ssh informations:
-```
-vagrant1 ansible_port=2222
-vagrant2 ansible_port=2200
-vagrant3 ansible_port=2201
-```
-
 >[!note]
 >We also need to add the ssh key with;
 >```

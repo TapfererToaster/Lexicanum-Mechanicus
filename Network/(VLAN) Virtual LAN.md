@@ -353,15 +353,15 @@ A switch can operate in one of four different modes, which can be configured wit
   - will advertise VLAN database changes to other switches
   - will synchronize its own database upon receiving an advertisement with a higher revision number
   - recommended mode for all switches in the domain
-  ```
-	SW1(config)# vtp mode server
-	```
+    ```
+    SW1(config)# vtp mode server
+    ```
 
 - **Client**:
   - Switch cannot create, modify or delete VLANs, otherwise behaves like server
   ```
-	SW1(config)# vtp mode client 
-	```
+  SW1(config)# vtp mode client
+  ```
   
 - **Transparent**:
 	- Switch can create, modify and delete VLANs, but will not advertise changes or synchronize its own database

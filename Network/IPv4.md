@@ -89,8 +89,6 @@ What devices belong in which subnet can be determined by:
   Each unit (Administration, Human Resources, ...) are divided into different subnets
 - **Device Type**
   Different devices (server, printer, hosts, ...) are divided into different subnets
-  
-  
 ## Broadcast Domains 
 In an Ethernet LAN devices use *[[(ARP) Address Resolution Protocol]]* to locate other devices on the network. ARP sends [[(OSI) Open Systems Interconnection-Modell#2. Datensicherungsschicht (Data Link, Layer 2)|Layer 2]] broadcasts to known IPv4 addresses on the local network to discover the associated MAC address. 
 Devices typically acquire IPv4 address configuration using the *[[(DHCPv4) Dynamic Host Configuration Protocol]]*, sending a broadcast on the local network to a DHCP server.

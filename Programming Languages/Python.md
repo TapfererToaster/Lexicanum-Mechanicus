@@ -823,6 +823,7 @@ first_vowel.span()
 - `re.findall()` liefert ein Tupel von mehreren zutreffenden Strings zurück
 
 # Systemnahe Programmierung
+## Prozesse
 Mit dem Befehl `fork()` aus dem `os` Modul kann man in Unix Systemen einen neuen [[Betriebssysteme#Prozessverwaltung|Prozess]] erzeugen, der eine identische Kopie eines ursprünglichen Prozesses erstellt. 
 Die Prozesse werden dann eingesetzt um unterschiedliche Aufgaben zu erfüllen, um sie zu unterscheiden gibt `fork()` im ursprünglichen *Parent* Prozess die Prozess ID des *Child* Prozesses zurück und im Child Prozess `0`. 
 ```python
@@ -835,3 +836,327 @@ if pid == 0:
 else:
 	print("Parent process. Child: {}".format(pid))
 ```
+
+## Pipes
+[[Betriebssysteme#Pipes|Pipes]] werden durch den Befehl `os.fork()` erzeugt wobei zwei Variablen zugewiesen werden müssen.
+```python
+reader, writer = os.pipe()
+```
+
+# Netzwerkprogrammierung
+>[!note]
+>An beiden Enden einer Netzwerkverbindung befinden sich zwei Sockets, die vergleichbar sind wie die Telefone in einer Telefonverbindung.
+
+Um Sockets zu verwenden muss das Modul `socket` importiert werden.
+## Sockets erzeugen
+Um ein Socket zu erzeugen benutzt man den Befehl
+```python
+sock = socket.socket(domain, type, protocol)
+
+# TCP socket
+tcp_sock = socket.socket(
+	socket.AF_INET,
+	socket.SOCK_STREAM,
+	socket.getprotobyname('tcp')
+)
+
+# UDP socket
+udp_sock = socket.socket(
+	socket.AF_INET,
+	socket.SOCK.DGRAM,
+	socket.getprotobyname('udp')
+)
+```
+
+## Adressen und Ports
+- `socket.gethostbyname(hostname)`
+  wandelt den hostnamen in die entsprechende IP Adresse um, benötigt jedoch Zugriff auf einen DNS-Dienst oder Server; Rückgabewert ist der Hostname und die IP-Adresse in ASCII Zeichen
+- `socket.getservbyname(service, protocol)`
+  statt der Portnummer kann das bei den "Well-known" Ports der Dienst und das Transportprotokoll angegeben werden
+```python
+port = socket.getservbyname('ftp', 'tcp')
+```
+
+## Verbindungen und Datenaustausch
+### UDP
+Bei einem UDP Socket kann man nach der Erstellung Daten sofort Senden und Empfangen benutzt werden die Befehle
+- `sock.bind((destAddr, port))`
+  stellt eine Verbindung zu einem UDP Host her, angegeben als Tupel aus IP-Adresse und Port
+- `sock.sendto(message, (addr,port))` 
+  sendet die Daten an den Empfänger; der Empfänger wird als Tupel bestehend aus IP-Adresse und Port angegeben, z.B. `("192.168.0.4", 8000)`
+- `sock.recvfrom(buffersize)`
+  empfängt ein UDP-Datagramm; `buffersize` gibt die Größe des Lesepuffers in Integer an; gespeichert wird das Paket in zwei Variablen, eine für die Daten und eine für die IP-Adresse des Senders
+### TCP
+- `sock.connect(dest)`
+  stellt eine Verbindung zu einem TCP Host her
+- `sock.send(binary)`
+  sendet einen Binär-String der nur aus ASCII Zeichen bestehen darf
+- `sock.recv(buffersize)`
+  wartet auf Daten vom Host und nimmt Daten in Größe des buffersize auf in Form eines Binärstrings
+- `sock.bind((addr,port))`
+  bindet ein Socket an eine IP-Adresse und einen Port
+- `sock.listen(max_queue)`
+  wandelt ein mit `bind()` gebundenes Socket ein lauschendes um und wartet auf einen Verbindungsversuch; `max_queue` gibt die maximale Größe der Warteschlange von Clientverbindungen an
+- `(clientsocket, remote_addr) = sock.sccept()`
+  wenn eine Verbindung eingeht, wird der Rest des Programms bzw. die nächste Programmzeile ausgeführt
+
+# Externe Module
+Python Module sind in dem [Python Package Index (PyPI)](https://pypi.org/) verfügbar, diese können mit `pip` und für Python 3 `pip3 ` installiert, aktualisiert und deinstalliert werden.
+## NumPy
+Dieses Modul ist für das Rechnen und Operieren mit Arrays optimiert und deswegen auch für lineare Algebra geeignet. 
+
+> [!NOTE]
+> Es wird für Machine Learning eingesetzt und ist Teil von *Scientific Python (SciPy)* einer Sammlung von wissenschaftlich-mathematischen Modulen.
+
+### Arrays
+Um (mehrdimensionale) Arrays zu erzeugen benutzt man `numpy.array([array])`
+```python
+import numpy
+
+a1 = numpy.array([3,2,1])
+a2 = numpy.array([3,2,1][-1,-2,-3])
+
+print(a1)
+print(a2[1])
+print(a2[1][2])
+print(a2[1,2])
+```
+
+Man kann auch *Vektoren* darstellen
+```python
+# Spaltenvektor
+sv = numpy.array([[1],[2],[3]])
+
+# Zeilenvektor
+zv = numpy.array([1,2,3])
+```
+
+*Matrizen* können nach folgendem Schema erstellt werden
+```python
+m1 = numpy.array([[1,2,3],[-1,-2,-3]])
+```
+
+*Skalarmultiplikationen* können mit dem normalen Multiplikationsoperator durchgeführt werden
+```python
+m1 * 4
+sv * -5
+```
+
+Um Skalar- und Punktprodukte zu berechnen wird die Funktion `.dot()` benutzt. 
+Mit ihr kann auch die Matrixmultiplikation nach dem Falk-Schema durchgeführt werden
+```python
+numpy.dot(zv1,zv2)
+zv1.dot(zv2)
+
+m1.dot(m2)
+```
+
+Spaltenvektoren müssen mit `transpose()` erst transponiert werden bevor man das Skalarprodukt berechnen kann. Mit dieser Funktion kann man auch Matrizen transponieren.
+```python
+sv.transpose()
+m1.transpose()
+```
+
+Nuller Matrizen können mit `.zeros()` erstellt werden
+```python
+numpy.zeros([3,4])
+```
+
+# Datenanalyse
+Python kann auch für [[Abominable Intelligence - Silica Animus#Datenanalyse|Datenanalyse]] benutzt werden.
+
+> [!NOTE]
+> Jupyter Notebooks sind praktisch im Arbeiten mit Datenanalyse
+
+## Aufbereitung 
+### Bag of Words
+Um einen Text als [[Abominable Intelligence - Silica Animus#Bag of Words|Bag of Words ]]zu formatieren kann man die Klasse `CountVectorizer`, aus dem Modul `scikit-learn`, benutzen.
+```python
+from sklearn.feature_extraction.txt import CountVectorizer
+import numpy
+
+strings = ["Berlin ist eine Stadt", "Berliner ist ein Gebäck", "JFK ist ein Berliner"]
+# Als Eingabe ist ein Numpy Array mit den einzelnen Strings erforderlich
+string_data = numpy.array(strings)
+vectorizer = CountVectorizer()
+bag_of_words = vectorizer.fit_transform(string_data)
+```
+
+In der Variable `bag_of_words` wird eine *Sparse Matrix* gespeichert, ein Format indem nur die Felder die nicht 0 sind gespeichert werden.
+Um diese Matrix in ein NumPy Array zu wandeln benutzt man `.toarray()`
+```python
+bag_of_words.toarray()
+```
+
+Die Liste der Wörter auf die sich das Array bezieht, kann aus dem `CountVectorizer` Objekt abgerufen werden.
+```python
+vectorizer.get_feature_names_out()
+```
+
+Um *Stoppwörter* zu filtern kann man das Argument `stop_words` des Konstruktors von `CountVectorizer` eine Liste von Wörtern übergibt.
+```python
+stop = ["der", "die", "das", "ein", "eine"]
+vectorizer = CountVectorizer(stop_words = stop)
+```
+
+Um einen Schwellenwert zu setzen ab dem Wörter herausgefiltert werden, kann man die im Konstruktor von `CountVectorizer` enthaltenen `min_df()` für die selten und `max_df()` für die häufig vorkommenden Wörter mit einem Wert zwischen 0 und 1 belegen.
+```python
+vectorizer = CountVectorizer(stop_words, max_df = 0.9)
+```
+
+### N-Gramme
+Für [[Abominable Intelligence - Silica Animus#N-Gramme|N-Gramme]] kann auch die Klasse `CountVectorizer` benutzt werden. Dazu gibt man die Länge der gesuchten N-Gramme als Tupel `(minRange,maxRange)` an den Parameter `ngram_range` des Konstruktors überliefert werden.
+```python
+# einzelne Wörter und Bigramme
+nGram1 = CountVectorizer(ngram_range= (1,2))
+# Nur Bigramme
+nGram2 = CountVectorizer(ngram_range= (2,2))
+```
+
+### Texte
+Um längere Texte für die Verarbeitung mit Machine Learning Algorithmen vorzubereiten, kann man die Klasse `HashingVectorizer` aus dem Modul `sklearn.feature_extraction.text` verwenden.
+Zusätzlich kann mit `HashingVectorizer` die Anzahl der gewünschten Features angegeben werden indem man die Anzahl an den Parameter `n_features` übergibt.
+```python
+from sklearn.feature_extraction.text import HashingVectorizer
+import numpy
+text_data = numpy.array(text)
+hashvalue= HaschinVectorizer(n_features= 10)
+features= hashvalue.transform(text_data)
+features.toarray()
+```
+
+### Bilddateien
+Für die Verarbeitung von Bilddateien eignet sich das Modul `scikit-image`
+```python
+from skimage.io import imread, imshow
+image = imread("bild.jpg")
+imshow(image)
+```
+Das Bild wird hier als dreidimensionales Array gespeichert, in dem für jedes Pixel die Farbwerte Rot, Grün und Blau als Integer zwischen 0 und 255 gespeichert wird.
+
+>[!note]
+>Um die Dimensionen des Arrays abzurufen wird `image.shape()` benutzt.
+
+Um die Wertemengen zu reduzieren gibt es mehrere Möglichkeiten.
+
+**Graustufen verwenden**
+Eine Möglichkeit die Werte zu reduzieren ist es das Bild in Graustufen zu speichern, welche als 256 verschiedene Graustufen als Floats zwischen 0 und 1 gespeichert werden.
+Hierfür benutzt man das Argument `as_gray`
+```python
+from skimage.io import imread, imshow
+image = imread("bild.jpg", as_gray= True)
+imshow(image)
+```
+
+**Bildausschnitt betrachten**
+Es ist nicht immer erforderlich das Gesamtbild zu betrachten, deswegen ist es sinnvoll nur den relevanten Bildausschnitt zu verwerten.
+Dafür werden die gewünschten Dimensionen als Koordinaten `[YStart:YEnde, XStart:XEnde]` angegeben
+```python
+ausschnitt= image[350:550, 250:450]
+```
+
+>[!note]
+>Bei der Verarbeitung von mehreren Bildern sollten sie die gleichen Proportionen haben.
+
+**Bild verkleinern**
+Zusätzlich kann das Bild verkleinert werden, d.h. die Anzahl der Pixel wird verringert.
+Dazu kann man die Funktion `resize()` aus dem Untermodul `skimage.transform` und übergibt das Bild und die gewünschte Größe, als Tupel, in Pixel.
+```python
+# Bild wird auf 50x50 Pixel verkleinert
+verkleinert= resize(Ausschnitt, (50,50))
+```
+## Datenanalyse 
+Zur Analyse von Datenmengen kann das Modul [pandas](https://pandas.pydata.org/docs/user_guide/index.html) benutzt werden.
+>[!note]
+>`pandas` benutzt die Datenstruktur DataFrame, eine Mischung aus Array und Datenbanktabelle, also eine Datenmenge mit mehreren Datensätzen.
+
+Man kann verschiedene Dateiformate benutzen, jedoch sind [[(CSV) Comma-Separated Values]] sehr gut geeignet und der Header mit den Spaltentiteln wird automatisch als Schlüssel für den Zugriff auf die einzelnen Spalten verwendet. 
+
+>[!note]
+>Um eine CSV Datei ohne Header zu importieren muss das Argument `header= None` übergeben werden.
+
+>[!note]
+>Als Beispiel wird ein Auszug des [Iris flower data set](https://en.wikipedia.org/wiki/Iris_flower_data_set) benutzt.
+
+Um eine Datei zu importieren wird `read_csv()` benutzt
+```python
+import pandas
+
+iris = pandas.read_csv('iris.csv')
+```
+
+Mit `head(AnzahlZeilen)` kann man eine Anzahl von Zeilen der Datenmenge anzeigen lassen.
+```python
+iris.head(6)
+```
+
+Mit `.info()` kann man Informationen über die Datenmenge wie die Spaltentitel und Datentypen erfahren
+```python
+iris.info()
+```
+
+Um auf einzelne Spalten zuzugreifen wird der Spaltenname benutzt 
+```python
+iris['PetalWidth']
+```
+
+Beim Zugriff auf die Spalten und auch auf das DataFrame Objekt selbst kann man zusätzlich bestimmte Optionen festlegen:
+- `.unique()`: die unterschiedlichen Werte
+- `.min()`: der kleinste Wert
+- `.max()`: der größte Wert
+- `.mean()`:  der Durschnitt der Werte
+- `.median()`: der Median der Werte
+
+```python
+# Zeigt die größten Werte aller Spalten an
+iris.max()
+
+# Zeigt den größten Wert für die Breite der Blüte an
+iris['PetalWidth'].max()
+```
+
+Um die Werte sortiert auszugeben kann man `.grouby(Spaltenname)` benutzen
+```python
+iris.groupby('Classification')
+```
+
+Auf den Indexoperator kann man auch Vergleichsoperatoren anwenden
+```python
+iris[iris['Classification']== 'Iris-virginica']
+iris[iris['PetalLength']> 2.3]
+```
+
+## Visualisierung
+Mit dem Modul `matplotlib.pyplot` ist es möglichverschiedene Diagrammtypen zu erstellen um Datenmengen zu visualisieren.
+Des Weiteren bietet das Modul [seaborn](https://seaborn.pydata.org/) mehr Darstellungen mit weniger Code darzustellen.
+
+Ein einfacher Scatter-Plot lässt sich mit der `scatterplot()` Funktion erstellen
+```python
+import seaborn 
+seaborn.scatterplot(
+	data=iris, x='PetalLength', y='PetalWidth',
+	hue='Classification', style= 'Classification'
+)
+```
+
+Die Optionen `hue` und `style` sind für die Marker und Farben der Datenpunkte verantwortlich, `Classification` sorgt dafür, dass sich die Punkte in beiden Eigenschaften unterscheiden sollen. 
+
+Box-Plots stellen die Werteverteilung eines Features der verschiedenen Kategorien dar.
+```python
+seaborn.boxplot(x='Classification',y= 'PetalLength', data= iris)
+```
+
+Ein Pair-Plot stellt Scatter-Plots für jede Kombination von Kategorien dar, wobei in den Feldern in denen sich dieselbe Kategorie überschneidet werden die möglichen Werte und die Häufigkeitsverteilung angegeben.
+```python
+seaborn.pairplot(data= iris, kind='scatter', hue='Classification'4)
+```
+
+Die Heatmap stellt die Korrelationen der verschiedenen Features dar, die mit der Funktion `.corr()` berechnet werden können. 
+>[!note]
+>Die Korrelation wird durch einen Wert zwischen +1 und -1 angezeigt, ein positiver Wert bedeutet, dass sich die Werte in dieselbe Richtung entwickeln, negative Werte, dass sie sich in unterschiedliche Richtungen entwickeln und 0, dass es keine Relation gibt.
+
+```python
+iris.corr()
+seaborn.heatmap(iris.corr(), annot=True, cmap= 'viridis')
+```
+
