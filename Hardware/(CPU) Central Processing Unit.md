@@ -134,4 +134,4 @@ JE X
 ```
 
 # Threading
-Beim *Threading* werden mehrere Aufgaben ([[Betriebssysteme#Threads|Threads]]) parallel von einem Prozessor bearbeitet.
+Beim *Threading* werden mehrere Aufgaben ([[Betriebssysteme#Threads|Threads]]) parallel von einem Prozessor bearbeitet. 

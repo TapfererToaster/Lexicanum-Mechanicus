@@ -233,7 +233,6 @@ int main(void)
 | `&&`         | Logisches UND   | `condition1 && condition2` | condition1 und condition2 sind wahr             |
 | \|\|         | Logisches ODER  | condition1 \|\| conditon2  | condition1 oder condition2 oder beide sind wahr |
 | `!`          | Logisches NICHT | `!condition`               | condition ist falsch                            |
-|              |                 |                            |                                                 |
 ## Bitoperatoren
 Mit Bitoperatoren kann man auf die binäre Darstellung von Zahlen zugreifen und Operationen durchführen.
 ![[Bitoperatoren.png|554x116]]

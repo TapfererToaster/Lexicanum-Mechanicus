@@ -25,7 +25,6 @@ Unter den TLDs sind die Second-Levels-Domains wie zum Beispiel `.ac.uk` für Uni
 >[!note]
 >Aus Sicherheitsgründen sollten die Zonendaten für die Domains eines einzelnen Betreibers auf mindestens zwei voneinander unabhängigen (in verschiedenen autonomen  Systemen) Namenservern vorliegen. Die Daten müssen auf dem primären *Master-Nameserver* bezeichnet werden und werden automatisch auf dem *Slave-Server* repliziert.
 >Bei größeren Unternehmen und Institutionen befindet sich der externe Slave-Nameserver bei dem zuständigen Backbone-Provider.
-
 # Nslookup
 If you want to look up the IP address of a domain from the command line, you can use `nslookup`
 ```

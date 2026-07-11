@@ -117,6 +117,7 @@ Das Unterteilen in Cluster hat den Nachteil, dass eine Datei mindestens ein Clus
 	- *Extended FAT (exFAT)*
 	  besonders für externe Festplatten und USB-Sticks geeignet; unterstützt größere Datenträger und Partitionen besser als FAT32 
 	  
-- *New Technology File System (NTFS)*
+## New Technology File System (NTFS)
   Proprietäres Dateisystem von Microsoft
   Die Cluster werden nicht in einer Tabelle, sondern in einer komplexen Baumstruktur, die schnellere Zugriffe und mehr Schutz vor Fehlern bietet. Partitionen können komprimiert und verschlüsselt werden. Es ist möglich FAT-Systeme in NTFS zu konvertieren, jedoch nicht andersrum.
+

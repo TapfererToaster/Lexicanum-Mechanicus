@@ -1,12 +1,18 @@
-#Networking_Device
 #CCNA 
+# Routers
+Routers are used to connect end hosts to other networks and enable communication between them, f.e. the internet or multiple LANs
+
+>[!note] Routers and home routers
+>Routers are not used to connect many end hosts within a LAN.
+>The wireless router usually found in homes, typically fills the roles of a router, switch and wireless access point.
+
 # Router as Gateways
 A router provides a gateway through which hosts on the local network can access the internet or other networks. 
-In order for a host to access the gateway it must now the IP address of the router interface facing the local network, known as the *default gateway address*. This address can be obtained by either being statically assigned by a network administrator or automatically by using the [[(DHCPv4) Dynamic Host Configuration Protocol]].
+In order for a host to access the gateway it must now the IP address of the router interface facing the local network, known as the *default gateway address*. This address can be obtained by either being statically assigned by a network administrator or automatically by using [[(DHCPv4) Dynamic Host Configuration Protocol]].
 >[!note]
 >As a router is the gateway to remote networks it also functions as a boundary between networks
 # Routing
-
+[[Routing]]
 # Router Configuration
 #Cisco_CLI 
 We use the [[Cisco IOS CLI]] to configure the router.
@@ -17,9 +23,15 @@ Router(config)# hostname Router1
 ```
 2. Secure privileged EXEC mode.
 ```
+# Optional
+Router(config)# security passwords min-length 10
+
 Router(config)# enable secret password
 ```
-
+- (Set Domain Name)
+  ```
+  Router(config)# ip domain-name damonaName
+  ```
 3. Secure user EXEC mode.
 ```
 Router(config)# line console 0    
@@ -30,9 +42,11 @@ Router(config-line)# login
 4. Secure remote Telnet / SSH access.
 ```
 Router(config-line)# line vty 0 4    
-Router(config-line)# password   password    
+Router(config-line)# password password    
+# block login for 120 seconds after 3 attempts within 60 seconds
+Router(config)# login block-for 120 attempts 3 within 60
 Router(config-line)# login    
-Router(config-line)# transport input {    ssh   | telnet}
+Router(config-line)# transport input {ssh | telnet}
 Router(config-line)# exit 
 ```
 
@@ -56,10 +70,7 @@ Router# copy running-config startup-config
 ```
 Router> enable
 Router# configure terminal
-Enter configuration commands, one per line.
-End with CNTL/Z.
 Router(config)# hostname R1
-R1(config)#
 ```
 2. Secure privileged EXEC mode.
 ```
@@ -70,15 +81,15 @@ R1(config)# enable secret class
 R1(config)# line console 0
 R1(config-line)# password cisco
 R1(config-line)# login
-R1(config-line)# exit
 ```
 4. Secure remote Telnet / SSH access.
 ```
 R1(config)# line vty 0 4
 R1(config-line)# password cisco
+# block login for 120 seconds after 3 attempts within 60 seconds
+Router(config)# login block-for 120 attempts 3 within 60
 R1(config-line)# login
 R1(config-line)# transport input ssh telnet
-R1(config-line)# exit
 ```
 5. Secure all passwords in the config file.
 ```
@@ -103,9 +114,22 @@ Router(config)# interface type-and-number
 Router(config-if)# description description-text  
 Router(config-if)# ip address ipv4-address subnet-mask  
 Router(config-if)# ipv6 address ipv6-address/prefix-length
+Router(config-if)# ipv6 address ipv6-address link-local
 Router(config-if)# speed {DataRate | auto}
 Router(config-if)# duplex {half | full | auto}
 Router(config-if)# no shutdown
+```
+
+**Example**
+```
+R1(config)# interface gigabitEthernet 0/0/0
+R1(config-if)# description Link to LAN
+R1(config-if)# ip address 192.168.10.1 255.255.255.0
+R1(config-if)# ipv6 address 2001:db8:acad:10::1/64
+R1(config-if)# speed auto
+R1(config-if)# duplex auto
+R1(config-if)# no shutdown
+R1(config-if)# exit
 ```
 ### Speed
 - maximum rate at which the interface can send and receive traffic in bits per second
@@ -154,6 +178,12 @@ R1(config-if)# exit
 R1(config)#
 %LINEPROTO-5-UPDOWN: Line protocol on Interface Loopback0, changed state to up
 ```
+### Configure default Gateway
+To configure the default gateway of a device use:
+```
+R1(config)# interface interfaceName
+R1(config-if)# ip default-gateway ip
+```
 ### Interface Verification
 #### Verify Interface Status
 You can verify that the interfaces are active and operational with the commands:
@@ -188,8 +218,6 @@ You can verify the IPv6 addresses with
 You can display the current commands applied to a interface with 
 - `show running-config interface`
 
-You can also use `show interface brief` to view a summary of the interface
-
 **Example**
 ```
 R1 show running-config interface gigabitethernet 0/0/0
@@ -204,28 +232,6 @@ interface GigabitEthernet0/0/0
 end
 R1#
 ```
-
-
-```
-R1# show ip interface brief
-Interface              IP-Address      OK? Method Status                Protocol
-GigabitEthernet0/0/0   192.168.10.1    YES manual up                    up
-GigabitEthernet0/0/1   209.165.200.225 YES manual up                    up
-Vlan1                  unassigned      YES unset  administratively down down
-R1# show ipv6 interface brief
-GigabitEthernet0/0/0       [up/up]
-    FE80::201:C9FF:FE89:4501
-    2001:DB8:ACAD:10::1
-GigabitEthernet0/0/1       [up/up]
-    FE80::201:C9FF:FE89:4502
-    2001:DB8:FEED:224::1
-Vlan1                      [administratively down/down]
-    unassigned
-R1#
-```
-
-![[Cisco Router Verify Commands.png]]
-
 #### Verify Routes
 The `show ip route` and `show ipv6 route` displays the three directly connected network entries and the three local host ^route interface entries.
 ```
@@ -250,46 +256,14 @@ L        209.165.200.225/32 is directly connected, Serial0/1/0
 >- **L**: local route
 >- **R**: RIR learned route
 
-### Example
-```
-R1> enable
-R1# configure terminal
-Enter configuration commands, one per line.
-End with CNTL/Z.
-R1(config)# interface gigabitEthernet 0/0/0
-R1(config-if)# description Link to LAN
-R1(config-if)# ip address 192.168.10.1 255.255.255.0
-R1(config-if)# ipv6 address 2001:db8:acad:10::1/64
-R1(config-if)# no shutdown
-R1(config-if)# exit
-R1(config)#
-*Aug  1 01:43:53.435: %LINK-3-UPDOWN: Interface GigabitEthernet0/0/0, changed state to down
-*Aug  1 01:43:56.447: %LINK-3-UPDOWN: Interface GigabitEthernet0/0/0, changed state to up
-*Aug  1 01:43:57.447: %LINEPROTO-5-UPDOWN: Line protocol on Interface GigabitEthernet0/0/0, changed state to up
-R1(config)#
-R1(config)#
-R1(config)# interface gigabitEthernet 0/0/1
-R1(config-if)# description Link to R2
-R1(config-if)# ip address 209.165.200.225 255.255.255.252
-R1(config-if)# ipv6 address 2001:db8:feed:224::1/64
-R1(config-if)# no shutdown
-R1(config-if)# exit
-R1(config)#
-*Aug  1 01:46:29.170: %LINK-3-UPDOWN: Interface GigabitEthernet0/0/1, changed state to down
-*Aug  1 01:46:32.171: %LINK-3-UPDOWN: Interface GigabitEthernet0/0/1, changed state to up
-*Aug  1 01:46:33.171: %LINEPROTO-5-UPDOWN: Line protocol on Interface GigabitEthernet0/0/1, changed state to up
-R1(config)#
-```
-### Configure default Gateway
-To configure the default gateway of a device use:
-```
-R1(config)# interface interfaceName
-R1(config-if)# ip default-gateway ip
-```
-
 ### Interface Errors
 
 ## IPv6 Configuration
+
+### Enable IPv6 Routing
+```
+R1(config)# ipv6 unicast-routing
+```
 ### GUA
 ```
 R1(config)# interface gigabitethernet 0/0/0
@@ -315,11 +289,6 @@ R1(config-if)# exit
 R1(config)# interface serial 0/1/0
 R1(config-if)# ipv6 address fe80::3:1 link-local
 R1(config-if)# exit
-```
-
-### Enable IPv6 Routing
-```
-R1(config)# ipv6 unicast-routing
 ```
 ## AutoSecure
 ```
@@ -376,12 +345,6 @@ Router(config)# **hostname R1**
 R1(config)# **ip domain name span.com**
 
 R1(config)# **crypto key generate rsa general-keys modulus 1024**
-
-The name for the keys will be: Rl.span.com % The key modulus size is 1024 bits
-
-% Generating 1024 bit RSA keys, keys will be non-exportable...[OK]
-
-Dec 13 16:19:12.079: %SSH-5-ENABLED: SSH 1.99 has been enabled
 
 R1(config)#
 

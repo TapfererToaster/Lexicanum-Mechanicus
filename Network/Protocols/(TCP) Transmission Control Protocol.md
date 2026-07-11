@@ -41,6 +41,9 @@ The ports are split into three categories:
 | 143  | IMAP        |
 | 443  | HTTPS       |
 
+# Header
+![[bilder/tcp/TCP Header.png]]
+
 - *Sequence Number*
 Gibt an zu welchem Byte der zu übertragenden Sequenz das erste Nutzdatenbyte des Pakets entspricht; Ist die SYN-Flag gesetzt wird die *Initial Sequence Number (ISN)* angegeben.
 - *Acknowledgement Number*
@@ -70,4 +73,5 @@ Wird benutzt um die Korrektheit der Daten zu sichern
 Zeigt auf das Byte der aktuellen Sequenz das Urgent Data enthält
 - *Optionen*
 Enthält verschiedene hersteller- und implementierungsabhängige Zusatzinformationen; (immer ein vielfaches von 8 Bit lang)
+
 

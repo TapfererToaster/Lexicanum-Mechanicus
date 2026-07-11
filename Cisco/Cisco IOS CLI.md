@@ -217,7 +217,7 @@ GigabitEthernet0/0/0   192.168.10.1    YES manual up                    up
 GigabitEthernet0/0/1   192.168.11.1    YES manual up                    up
 Serial0/1/0            209.165.200.225 YES manual up                    up
 Serial0/1/1            unassigned      NO  unset  down                  down
-R1#
+
 R1# show ip interface brief | include up
 GigabitEthernet0/0/0   192.168.10.1    YES manual up                    up
 GigabitEthernet0/0/1   192.168.11.1    YES manual up                    up
@@ -232,7 +232,7 @@ GigabitEthernet0/0/0   192.168.10.1    YES manual up                    up
 GigabitEthernet0/0/1   192.168.11.1    YES manual up                    up
 Serial0/1/0            209.165.200.225 YES manual up                    up
 Serial0/1/1            unassigned      NO  unset  down                  down
-R1#
+
 R1# show ip interface brief | exclude unassigned
 Interface              IP-Address      OK? Method Status                Protocol
 GigabitEthernet0/0/0   192.168.10.1    YES manual up                    up
@@ -336,3 +336,77 @@ FastEthernet0/1 Unassigned YES NVRAM down down
 ```
 ## Duplex Mismatch
 When two interfaces have different duplex settings (full duplex and half duplex) the performance of the link will be greatly reduced. If the full duplex device transmits a frame while the half duplex device is also transmitting a frame, the half duplex device will interpret that as a collision (although a collisions has not occurred).
+
+# SSH
+#### Verify the Switch supports SSH
+To verify if a switch supports SSH you can use the `show version` command and check if the IOS filename includes a `k9`
+```
+S1# show version
+Cisco IOS Software, C2960 Software (C2960-LANBASEK9-M), Version 15.0(2)SE7, RELEASE SOFTWARE (fc1)
+```
+
+You can also use the `show ip ssh` command, if the switch des not support SSH the command will not be recognized. 
+#### Configure SSH
+1. **Verify SSH support**
+```
+S1# show ip ssh
+```
+2. **Configure IP domain**
+   With the command `ip domain-name domainName`
+```
+S1(config)# ip domain-name cisco.com
+```
+3. **Generate RSA key pairs**
+   >[!note]
+   >To delete the key pair use `crypto key zeroize rsa`
+   >
+   
+```
+S1(config)# crypto key generate rsa
+How many bits in the modulus [512]: 1024
+```   
+4. **Configure user authentication**
+   Command: `username userName secret password`
+```
+S1(config)# username admin secret ccna
+```
+5. **Configure vty lines**
+   Command: `transport input ssh`
+```
+S1(config)# line vty 0 15
+S1(config-line)# transport input ssh
+S1(config-line)# login local
+S1(config-line)# exec-timeout 15 0 (logout after 15 minutes of inactivity)
+S1(config-line)# exit
+```
+6. **Enable SSH version 2**
+```
+S1(config)# ip ssh version 2
+```
+#### Verify SSH is Operational
+1. **Connect to the switch with PuTTy**
+2. **Login**
+```
+Login as: admin
+Using keyboard-interactive
+Authentication.
+Password:
+S1> enable
+Password:
+S1#
+```
+3. **Display SSH version and configuration**
+```
+S1# show ip ssh
+SSH Enabled - version 2.0
+Authentication timeout: 120 secs; Authentication retries: 3
+To check the SSH connections to the device, use the show ssh command as shown.
+S1# show ssh
+%No SSHv1 server connections running.
+Connection Version Mode Encryption  Hmac                State          Username
+0          2.0     IN   aes256-cbc  hmac-sha1    Session started       admin
+0          2.0     OUT  aes256-cbc  hmac-sha1    Session started       admin
+```
+
+# Set clock
+- `Router# clock set 14:30:00 8 Jul 2026`

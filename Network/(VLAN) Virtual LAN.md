@@ -1,6 +1,6 @@
 #CCNA 
-*VLANs* provide segmentation and organizational flexibility in a switched network and are based on logical connections instead of physical connections.
-They allow admins to separate the network based on factors such as team or application.
+*VLANs* provide segmentation and organizational flexibility in a [[Switches|switched]] network and are based on logical connections instead of physical connections.
+They allow admins to separate the network based on factors such as teams or application.
 Benefits of VLANs are:
 - **Smaller broadcast domains**
 	- Dividing a network into VLANs reduces the number of devices in the broadcast domain
@@ -19,8 +19,8 @@ Benefits of VLANs are:
 
 # Types of VLAN
 ## Default VLAN
-The default VLAN on a Cisco switch is VLAN 1 and unless explicitly configured all switch ports are on VLAN1.
-Important:
+The default VLAN on a Cisco switch is VLAN 1 and unless explicitly configured all switch ports belong to it.
+**Important**:
 - All ports are assigned to VLAN 1 by default
 - The native VLAN is VLAN 1 
 - The management VLAN is VLAN 1
@@ -40,6 +40,14 @@ This was developed to accommodate for devices that do not support 802.1Q tagging
 
 >[!note] Disabling the Native VLAN
 >The Native VLAN can not be disabled, so an unused VLAN (that is not VLAN 1) should be assigned as the Native VLAN on trunk ports.
+>To do this use:
+>```
+>S2(config-if-range)#interface interfaceID
+>S2(config-if)#switchport trunk native vlan vlanID
+>
+>S2(config-if-range)#interface g0/1
+>S2(config-if)#switchport trunk native vlan 999
+>```
 ### Native VLAN Mismatch
 When the ports on each end of a link have different native VLANs configured, a mismatch occurs and frames might not reach their destination.
 ![[Native VLAN Mismatch.png]]
@@ -62,14 +70,15 @@ The standard [[Ethernet#Frames|Ethernet frame header]] does not contain informat
 ![[VLAN tag fields.png]]
 
 The fields of the VLAN tag are the following
-- *Tag Protocol ID (TPID)*: 2 byte long and contains the value 0x8100, indicates that the frame is 802.1Q tagged
+- *Tag Protocol ID (TPID)*: 
+  2 byte long, for Ethernet the value is 0x8100, indicating that the frame is 802.1Q tagged
 - *Tag Control Information (TCI)*
-	- Priority Code Point: 3 bits in length and is used for Quality of Service by markinng frames as higher or lower priority
-	- Drop Eligible Indicator: 1 bit long and indicates frames that can be dropped if the network is congested
-	  >[!note]
-	  > Previously known as **Canonical Format Identifier (CFI)** which was used to enable Token Ring frames to be carried across Ethernet links
-
-	- VLAN Identifier (VID): 12 bit long and indicates which VLAN the frame is in, suppurts up to 4096 VLAN IDs
+	- *Priority Code Point*: 
+	  3 bits in length, is used for Quality of Service by marking frames as higher or lower priority
+	- *Drop Eligible Indicator*: 
+	  1 bit long and indicates frames that can be dropped if the network is congested
+	  Previously known as **Canonical Format Identifier (CFI)** which was used to enable Token Ring frames to be carried across Ethernet links.
+	- *VLAN Identifier (VID):* 12 bit long, indicates which VLAN the frame is in, supports up to 4096 VLAN IDs
 
 >[!note]
 >After the header is inserted the FCS is recalculated.
@@ -81,14 +90,33 @@ The fields of the VLAN tag are the following
 - When a 802.1Q trunk port receives a tagged frame with the VLAN ID that is the same as the native VLAN, it drops the frame.
 - When configuring a switch port on a Cisco switch configure the devices so they do not send tagged frames on the native VLAN
 ### Untagged Frames on the Native VLAN
-- When a Cisco switch trunk port receives untagged frames, it forwards those to the native  VLAN
+- When a Cisco switch trunk port receives untagged frames, it forwards those to the native VLAN
 - If there are no devices associated with the native VLAN and there are not other trunk ports the frame will be dropped.
 - The default native VLAN is VLAN 1
 - When configuring an 802.1Q trunk port, a default Port VLAN ID (PVID) is assigned the value of the native VLAN ID
 - All untagged traffic coming in or out of the 802.1Q port is forwarded based on the PVID value.
 ## Voice VLAN Tagging
+For VoIP a separate VLAN is required, as this enable quality of service (QoS) and security policies for voice traffic.
+
 # VLAN Configuration
 #Cisco_CLI 
+
+**Example**:
+```
+S1# configure terminal
+S3(config)# vlan 20
+S3(config-vlan)# name student
+S3(config-vlan)# vlan 150
+S3(config-vlan)# name VOICE
+S3(config-vlan)# exit
+S3(config)# interface fa0/18
+S3(config-if)# switchport mode access
+S3(config-if)# switchport access vlan 20
+S3(config-if)# mls qos trust cos
+S3(config-if)# switchport voice vlan 150
+S3(config-if)# end
+S3#
+```
 ## VLAN Ranges on Catalyst Switches
 ### Normal Range VLANs
 The following are characteristics of normal range VLANs:
@@ -107,17 +135,10 @@ The following are characteristics of extended range VLANs:
 - Requires VTP transparent mode configuration to support extended range VLANs
 
 ## VLAN creation
-```
-Switch# configure terminal
-
-# Create a VLAN with valid ID
-Switch(config)# vlan vlan-id
-
-# Specify a unique name 
-Switch(config-vlan)# name vlan-name
-
-Switch(config-vlan)# end
-```
+- Create a VLAN with a valid ID:
+  `Switch(config)# vlan vlan-id`
+- Specify a unique name: 
+  `Switch(config-vlan)# name vlan-name`
 
 **Example**
 ```
@@ -127,66 +148,69 @@ S1(config-vlan)# name student
 S1(config-vlan)# end
 ```
 
+> [!NOTE]
+> To create multiple VLANs you can enter multiple IDs separated by commas or enter a range of IDs
+> ```
+> S1(config)# vlan 20,32,52
+> S1(config)# vlan 20-30
+> ```
+
 ## Access Port Assignment
-```
-Switch# configure terminal
-Switch(config)# interface interface-id
+- Enter interface:
+  `Switch(config)# interface interface-id`
+- Set the port to access mode:
+  `Switch(config-if)# switchport mode access`
+- Assign the port to a VLAN:
+  `Switch(config-if)# switchport access vlan vlan-id`
 
-# Set the port to access mode 
-Switch(config-if)# switchport mode access
-
-# Assign the port to a VLAN
-Switch(config-if)# switchport access vlan vlan-id
-
-Switch(config-if)# end
-```
+>[!note]
+>`switchport mode access` is optional, although recommended as a security best practice. This sets the interface to strictly access mode, indicating that the port belongs to a single VLAN and it will not negotiate to become a trunk link.
+>
+>`switchport access vlan` forces the creation of a VLAN if it does not already exist.
 
 **Example**
 ```
 S1# configure terminal
-S1(config)# interface fa0/6
+S1(config)# interface fa0/6 // range fa0/1 - 24, gi0/1 - 2
 S1(config-if)# switchport mode access
 S1(config-if)# switchport access vlan 20
 S1(config-if)# end
 ```
+
+>[!tip]
+>To get the interface range use `show running-config`
+>To check if the interfaces are in the vlan use `show vlan brief`
 ## Data and Voice VLAN
+- Assign a voice VLAN to a port:
+  `switchport voice vlan vlan-id`
+- Set the trusted state of an interface, to indicate which fields are used to classify traffic:
+  `mls qos trust [cos | device cisco-phone | dscp | ip-precedence]`
 
-Use the `switchport voice vlan vlan-id` command to assign a voice VLAN to a port.
-Use the `mls qos trust [cos | device cisco-phone | dscp | ip-precedence]` interface configuration command to set the trusted state of an interface, and to indicate which fields of the packet are used to classify traffic.
-
+**Example**
 ```
-S3(config)# vlan 20
-S3(config-vlan)# name student
-S3(config-vlan)# vlan 150
-S3(config-vlan)# name VOICE
-S3(config-vlan)# exit
-S3(config)# interface fa0/18
-S3(config-if)# switchport mode access
-S3(config-if)# switchport access vlan 20
-S3(config-if)# mls qos trust cos
-S3(config-if)# switchport voice vlan 150
-S3(config-if)# end
-S3#
+S3(config)# interface fa0/18
+S3(config-if)# mls qos trust cos
+S3(config-if)# switchport voice vlan 150
 ```
 ## Verify VLAN Information
 
-Use `show vlan [brief | id vlan-id | name vlan-name | summary]` to view information about the VLAN
-```
-# Display VLAN name, status and its ports one VLAN per line
-brief
+Use `show vlan` to view information about the VLAN
 
-# Display information about hte identified VLAN ID number
-id vlan-id
+- Display VLAN name, status and its ports one VLAN per line:
+  `S1# show vlan brief`
+- Display information about the identified VLAN ID number:
+  `S1# show vlan id vlan-id`
+- Display information about the identified VLAN name:
+  `S1# show vlan name vlan-name`
+- Display VLAN summary information:
+  `S1# show vlan summary`
 
-# Display information about the identified VLAN name
-name vlan-name
-
-# Display VLAN summary information
-summary
-```
-
+>[!note]
+>Another useful command is  `show interfaces f0/18 switchport`
 ## Change VLAN Port Membership
 To change the VLAN port membership re-enter the `switchport access vlan vlan-id` command with the correct or new VLAN ID.
+
+To remove a VLAN from a port use `no switchport access vlan`
 ## Delete VLANs
 To delete a VLAN use the `no vlan vlan-id` command.
 >[!warning]
@@ -207,23 +231,14 @@ To delete the entire `vlan.dat` file use `delete flash:vlan.dat`. This will dele
 ## Trunk Configuration
 #Cisco_CLI 
 >[!important]
->Remember a VLAN trunk is a Layer 2 link between two switches that carries traffic for all VLANs (unless the allowed VLAN list is restricted manually or dynamically).
+>Remember that a VLAN trunk is a Layer 2 link between two switches that carries traffic for all VLANs (unless the allowed VLAN list is restricted manually or dynamically).
 
-```
-Switch# configure terminal
-Switch(config)# interface interface-id
-
-# Set the port to permanent trunking mode
-Switch(config-if)# switchport mode trunk
-
-# Set the native VLAN to something other than VLAN 1
-Switch(config-if)# switchport trunk native vlan vlan-id
-
-# Specify the list of VLANs to be allowed on the trunk link
-Switch(config-if)# switchport trunk allowed vlan vlan-list
-
-Switch(config-if)# end
-```
+- Set the port to permanent trunking mode:
+  `Switch(config-if)# switchport mode trunk`
+- Set the native VLAN (to something other than VLAN 1):
+  `Switch(config-if)# switchport trunk native vlan vlan-id`
+- Specify the list of VLANs to be allowed on the trunk link:
+  `Switch(config-if)# switchport trunk allowed vlan vlan-list`
 
 **Example**
 ```
@@ -245,7 +260,9 @@ S1(config-if)# end
 >- `remove`: remove VLANs from the current list
 
 ### Verify Trunk Configuration
-To verify the Trunk configuration use `show interface interface-id switchport` or `show interfaces trunk`
+To verify the Trunk configuration use:
+- `show interface interface-id switchport`
+- `show interfaces trunk`
 
 ### Reset the Trunk to the Default State
 To remove the allowed VLANs and reset the native VLAN of the trunk use the commands `no switchport trunk allowed vlan` and `no switchport trunk native vlan`
@@ -258,21 +275,23 @@ S1(config-if)# end
 
 ## Dynamic Trunking Protocol (DTP)
 The *Dynamic Trunking Protocol (DTP)* is a Cisco proprietary protocol that automatically negotiates trunking with a neighboring device.
-To enable trunking from a Cisco switch to a device that does not support DTP, use the `switchport mode trunk` and `switchport nonegotiate` command, this causes the interface to become a trunk, but it will not generate DTP frames.
-```
-S1(config-if)# switchport mode trunk
-S1(config-if)# switchport nonegotiate
-```
 
-To re-enable dynamic trunking protocol use the `switchport mode dynamic auto` command.
+To enable dynamic trunking protocol use the `switchport mode dynamic auto` command.
 ```
 S1(config-if)# switchport mode dynamic auto
 ```
 
-If the ports connecting two switches are configured to ignore all DTP advertisements with the `switchport mode trunk` and the `switchport nonegotiate` commands, the ports will stay in trunk port mode. If the connecting ports are set to dynamic auto, they will not negotiate a trunk and will stay in the access mode state, creating an inactive trunk link.
->[!tip]
->When configuring a port to be in trunk mode, use the `switchport mode trunk` command. Then there is no ambiguity about which state the trunk is in; it is always on.
+If the ports connecting two switches are configured to ignore all DTP advertisements with the `switchport mode trunk` and the `switchport nonegotiate` commands, the ports will stay in trunk port mode. 
 
+If the connecting ports are set to dynamic auto, they will not negotiate a trunk and will stay in the access mode state, creating an inactive trunk link.
+>[!tip]
+>Use `switchport mode trunk` to specifically set it as a trunk, without any ambiguity
+
+To enable trunking from a Cisco switch to a device that does not support DTP, use the `switchport mode trunk` and `switchport nonegotiate` command, configuring the port as a trunk without generating DTP frames.
+```
+S1(config-if)# switchport mode trunk
+S1(config-if)# switchport nonegotiate
+```
 
 ### Negotiated Interface Modes
 The `switchport mode` command has additional options for negotiating the interface mode.
@@ -301,7 +320,7 @@ The options are:
 >You must manually configure the neighboring interface as a trunk interface to establish a trunk 
 >link.
 
-![[Results of DTP Configuration.png]]
+![[Results of DTP configuration.png|509]]
 ### Verify DTP Mode
 To verify the DTP mode use `show dtp interface interface-id`.
 
@@ -311,11 +330,13 @@ To verify the DTP mode use `show dtp interface interface-id`.
 ### DTP as a Vulnerability
 DTP is a security vulnerability as an attacker can exploit it to form a trunk link to a switch and gaining access to the VLANs in a LAN. 
 Although end host do not use DTP messages a malicious user can use tools like [Yersinia](https://www.kali.org/tools/yersinia/) to send DTP messages.
-![[DTP Yersinia Hack.png]]
+![[DTP Yersinia Hack.png|400x188]]
 
 To prevent this you can either:
-- Manually configure the port an an access port with `switchport mode access`
-- Explicitly disable DTP with `switchport nonnegotiate`
+- Manually configure the port an an access port:
+  `switchport mode access`
+- Explicitly disable DTP:
+   `switchport nonnegotiate`
 
 >[!note]
 >It is a security best practice to use `switchport nonegotiate` to disable DTP on switch ports, even if you configure the port in trunk mode.

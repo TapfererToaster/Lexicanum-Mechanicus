@@ -11,24 +11,24 @@ The communication could be a web browser communicating with a web server.
 - Layer
 ## Physical Layer
 
-> [!definition] Definition
+> [!important] Definition
 > The **Physical Layer** defines the *physical requirements* for transmitting data from one node to another, such as ports, connectors, cables and how data should be encoded.
 > 
 > This layer is parallel to the [[(OSI) Open Systems Interconnection-Modell#1. Physische Schicht (Physical, Layer 1)|OSI Layer 1]]
 
-In IEEE 802.3 [[Ethernet]] defines connectors and cable types, as well as how data should be encoded into electrical or light signals among other minutiae about how to communicate.
+IEEE 802.3 ([[Ethernet]]) defines connectors and cable types, as well as how data should be encoded into electrical or light signals among other minutiae about how to communicate.
 [[WLAN#IEEE 802.11 standards|IEEE 802.11]] defines what radio waves should be modulated to encode data, etc.
 
 >[!note]
 >Scheinbar ist diese Schicht streng genommen nicht teil von dem TCP/IP Stack 
 ## Data Link Layer
->[!definition] Definition
+>[!important] Definition
 >The **Data Link Layer** defines how data is addressed and is responsible for *hop-to-hop* delivery of messages, with the use of MAC addresses.
 >
 >This layer is parallel to the [[(OSI) Open Systems Interconnection-Modell#2. Datensicherungsschicht (Data Link, Layer 2)| OSI Layer 2]]. 
 
 This Layer is responsible to prepare data for transmission over the physical medium to the next node, this node is a router or the destination device.
->[!info]
+>[!warning]
 >Switches do not count as hops.
 
 At each hop, the MAC address is changed to the MAC address of the next hop and sent to it.
@@ -36,7 +36,6 @@ At each hop, the MAC address is changed to the MAC address of the next hop and s
 ![[Data-Link-Layer Hop-to-Hop.png]]
 
 This layer does technically not define the network access as in the OSI Model, but  specifies how the IP-Protocol interacts with other protocols.
-
 ## Network / Internet Layer
 >[!definition]
 >The **Network Layer** uses IP addresses to provide *end-to-end* delivery of messages.

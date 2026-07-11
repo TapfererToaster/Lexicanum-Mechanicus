@@ -1,4 +1,19 @@
 #CCNA 
+# Network Models
+A networking model is a framework that defines the necessary functions and components to enable communication via a network. The functions and components are usually separated into layers, with each of these describing a certain role, which are then fulfilled by one or more protocols. 
+
+>[!note]
+>A protocol is a set of rules that define how data is communicated between devices.
+
+The two models that should be known are:
+- [[(OSI) Open Systems Interconnection-Modell]]
+- [[TCP-IP Modell]]
+## Vendor-proprietary and vendor neutral
+In the past there have been many attempts to create models, many of those concepts were *vendor-proprietary*, meaning a single vendor created its own concept and protocols that were used by their products.
+>[!note]
+>An example for a vendor-proprietary network is [IBM's SNA](https://en.wikipedia.org/wiki/Systems_Network_Architecture).
+
+In the end the *vendor neutral* approach was successful, with protocols that can be used by devices of all vendors (f.e. Linux, Windows and Mac computers can all use the same protocols and communicate with each other).
 # Types
 ## Local Area Network (LAN)
 >[!important] Defintion
@@ -34,19 +49,15 @@ Bei ADSL sind die Download und Upload Raten unterschiedlich.
 
 **Symmetric DSL (SDSL)**
 Bei SDLS sind Upload und Download Raten gleich.
-
 ## Global Area Network (GAN)
 Umfasst mehrere Länder, einen Kontinent oder die ganze Welt.
 # Topology
 Die Topologie eines Netzwerkes beschreibt in welcher physikalischen Grundform die einzelnen Geräte organisiert sind.
 ## Bustopologie
 Bei einer Bustopologie werden die Geräte hintereinander an einen Kabelstrang angeschloßen. Die Enden des Kabelstrangs werden mit Abschlußwiderständen (Terminatoren) abgeschloßen. 
-
 ## Sterntopologie
 Bei einer Sterntopologie werden die Geräte an ein zentrales Gerät angeschloßen, oft ein [[Switches]].
-
 ## Ringtopologie
 Bei einer Ringtopologie werden die Geräte an einem Kabelstrang ringförmig angeschloßen, wobei die Enden des Kabelstrangs nicht terminiert werden sondern einen geschloßenen Ring bilden.
-
 ## Baumtopologie
 Bei einer Baumtopologie gehen von einem Gerät aus mehrere Verästelungen ab, an denen sich weitere Geräte oder Netze befinden.

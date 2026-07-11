@@ -1,7 +1,6 @@
 Containers are built around encapsulating and creating standardized software units, packaging an applications code and its dependencies such that they can be deployed in any environment with expected, repeatable and consistent results.
 
 Container are lightweight, small in size, utilize fewer resources and have quicker boot times then VMs which have a lot of overhead. 
-
 # Characteristics
 ## Containers are not Virtual Machines
 Linux containers can be thought of as very lightweight wrappers around a single Unix process, which might spawn other processes, but one statically compiled binary can also be all that is inside a container.

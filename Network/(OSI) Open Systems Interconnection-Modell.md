@@ -1,10 +1,14 @@
 #CCNA 
 
-Das *Open Systems Interconnection (OSI)* Modell besteht aus einem Regelsatz, Prozeduren und Formaten, die Netzwerkkommunikation managen und beim designen von Netzwerksystemen helfen und erklären, wie diese funktionieren.
-Das Modell basiert auf einem Vorschlag der *Internationalen Organisation für Normung (ISO)*.
+>[!warning]
+>The OSI model is not used in networking and is rather a reference that helps when learning about networking.
+>The [[TCP-IP Modell]] is the model used in networking and is more important for actual networking.
 
-![[OSI-Summery-table.png]]
 
+Das *Open Systems Interconnection (OSI)* Modell besteht aus einem Regelsatz, Prozeduren und Formaten, die Netzwerkkommunikation ermöglichen und beim erstellen von Netzwerksystemen helfen und erklären, wie diese funktionieren.
+Das Modell basiert auf einem Vorschlag der [[Organizations#International Organization for Standardization (ISO)|International Organization for Standardization (ISO)]].
+It defines seven layers each having a certain function to enable communication. 
+![[OSI-Summery-table.png|420x411]]
 # 1. Physische Schicht (Physical, Layer 1)
 Die Physische Schicht ist die unterste Schicht im OSI Modell und bezieht sich auf das physische Medium das den Datenbitstrom überträgt, bzw. die 1 und 0 die über das Netzwerk gesendet werden.
 
@@ -82,8 +86,8 @@ It also places information inside the frame that identifies which network protoc
 - [[Ethernet#Sublayers|Ethernet Standard]] 
 #### MAC Addresses
 **Characteristics**
-MAC addresses are 6 bytes or 48 bits long and are written using the [[Number Systems#Hexadecimal| Hexadecimal Number System]].
-There are also different notational conventions:
+MAC addresses are 6 bytes or 48 bits long and are written using the [[Number Systems#Hexadecimal|Hexadecimal Number System]].
+There are also different notation conventions:
 -  0cf5.a452.b101 (Cisco IOS) 
 - 0C-F5-A4-52-B1-01 (Windows) 
 - 0c:f5:a4:52:b1:01 (macOS)
@@ -123,7 +127,6 @@ If multiple devices are sending data simultaneously a data collision will occur;
 
 >[!note]
 >The random amount of time is important to minimize the chance that multiple devices will transmit at the same time.
-
 #### Carrier sense multiple access with collision avoidance (CSMA/CA)
 This control method is used by [[WLAN]] and attempts to avoid collisions.
 Each device that transmits includes the time duration that it needs for the transmission and all other wireless devices receive this information and know how long the the medium will be unavailable, and wait until it is available.

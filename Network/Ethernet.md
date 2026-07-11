@@ -6,25 +6,37 @@ It operates in the [[(OSI) Open Systems Interconnection-Modell#2. Datensicherung
 ![[Data-link Ethernet MAC sublayer.png]]
 Ethernet operates on the [[(OSI) Open Systems Interconnection-Modell#Media Access Control (MAC) Sublayer|MAC Sublayer]] of the data link layer, which is responsible for data encapsulation and accessing the media.
 
-**Data Encapsulation**
+## Data Encapsulation
 [IEEE 802.3](https://en.wikipedia.org/wiki/IEEE_802.3) data encapsulation includes the following:
 - **Ethernet frame**:
-   Internal structure of the [[Ethernet#Frames|Ethernet frame]], fields within the frame are delimited by delimiting bits that provide synchronization between the transmitting and receiving nodes 
+   Internal structure of the Ethernet frame, fields within the frame are delimited by delimiting bits that provide synchronization between the transmitting and receiving nodes 
 - **Ethernet Addressing**:
    The frame includes a source and destination MAC address to deliver the Ethernet frame from one Ethernet NIC to another Ethernet NIC on the same LAN
 - **Ethernet Error detection**: 
   The frame includes a *frame check sequence (FCS)* trailer for error detection
 
-**Accessing Media**
-IEEE 802.3 also includes the specification, how different Ethernet communications standards over different media (copper, fibre, ...)
+## Accessing Media
+IEEE 802.3 also includes the specification (speed, cable types and distances) of different Ethernet communications standards over different media (copper, fibre, ...).
 - IEEE 802.3u Fast Ethernet
 - IEEE 802.3z Gigabit Ethernet over Fiber
 - IEEE 802.3ab Gigabit Ethernet over Copper
 - IEEE 802.3ae 10 Gigabit Ethernet over Fiber
 
 >[!note]
->Legacy Ethernet using a bus topology or hubs, is a shared, half-duplex medium. which uses a contention-based access method, *[[(OSI) Open Systems Interconnection-Modell#Carrier sense multiple access with collision detection (CSMA/CD)|carrier sense multiple access with collision detection]]*. This allows multiple devices to share the half-duplex medium and detecting collisions when multiple devices attempt to transmit simultaneously. It also provides back-off algorithm for retransmission.
->Modern Ethernet LANs use switches that operate in full-duplex, which do not require access control through CSMA/CD.
+>Legacy Ethernet using a bus topology or hubs, is a shared, half-duplex medium,  which uses *[[(OSI) Open Systems Interconnection-Modell#Carrier sense multiple access with collision detection (CSMA/CD)|carrier sense multiple access with collision detection]]*. 
+>Modern Ethernet LANs use switches that operate in full-duplex and do not require access control through CSMA/CD.
+### Standards for TP-cables
+Ethernet also uses various standards for [[Cables, Connectors and Ports#Copper Twisted-Pair Connections|TP cabling]], some of them are:
+![[TP-Ethernet Standards.png]]
+
+Each of these standards support a maximum cable length of 100 meters.
+
+>[!note]
+>The different names names of the standards are derived from 
+> - the maximum supported transmission speed
+> - the name of the [[Organizations#Institute of Electrical and Electronics Engineers (IEEE)|IEEE]] task group that defined the it
+> - an informal name by the IEEE that indicates the speed and cable type (standards for copper cable end with T)
+> - name of the cable standard as defined by Telecommunications Industry Association (TIA) and Electronic Industries Alliance (EIA), as the cables themselves are not defined, but only used by the IEEE
 # Frames 
 Ethernet frames have a minimum size of 64 bytes and an expected maximum of 1518 bytes, including the destination MAC address field through the check sequence (FCS). 
 If the size of a frame it less than the minimum or greater than the maximum, the receiver drops the frame and consideres it invalid. 
@@ -67,4 +79,3 @@ A value of 1536 or greater indicates the type of encapsulated packet:
 ### Frame Check Sequence
 The *Frame Check Sequence* is the only field in the Ethernet trailer and is 4 bytes long.
 It is responsible to detect corrupted data in a frame by using a *Cyclic Redundancy Check (CRC)*. This is done by calculating a *checksum* before the frame is send. The receiving device can then compute its own checksum and compares the two. If the two checksums are not identical the frame is discarded, as it means that the data has been corrupted during transportation.
-

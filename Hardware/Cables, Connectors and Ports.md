@@ -2,13 +2,9 @@
 # Copper Twisted-Pair Connections
 
 >[!note]
->TP cables are often called "Ethernet cables", but be aware that Ethernet is a standard that makes use of both TP and fibre-optic cables
-
+>TP cables are often called "Ethernet cables", but be aware that [[Ethernet]] is a standard that makes use of both TP and fibre-optic cables
 ## Connector
 Twisted-Pair cables use a *8 position 8 contact (8P8C)* connector, often referred to as a *Registered Jack-45 (RJ45)* connector.
-
->[!note]
->The RJ stand for "Registered Jack"
 ## Schirmarten
 Twisted-Pair cables can have different buildups, which protect them from interference:
 - *Unshielded (U)*:
@@ -32,12 +28,7 @@ Twisted-Pair cables can have different buildups, which protect them from interfe
   >- SF/UTP
   >- U/FTP
   >- S/FTP
-
-## IEEE 802.3 standards
-The [[Ethernet|IEEE 802.3 Ethernet]] standard defined various standards for TP cabling, some of them are:
-![[TP-Ethernet Standards.png]]
-
-## Straight-though and Crossover Cables
+## Cable Types
 >[!note] 
 >Not all Ethernet standards use all 4 pairs of wires of the 8P8C connector.
 >- 10BASE-T:       4 wires
@@ -47,8 +38,13 @@ The [[Ethernet|IEEE 802.3 Ethernet]] standard defined various standards for TP c
 
 ### Straight-through Cables
 10BASE-T and 100BASE-T use two wire pairs one for transmission and one for receiving:
+*Straight-through cables* connect one pin pair to the same pins on the other device, this is used when connecting two different devices, f.e. a PC to a switch.
+
 ![[Straight-trhough wireing.png|585]]
-Straight-through cables connects one pin pair to the same pins on the other device, this works well when connecting a PC to a switch. However when connecting two devices of the same type (PCs, switches, ...), data collision would occur, as the same pins are used for transmission or receiving. 
+
+### Crossover
+*Crossover cables* are used when connecting two devices of the same type (PCs, switches, ...),  because data collision would occur, as the same pins are used for transmission or receiving. 
+
 ![[Cross-over cable.png|589]]
 ### Auto MDI-X
 *Auto Medium-Dependent Interface Crossover (Auto MDI-X)* is a feature that allows modern devices to change the pins it uses for transmission and receiving
@@ -78,14 +74,30 @@ A fiber-optic cable is made up of a glass core surrounded by multiple layers:
   protects the inner components
 ### Multimode and Singlemode
 There are two main types of fiber-optic cables
-- *Multimode fiber (MMF)*
+- *Multimode fiber (MMF)*:
+   have a wide core and use a LED transmitter that emits light at multiple angles (*modes*), which are reflected by the cladding
 - *Single-mode fiber (SMF)*
+  have a thin core and use a laser transmitter that emits light at a single angle
 
 ![[SMF MMF.png]]
 
-MMF cables have a wide core and use a LED transmitter that emits light at multiple angles (*modes*), which are reflected by the cladding.
-SMF have a thin core and use a laser transmitter that emits light at a single angle.
+> [!NOTE]
+> Typically SMF cables are more expensive (the Laser) and support greater maximum distances (<= 10 km) 
+# TP vs. Fiber
+When choosing whether to use TP or fiber cables you should consider the following points:
+- maximum required distance
+- cost
+- what cables are supported by the devices
+- what is the environment (f.e. many electrical devices)
 
-# UTP vs. Fiber
 **Fiber**:
 - support greater distances
+- more expensive than TP systems
+- more common in network infrastructure (f.e. connecting a switch and router on different floors or buildings)
+- not affected by electromagnetic interference (EMI)
+
+**TP**: 
+- cheaper
+- more common in LAN infrastructure (f.e. connecting a switch with a computer)
+- affected by EMI
+- can leak their signal outside of the cable

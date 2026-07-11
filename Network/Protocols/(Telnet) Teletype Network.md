@@ -12,6 +12,7 @@ telnet ip-address 13
 - **Web (HTTP) server**: serves web pages; listens on port 80
 ```
 telnet ip-address 80
+
 telnet example.com 80
 ...
 GET / HTTP/1.1

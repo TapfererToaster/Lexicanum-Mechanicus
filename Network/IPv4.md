@@ -79,23 +79,6 @@ There are five RIRs, who have the responsability to allocate IP addresses to ISP
 - **Asia Pacific Network Information Centre (APNIC)**
 - **Regional Latin-American and Caribbean IP Address Registry (LACNIC)**
 - **Reseaux IP Europeens Network Coordination Centre (RIPE NCC)**
-
-# Network Segmentation
-Subnetting reduces the overall network traffic, which improves network performance, it also allows for better security implementation.
-What devices belong in which subnet can be determined by:
-- **Location**
-  The devices on each floor of a building are grouped into a subnet for each floor
-- **Group or Function**
-  Each unit (Administration, Human Resources, ...) are divided into different subnets
-- **Device Type**
-  Different devices (server, printer, hosts, ...) are divided into different subnets
-## Broadcast Domains 
-In an Ethernet LAN devices use *[[(ARP) Address Resolution Protocol]]* to locate other devices on the network. ARP sends [[(OSI) Open Systems Interconnection-Modell#2. Datensicherungsschicht (Data Link, Layer 2)|Layer 2]] broadcasts to known IPv4 addresses on the local network to discover the associated MAC address. 
-Devices typically acquire IPv4 address configuration using the *[[(DHCPv4) Dynamic Host Configuration Protocol]]*, sending a broadcast on the local network to a DHCP server.
-Switches send broadcasts out all interfaces except the interface on which it was received.
->[!warning] Large Broadcast Domains
-> The hosts in a large broadcast domain can generate excessive broadcasts, which can slow down network operations, due to high network traffic. 
-
 # Packets
 [Cisco Networking Academy](https://www.netacad.com/launch?id=75cbc2e3-bab4-484c-a925-ad839c127c20&tab=curriculum&view=8647a713-1af7-56f2-aad8-6a839871467f)
 
@@ -226,6 +209,22 @@ The final field of the IPv4 header is the *Option field*. This field is optional
 
 # Subnetting
 *Subnetting* is a method of dividing an IP address block into multiple smaller *subnets (subdivided networks)* by assigning bits from the host portion to the network portion of the network address.
+
+This reduces the overall network traffic, improving network performance, and allowing for better security implementation.
+What devices belong in which subnet can be determined by:
+- **Location**
+  The devices on each floor of a building are grouped into a subnet for each floor
+- **Group or Function**
+  Each unit (Administration, Human Resources, ...) are divided into different subnets
+- **Device Type**
+  Different devices (server, printer, hosts, ...) are divided into different subnets
+## Broadcast Domains 
+In an Ethernet LAN devices use *[[(ARP) Address Resolution Protocol]]* to locate other devices on the network. ARP sends [[(OSI) Open Systems Interconnection-Modell#2. Datensicherungsschicht (Data Link, Layer 2)|Layer 2]] broadcasts to known IPv4 addresses on the local network to discover the associated MAC address. 
+Devices typically acquire IPv4 address configuration using the *[[(DHCPv4) Dynamic Host Configuration Protocol]]*, sending a broadcast on the local network to a DHCP server.
+Switches send broadcasts out all interfaces except the interface on which it was received.
+>[!warning] Large Broadcast Domains
+> The hosts in a large broadcast domain can generate excessive broadcasts, which can slow down network operations, due to high network traffic. 
+
 ## Fixed-Length Subnet Masking (FLSM)
 ![[Fixed-Length Subnet Masking.png]]
 *Fixed-Length Subnet Masking (FLSM)* divides a address block into multiple subnets of equal size.

@@ -1,5 +1,14 @@
-#Networking_Device 
 #CCNA 
+
+Switches are a type of network infrastructure device, which are used to connect devices within a [[Networks#Local Area Network (LAN)|LAN]]. 
+Devices are directly connected to the switch by a cable plugged into the device and to a port on the switch.
+
+>[!note]
+>The devices do not typically communicate with the switch, it is only infrastructure over which communication can occur.
+
+>[!note]
+>A port is a physical connector and serve as a interface between two devices in a network. For that reason is the term port and interface often used interchangeably. 
+
 # Frame Forwarding Methods
 Switches use one of two forwarding methods:
 - **Store and forward switching**:
@@ -30,16 +39,15 @@ There are two ways of memory buffering:
 	- all frames are stored in a memory buffer shared by all ports which is dynamically allocated
 	- enables to store larger frames with fewer dropped frames
 
-
 # Basic Switch Stuff
 
 ## Switch Boot Sequence
 - **Step 1**:
-  First, the Switch loads a *power-on self-test (POST)* program stored in ROM. POST checks the CPU, DRAM and the portion of the flash device that makes up the flash file system.
+  The switch loads a *power-on self-test (POST)* program stored in ROM, which checks the CPU, DRAM and the portion of the flash device that makes up the flash file system.
 - **Step 2**:
-  Next, the switch loads the boot loader software. The boot loader is a small program stored in ROM that is run immediately after POST successfully completes.
+  The switch loads the boot loader software, a small program stored in ROM that is run immediately after POST successfully completes.
 - **Step 3**:
-  The boot loader performs low-level CPU initialization. It initializes the CPU registers, which control where physical memory is mapped, the quantity of memory and its speed.
+  The boot loader performs low-level CPU initialization, initializing the CPU registers, which control where physical memory is mapped, the quantity of memory and its speed.
 - **Step 4**:
   The boot loader initializes the flash file system on the system board.
 - **Step 5**: 
@@ -67,7 +75,7 @@ S1(config)# boot system flash:/c2960-lanbasek9-mz.150-2.SE/c2960-lanbasek9-mz.15
 ![[Switch LED indicators.png]]
 1. **SYST**: System LED
    Shows whether the system is receiving power and is functioning properly.
-   -  LED is *off*: it means the system is not powered on.
+   -  LED is *off*: the system is not powered on.
    - LED ist *blinking green*: the system is operating normally.
    - LED is *amber*: the system is receiving power but is not functioning properly.
 1. **RPS**: Redundant Power System LED
@@ -106,7 +114,7 @@ S1(config)# boot system flash:/c2960-lanbasek9-mz.150-2.SE/c2960-lanbasek9-mz.15
 ## Recovering from a System Crash 
 The boot loader provides access into the files stored in the flash memory of the switch if the operating system cannot be used because of missing or damaged system files. 
 The boot loader command-line interface can be accessed through a console connection following these steps:
-- **Step 1**: Connect a PC by console cable to the switch console port. Configure terminal emulation software to connect to the switch.
+- **Step 1**: Connect a PC by console cable to the switch console port and configure terminal emulation software to connect to the switch.
 - **Step 2**: Unplug the switch power chord.
 - **Step 3**: Reconnect the power chord to the switch and, within 15 seconds, press and hold the "Mode" button while the System LED is still flashing green
 - **Step 4**: Continue pressing the "Mode" button until the System LED turns briefly amber and then solid green
@@ -157,7 +165,11 @@ To change the BOOT environment variable path use the command `BOOT=flash` and ve
 > ```
 
 >[!note]
->The boot loader commands support initializing flash, formatting flash, installing a new IOS, changing the BOOT environment variable and recovery of lost or forgotten passwords.
+>The boot loader commands support:
+>-  initializing and formatting flash
+>- installing a new IOS
+>- changing the BOOT environment variable
+>- recovery of lost or forgotten passwords.
 # Port Configuration
 ## Duplex Communication
 - **Full-duplex**:
@@ -170,8 +182,10 @@ To change the BOOT environment variable path use the command `BOOT=flash` and ve
   half-duplex communication is unidirectional. It also creates performance issues because data can only flow in one direction, often resulting in collisions. It is typically seen in older hardware, such as hubs and have been replaced by full-duplex switches.
   ![[Half-duplex Communication.png]]
 
+### Configuration
 To configure Switch ports use the commands `duplex` and `speed` 
 ```
+S1(config) interface FastEthernet 0/1
 S1(config-if) duplex full
 S1(config-if) speed 100
 ``` 
@@ -354,6 +368,38 @@ SW1(config-if)# interface range f0/1-2
 SW1(config-if)# duplex auto
 ```
 
+## Management Access and SVI Configuration
+To prepare  a switch for remote management access, the switch must have *switch virtual interface (SVI)* configured with an IP address and subnet mask or an IPv6 address and prefix. To access the switch from a remote network, the switch needs a default gateway. 
+
+To configure the SVI you first need to connect your computer via a console cable to the console port of the switch and [[(VLAN) Virtual LAN#VLAN creation|create the VLAN]].
+- **Step 1**: Configure the Management Interface
+  - Enter global configuration mode: `S1# configure terminal`
+  - Enter SVI interface configuration mode: `S1(config)# interface vlan 99`
+> [!tip]
+> By default the switch can be managed through VLAN1, but it is better to use another VLAN for configuration, such as VLAN99, because all other ports are also assigned to VLAN1.
+
+  - Configure the IPv4 address: `S1(config-if)# ip address 192.168.1.11 255.255.255.0`
+  - Configure the IPv6 address: `S1(config-if)# ipv6 address 2001:db8:acad:1 ::11/64`
+  - Configure the IPv6 link-local address: `S1(config-if)# ipv6 address fe80::1 link-local`
+  - Enable the interface: ``S1(config-if)# no shutdown`
+  - Return to the privileged EXEC mode: ``S1(config-if) end#`
+  - Save the config: `S1# copy running-config sartup-config`
+- **Step 2**: Configure the Default Gateway
+	- Configure the default gateway: `S1(config)# ip default-gateway 192.168.1.1`
+	- Return to privileged EXEC mode: `S1(config)# end`
+	- Save the config: `S1# copy running-config sartup-config`
+- **Step 3**: Verify Configuration
+	- `S1# show ip interface brief`
+	- `S1# show ipv6 interface brief`
+
+>[!note]
+>```
+>S1(config)# line con 0
+>S1(config-line)# logging synchronous
+>S1(config)# line vty 0 15
+>S1(config)# password root
+>S1(config)# login
+>```
 ## Secure Remote Access
 ### Telnet
 ### SSH
@@ -395,6 +441,7 @@ S1(config)# username admin secret ccna
 S1(config)# line vty 0 15
 S1(config-line)# transport input ssh
 S1(config-line)# login local
+S1(config-line)# exec-timeout 15 0 (logout after 15 minutes of inactivity)
 S1(config-line)# exit
 ```
 6. **Enable SSH version 2**
@@ -431,26 +478,6 @@ To configure the default gateway use the `ip default-gateway ipaddress` command 
 ```
 Switch(config)# ip default-gateway 192.168.1.1
 ```
-
-## Management Access and SVI Configuration
-To prepare  a switch for remote management access, the switch must have *switch virtual interface (SVI)* configured with an IP address and subnet mask or an IPv6 address and prefix. Further to access the switch from a remote network, the switch needs a default gateway. 
-
-By default the switch can be managed through VLAN1, but also all ports are assigned to VLAN1, because of that it is better to use another VLAN for configuration, such as VLAN99.
-- **Step 1**: Configure the Management Interface
-  - Enter global configuration mode: `S1# configure terminal`
-  - Enter SVI interface configuration mode: `S1(config)# interface vlan 99`
-  - Configure the IPv4 address: `S1(config-if)# ip address 172.17.99.11 255.255.255.0`
-  - Configure the IPv6 address: `S1(config-if)# ipv6 address 2001:db8:acad:99::11/64`
-  - Enable the interface: ``S1(config-if)# no shutdown`
-  - Return to the privileged EXEC mode: ``S1(config-if) end#`
-  - Save the config: `S1# copy running-config sartup-config`
-- **Step 2**: Configure the Default Gateway
-	- Configure the default gateway: `S1(config)# ip default-gateway 172.17.99.1`
-	- Return to privileged EXEC mode: `S1(config)# end`
-	- Save the config: `S1# copy running-config sartup-config`
-- **Step 3**: Verify Configuration
-	- `S1# show ip interface brief`
-	- `S1# show ipv6 interface brief`
 
 ## STP configuration
 ### Bridge Priority
