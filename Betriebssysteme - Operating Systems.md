@@ -78,7 +78,7 @@ Um dies zu verhindern sollte:
 - Benötigt der Prozess die Ressource nicht mehr, löst er die Sperre 
 
 ## Threads
-*Threads* werden benutzt um Prozessen, die gemeinsam dasselbe Problem bearbeiten, ununterbrochen miteinander kommunizieren können. 
+*Threads* werden benutzt um Prozessen, die gemeinsam dieselbe Aufgabe bearbeiten, ununterbrochen miteinander kommunizieren können. 
 Zudem kann man mit Threads innerhalb eines Prozesses mehrere Aufgaben parallel erledigen. 
 Threads besitzen keine getrennten Speicherbereiche sondern greifen auf einen gemeinsamen Speicherbereich zu.
 

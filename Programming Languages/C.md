@@ -64,10 +64,9 @@ Kommentare werden mit den Zeichen `/*` begonnen und mit `*/` geschlossen, seit d
 ## Umwandlung eines Datentyps
 Wenn in einer Operation verschiedene Datentypen verwendet werden wird eine *implizite* Typumwandlung nach definierten Regeln durchgeführt.
 >[!warning]
->Bei der impliziten Typumwandlung kann es zum Überlauf (z.B. double/int) und Verlust von Nachkommastellen und somit auch zum Verlust von Genauigkeit kommen kann.
+>Bei der impliziten Typumwandlung kann es zum Überlauf (z.B. double/int) und Verlust von Nachkommastellen und somit auch zum Verlust von Genauigkeit kommen.
 
-
-Es können auch *explizite* Typumwandlungen mithilfe von Unwandlungsoperatoren, auch *cast* Anweisungen genannt.
+*Explizite* Typumwandlungen können mithilfe von *cast* Anweisungen durchgeführt werden.
 ```C
 int i;
 // i wird von int zu double umgewandelt
@@ -79,16 +78,16 @@ double x = (double) ((int) a) / (int)b)
 ```
 
 # Variablen
- Bevor man Variablen benutzen kann muss man diese deklarieren, also einen Datentyp und Bezeichner (Namen) festlegen. Zusätzlich muss die Variable definiert werden, ihr muss noch ein Speicherbereich zugeteilt werden. 
-
-> [!NOTE]
->  Jede Definition ist auch eine Deklaration.
-
 ## Definition
+Bei der Definition wird einer Variable ein Datentyp, Bezeichner und Wert zugewiesen wird. 
 Variablen können nach folgendem Muster definiert werden:
 - `Datentyp name;`
 - `Datentyp name1, name2;`
 - `Datentyp name = ausdruck;`
+
+>[!note]
+>`Datentyp name;` ist streng genommen eine *Deklaration*, wobei einer Variablen nur ein Datentyp und ein Bezeichner zugewiesen wird.
+>Definitionen sind eigentlich nur eine spezielle Form der Deklaration.
 
 ```C
 char antwort;
@@ -101,39 +100,43 @@ Werte werden mit `=` den Variablen zugewiesen:
 int zahl = 17; 
 ```
 
-Beispiel
+**Beispiel**
 ```C
 int main(void)
 {
 	int zahl1 = 3;
-	int zahl2 = 5;
+	int zahl2 =
+	 5;
 	int ergebnis = zahl1 + zahl2;
 	return 0;
 }
 ```
 
-> [!NOTE] Gültigkeitsbereiche
-> **Lokale Variablen**
-> Lokale Variablen sind nur innerhalb des Blockes gültig, in dem sie definiert wurden. Außerhalb des Blockes sind der Name der Variablen und ihr Wert unbekannt.
-> 
-> **Globale Variablen**
-> Globale Variablen sind von ihrer Initialisierung bis zum Ende des Programms gültig. Sie können von allen Funktionen aus gelesen und verändert werden. 
-> Innerhalb von Funktionen können globale Variablen von lokalen mit gleichem Namen verdeckt werden.
-> Globale Variablen sollten vermieden werden.
-> 
-> **Statische Variablen**
-> Statische Variablen behalten ihre Lebensdauer über das gesamte Programm und behalten ihre Werte wenn der Gültigkeitsbereich verlassen wird.
-> 
-> **Externe Variablen** 
-> Externe Variablen sind globale Variablen aus externen Dateien oder Bibliotheken. 
+## Gültigkeitsbereich
+
+**Lokale Variablen**
+Lokale Variablen werden innerhalb von Funktionen und Anweisungsblöcken definiert und sind nur in diesen Blöcken gültig, außerhalb des Blockes sind Name und Wert der Variablen unbekannt. 
+
+**Globale Variablen**
+Globale Variablen werden außerhalb von Funktionen definiert und sind von ihrer Initialisierung bis zum Ende des Programms gültig. Sie können von allen Funktionen aus gelesen und verändert werden. 
+Innerhalb von Funktionen können globale Variablen von lokalen mit gleichem Namen verdeckt werden.
+
+>[!note]
+>Die Verwendung von globalen Variablen ist fehleranfällig und sollte möglichst vermieden werden.
+
+**Statische Variablen**
+Statische Variablen behalten ihre Lebensdauer über das gesamte Programm und behalten ihre Werte über ihren Gültigkeitsbereich hinweg.
+Definiert werden sie mit: `static datenTyp name;`
+
+**Externe Variablen** 
+Externe Variablen sind globale Variablen aus externen Dateien oder Bibliotheken. 
+Sie werden mit `extern datenTyp name` gekennzeichnet.
 
 # Konstanten 
-Konstanten werden für Werte benutzt die sich im Laufe des Programms nicht ändern, etwa physikalische oder andere Größen. 
+Konstanten werden für Werte benutzt die sich im Laufe des Programms nicht ändern, etwa physikalische oder andere feste Größen. 
 Konstanten werden mit `const` definiert:
 ```C
-const double pi = 3.14;
-const double mwst = 0.19;
-const char zeichen = 'J';
+const datentyp constName = wert;
 ```
 
 **Beispiel**
@@ -153,6 +156,60 @@ int main(void)
 >[!note]
 >`getchar()` wird benutzt um nach der Ausgabe der Werte auf das drücken der Eingabetaste gewartet, damit die Ausgabe nicht sofort beendet wird.
 
+# Ein- und Ausgabe
+
+## Eingabe
+**getchar**
+Mit `getchar();` kann die Tastatureingabe von einem Zeichen eingelesen werden, wobei der Rückgabewert eine Zahl ist die dem jeweiligen Zeichen in der [ASCII Zeichentabelle](https://www.ascii-code.com/de) entspricht.
+```C
+int var = getchar();
+```
+
+### scanf
+Mit `scanf()` kann man Tastatureingaben abfragen und diese Variablen zuweisen.
+Für die Angabe der Variablen werden Platzhalter benutzt.
+- int: `%d`, `%i`
+- double: `%lf`
+- char: `%c`
+- Zeichenkette char[]: `%s`
+
+Es ist auch möglich mehrere Werte von der Tastatur einzulesen
+```C
+scanf("%d, %d, %d", &var1, &var2, &var3);
+```
+
+Die Funktion gibt als Rückgabewert die Anzahl der erfolgreich eingelesenen Elemente zurück, damit kann man überprüfen, ob die Eingabe erfolgreich war.
+## Ausgabe
+**putchar**
+Mit `putchar()` kann ein Zeichen auf dem Bildschirm ausgegeben werden. Dabei kann man das Zeichen oder den Zahlenwert aus der ASCII Tabelle übergeben werden.
+```C
+putchar('a');
+putchar(97);
+```
+ 
+### printf
+`printf()` ermöglicht die formatierte Ausgabe auf den Bildschirm, wobei Variablen durch einen Platzhalter eingefügt werden.
+```C
+printf("text %var", var);
+
+printf("Die Summe aus %d + %d = %d", num1, num2, num3);
+```
+
+#### Formatierung
+- Linksbündig: `-`
+- alternative Darstellung: `#` 
+- Nachkommastellen: `x.yf` (`x` Stellen insgesamt, `y` Nachkommastellen)
+
+#### Steuersequenzen
+- `\n`: Zeilenumbruch
+- `\a`: Tonausgabe
+- `\b`: Schreibmarke wird ein Zeichen nach links gesetzt.
+- `\f`: Seitenvorschub
+- `\r`: Wagenrücklauf (CR oder Enter)
+- `\t`:Tabulator
+- `\v`: vertikaler Tabulator
+- `\\`: `\` wird im Text ausgegeben
+- 
 ## Übung
 Ein Programm das Temperaturangaben con Kelvin (K) in °C umrechnet.
 ```C
@@ -273,6 +330,7 @@ Typ Name_der_Funktion (Parameter)
 	return wert;
 }
 
+// Beispiel:
 int addition (int x, int y)
 {
 	return x + y;
@@ -280,7 +338,13 @@ int addition (int x, int y)
 ```
 
 ## Aufrufen von Funktionen
-Funktionen werden durch Angabe des Funktionsnamen und wenn vorhanden durch Zuweisung von Argumenten für die Parameter. Gibt es einen Rückgabewert muss die Funktion einer Variablen zugewiesen werden.
+Funktionen werden durch Angabe des Funktionsnamen und falls nötig mit Zuweisung von Argumenten für die Parameter aufgerufen.
+
+>[!warning]
+>Die Anzahl und der Datentyp der Argumente muss mit den Parametern übereinstimmen ansonsten tritt ein Fehler auf.
+
+Sollte die Funktion einen Rückgabewert haben, muss die Funktion einer Variablen zugewiesen werden.
+
 ```C
 // Aufruf ohne Rückgabewert
 Funktionsname(parameter 1, parameter 2);
@@ -301,7 +365,7 @@ void add_mwst (double preis)
 	printf("\n*\t%5.2f EUR\n", preis * (mwst + 1));
 }
 
-int main()
+int main(void)
 {
 	add_mwst(artikel);
 	return 0;
@@ -309,7 +373,7 @@ int main()
 ```
 
 **Zeiger als Parameter**
-Es können auch Zeiger als Parameter übergeben werden
+Es können auch Zeiger als Argument übergeben werden, dafür muss das Argument als Referenz mit dem Zeichen `&` übergeben werden und der Parameter muss als Zeiger mit dem Zeichen `*` definiert werden. 
 ```C
 #include <stdio.h>
 
@@ -321,5 +385,51 @@ int main(void)
 {
 	int zahl1 = 0;
 	add(&zahl);
+	return 0;
 }
 ```
+
+## Rückgabe
+Funktionen geben Werte mithilfe der `return` Anweisung zurück, wobei mehrere return Anweisungen in einer Funktion stehen können, es kann jedoch immer nur ein Wert zurückgegeben werden.
+
+>[!note]
+>Sollte der Datentyp der `return` Anweisung nicht mit dem der Funktion übereinstimmen findet eine implizite Typumwandlung statt. 
+>Beispiel: 
+>```C
+>int rueckgabe()
+>{
+>	return 2.5
+>}
+>```
+>Es wird statt 2.5 wird 2 zurückgegeben.
+
+**Rückgabe von mehren Werten**
+Um mehrere Werte zurückzugeben kann man anstatt der `return` Anweisung, Zeiger oder (globale) Variablen benutzen.
+
+## Funktionsprototypen
+Wenn zwei Funktionen sich gegenseitig aufrufen kommt es normalerweise zu einem compile error. Um dies zu umgehen wird *Prototyping* benutzt, wobei eine Funktionsdefinition mit Rückgabewert, Datentyp und Parametern geschrieben.
+
+>[!note]
+>Die Trennung von Funktionsdeklaration und Funktionsdefinition können die Prototypen in eine Header Datei auslagern.
+
+Syntax
+```C
+Rückgabewert FunktionsName (Datentyp var1, Datentyp var2);
+```
+
+**Beispiel**
+```C
+// Prototyp
+void ausgabe(int ausgabe);
+int add(int num1, int num2)
+{
+	ausgabe(num1 + num2);
+	return(num1 + num2);
+}
+
+void ausgabe(int wert)
+{
+	printf("Die Summe ist %d", wert);
+}
+```
+

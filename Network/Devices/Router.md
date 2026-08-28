@@ -1,10 +1,13 @@
 #CCNA 
-# Routers
-Routers are used to connect end hosts to other networks and enable communication between them, f.e. the internet or multiple LANs
+
+Routers are used to connect networks and the end hosts inside them to other networks and enable communication between them, f.e. the internet or multiple LANs
 
 >[!note] Routers and home routers
 >Routers are not used to connect many end hosts within a LAN.
 >The wireless router usually found in homes, typically fills the roles of a router, switch and wireless access point.
+
+Routers can be *multiprotocol* or *singleprotocol*, meaning they support only a single protocol (f.e. IPv4) or multiple protocols (f.e. IPv4 and IPv6). 
+Singleprotocol router are only able to connect networks that use the same protocol.
 
 # Router as Gateways
 A router provides a gateway through which hosts on the local network can access the internet or other networks. 
@@ -12,59 +15,62 @@ In order for a host to access the gateway it must now the IP address of the rout
 >[!note]
 >As a router is the gateway to remote networks it also functions as a boundary between networks
 # Routing
+At each hop along the path, a router performs the following Layer 2 functions:
+1. Accepts a frame from a medium
+2. De-encapsulate the frame
+3. Rr-encapsulate the packet into a new frame
+4. Forward the new frame to the next hop
+
 [[Routing]]
+
+# Tunneling
+Beim *Tunneling* werden Daten eines Protokolls in der payload eines anderen Protokolls transportiert. Am Ziel wird der Transportrahmen entfernt und die ursprünglichen Daten können verarbeitet werden.
+Dies kann benutzt werden um z.B. IPv6 Pakete über ein IPv4 Netzwerk transportiert werden.
 # Router Configuration
 #Cisco_CLI 
 We use the [[Cisco IOS CLI]] to configure the router.
 ## Basic Steps
+
+>[!tip]
+>With the command `no ip domain-lookup` you can disable DNS lookup to prevent the router from attempting to translate incorrect commands as host names.
+>
+>`R1(config-line)# logging synchronous` prevents notifications to interrupt your input
+
+
 1. Configure device name
-```
-Router(config)# hostname Router1
-```
+   `Router(config)# hostname Router1`
+
 2. Secure privileged EXEC mode.
-```
-# Optional
-Router(config)# security passwords min-length 10
+   Optional: `Router(config)# security passwords min-length lengthNumber`
+   `Router(config)# enable secret password`
 
-Router(config)# enable secret password
-```
 - (Set Domain Name)
-  ```
-  Router(config)# ip domain-name damonaName
-  ```
+  `Router(config)# ip domain-name domainName`
+
 3. Secure user EXEC mode.
-```
-Router(config)# line console 0    
-Router(config-line)# password password    
-Router(config-line)# login
-```
+   `Router(config)# line console 0`    
+   `Router(config-line)# password password`    
+   `Router(config-line)# login`
 
-4. Secure remote Telnet / SSH access.
-```
-Router(config-line)# line vty 0 4    
-Router(config-line)# password password    
-# block login for 120 seconds after 3 attempts within 60 seconds
-Router(config)# login block-for 120 attempts 3 within 60
-Router(config-line)# login    
-Router(config-line)# transport input {ssh | telnet}
-Router(config-line)# exit 
-```
+4. [[Cisco IOS CLI#Configure SSH|Configure SSH]]
 
-5. Secure all passwords in the config file.
-```   
-Router(config)# service password-encryption
-```
+5. Secure remote Telnet / SSH access.
+   `Router(config-line)# line vty 0 4`
+   `Router(config-line)# password password`
+   `Router(config)# login block-for 120 attempts 3 within 60`
+   `Router(config-line)# login`
+   `Router(config-line)# transport input {ssh | telnet}`
 
-6. Provide legal notification.
-```
-Router(config)# banner motd delimiter message delimiter
-```
+6. Secure all passwords in the config file.
+   `Router(config)# service password-encryption`
 
-7. Save the configuration.
-```
-Router(config)# end    
-Router# copy running-config startup-config
-```
+7. Provide legal notification.
+   `Router(config)# banner motd delimiter message delimiter`
+
+8. Save the configuration.
+   `Router(config)# end`
+   `Router# copy running-config startup-config`
+
 ### Example
 1. Configure device name
 ```
@@ -93,32 +99,25 @@ R1(config-line)# transport input ssh telnet
 ```
 5. Secure all passwords in the config file.
 ```
-R1(config)# **service password-encryption**
+R1(config)# service password-encryption
 ```
 6. Provide legal notification.
 ```
-R1(config)# **banner motd #
-Enter TEXT message. End with a new line and the #
-***************************************************
-	WARNING: Unauthorized access is prohibited!
-***************************************************
-#
+R1(config)# banner motd # WARNING: Unauthorized access is prohibited! #
 ```
 7. Save the configuration.
 ```
 R1# copy running-config startup-config
 ```
 ## Configure Interfaces
-```
-Router(config)# interface type-and-number 
-Router(config-if)# description description-text  
-Router(config-if)# ip address ipv4-address subnet-mask  
-Router(config-if)# ipv6 address ipv6-address/prefix-length
-Router(config-if)# ipv6 address ipv6-address link-local
-Router(config-if)# speed {DataRate | auto}
-Router(config-if)# duplex {half | full | auto}
-Router(config-if)# no shutdown
-```
+- `Router(config)# interface type-and-number`
+- `Router(config-if)# description description-text`
+- `Router(config-if)# ip address ipv4-address subnet-mask`
+- `Router(config-if)# ipv6 address ipv6-address/prefix-length`
+- `Router(config-if)# ipv6 address ipv6-address link-local`
+- `Router(config-if)# speed {DataRate | auto}`
+- `Router(config-if)# duplex {half | full | auto}`
+- `Router(config-if)# no shutdown`
 
 **Example**
 ```
@@ -184,11 +183,11 @@ To configure the default gateway of a device use:
 R1(config)# interface interfaceName
 R1(config-if)# ip default-gateway ip
 ```
-### Interface Verification
+### Verification
 #### Verify Interface Status
 You can verify that the interfaces are active and operational with the commands:
-- `show ip interface brief`
-- `show ipv6 interface brief`
+- `R1# show ip interface brief`
+- `R1# show ipv6 interface brief`
 **Example**
 ```
 R1# show ip interface brief
@@ -211,12 +210,11 @@ Serial0/1/1            [down/down]     Unassigned
 ```
 #### Verify IPv6 Link Local and Multicast Addresses
 You can verify the IPv6 addresses with 
-- `show ipv6 interfaces brief`
-- `show ipv6 interface interface`, f.e.  `show ipv6 interface gigabitethernet 0/0/0`
-
+- `R1# show ipv6 interfaces brief`
+- `R1# show ipv6 interface interfaceID`
 #### Verify Interface Configuration
 You can display the current commands applied to a interface with 
-- `show running-config interface`
+- `R1# show running-config interface`
 
 **Example**
 ```
@@ -233,7 +231,10 @@ end
 R1#
 ```
 #### Verify Routes
-The `show ip route` and `show ipv6 route` displays the three directly connected network entries and the three local host ^route interface entries.
+Displays the entries in the routing table:
+- `R1# show ip route`
+- `R1# show ipv6 route`
+
 ```
 R1# show ip route
 Codes: L - local, C - connected, S - static, R - RIP, M - mobile, B - BGP
@@ -255,8 +256,6 @@ L        209.165.200.225/32 is directly connected, Serial0/1/0
 >- **D**: EIGRP learned route
 >- **L**: local route
 >- **R**: RIR learned route
-
-### Interface Errors
 
 ## IPv6 Configuration
 

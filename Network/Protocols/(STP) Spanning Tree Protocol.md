@@ -1,10 +1,16 @@
 #CCNA 
-![[Logical Physical Topology.png]]
-The *Spanning Tree Protocol (STP)* is a loop-preventing protocol that allows for redundancy in a Layer 2 topology. 
+![[Logical Physical Topology.png|509]]
+
+The *Spanning Tree Protocol (STP)* is a loop-preventing protocol that allows for redundancy in a Layer 2 topology and was defined in IEEE 802.1D. 
+A *Layer 2 loop* is a frame (multicast, broadcast, unknown unicast) that loops endlessly in the network, which can occur when multiple redundant path between switches are present.
+A loop can result in MAC table instability, link saturation and high CPU utilization
+
+*Broadcast Storms* can be caused by a faulty NIC or a Layer 2 loop, resulting in a high number of broadcasts and potentially disabling the network.
 >[!note]
 >Unlike Layer 3 protocols (IPv4, IPv6), Layer 2 Ethernet has no mechanism to recognize and eliminate endlessly looping frames.
 >Looping frames can also cause *MAC address flapping*, which is when a switch learns the same MAC address on multiple ports.
 
+Characteristics:
 - IEEE 802.D is the original IEEE MAC Bridging standard for STP.
 - When a redundant link fails STP recalculates the best link
 - Path redundancy provides multiple networks services by eliminating a single point of failure 
@@ -15,24 +21,24 @@ The *Spanning Tree Protocol (STP)* is a loop-preventing protocol that allows for
 
 1. **Select the Root Bridge**
    The STA begins by selecting a root bridge and each switch determines a single least cost path from itself to the root bridge
-   ![[STA Select Root Bridge.png]]
+   ![[STA Select Root Bridge.png|539]]
 2. **Block Redundant Paths**
    STP ensures that there is only one logical path between all destinations on the network by blocking redundant paths that could cause a loop.
-   ![[STA Block Redundant Paths.png]]
+   ![[STA Block Redundant Paths.png|563|529x334]]
 3. **Loop-Free Topology**
    The topology is now loop free but has also redundant paths in case of a failure
-   ![[STA Loop free Topology.png]]
+   ![[STA Loop free Topology.png|527x316]]
 4. **Link Failure Causes Recalculation**
    If a blocked path is needed to compensate for a switch or cable failure, STP recalculates the paths and unblocks the necessary ports
-   ![[STA Recalculation.png]]
+   ![[STA Recalculation.png|529x305]]
 
 # STP Algorithm
 Switches use *Bridge Protocol Data Units (BPDUs)* to share information about themselves and their connections, the *bridge identifier (BID)*, which identifies the switch in the LAN and the BID of the root bridge are important for the root bridge election.
 ## The BID
-![[Bridge Identifier (BID).png]]
+![[Bridge Identifier (BID).png|631x213]]
 
 - **Bridge Priority**
-  The default value for all Cisco switches is the decimal value 32768. And the range is 0 to 61440 in increments of 4096. A lower bridge priority is preferable with 0 taking precedence over all other bridge priorities.
+  The default value for all Cisco switches is the decimal value 32768, with a range from 0 to 61440 in increments of 4096. A lower bridge priority is preferable with 0 taking precedence over all other bridge priorities.
 - **Extended System ID**
   A decimal value added to the bridge priority to identify the VLAN for his BPDU. The extended system ID allows later implementations of STP to have different root bridges for different sets of VLANs. 
 
@@ -72,14 +78,14 @@ The root port is selected using the following parameters:
    If multiple ports have the same root path cost and are connected to the same neighbor, the port connected to the neighboring port with the lowest port ID will be the root port.  
 ## Elect Designated Ports
 A *Designated Port* is a port on which traffic from the root bridge is received. The port is determined by the lowest internal routing cost to the rooting bridge (root port).
-![[Designated Ports.png]]
+![[Designated Ports.png|614x392]]
 >[!note] Designed Ports on Root Bridge
 >All ports on the root bridge are designated ports.
 
 ## Elect Alternate (Blocked) Ports
 If a port is not a root or a designated port, it becomes an alternate or backup port. These ports are in discarding or blocking state to prevent loops.
 All other inter-switch ports are in forwarding state. 
-![[Elect alternate ports.png]]
+![[Elect alternate ports.png|602x443]]
 # STP Timers and Port States
 STP convergence requires three timers:
 - **Hello Timer**: interval between BPDUs
@@ -116,13 +122,13 @@ STP convergence requires three timers:
 
 ![[STP variations.png]]
 ## Rapid Spanning Tree Protocol
-The *Rapid Spanning Tree Protocol (RSTP)* defined in IEEE 802.1w supersedes the original, while retaining backward compatibility, as most parameters have been left unchanged.
-RSTP increases the speed of recalculation of the spanning tree when the layer 2 network topology changes.
+The *Rapid Spanning Tree Protocol (RSTP)* defined in IEEE 802.1w supersedes the original, while being backwards compatible, as most parameters have been left unchanged.
+RSTP increases the speed of recalculation of the spanning tree when the layer 2 network topology changes and achieves faster convergence.
 ### RSTP Port States
-![[RSTP Port States.png]]
+![[RSTP Port States.png|450x448]]
 
 ### RSTP Port Roles
-![[RSTP Port Roles.png]]
+![[RSTP Port Roles.png|453x365]]
 
 # PortFast and BPDU Guard
 When a device is connected to a switch or a switch is powered up it goes through the listening and learning states, each time waiting for the Forward Delay timer to expire.
@@ -131,3 +137,18 @@ When a switch port is configured with *PortFast*, it will change from blocking t
 >[!warning]
 >PortFast is only for use on switch ports that connect to end devices.
 
+# Alternatives to STP
+- Multi System Link Aggregation (MLAG)
+- Shortest Path Bridging (SPB)
+- Transparent Interconnect of Lots of Links (TRILL)
+
+Further as STP does not offer the efficiencies and predictabilities of routing, as routing allows for redundant paths and loops in the topology without the need to block ports. Because of this environments could be designed where only access layer switches operate on Layer 2.
+
+**Traditional STP Topology**
+![[Traditional STP topology.png|575x283]]
+
+**Alternative Topology**
+![[Alternative STP topology.png|570x282]]
+
+# Verify STP
+- `show spanning-tree`

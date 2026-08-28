@@ -8,14 +8,16 @@ Uses:
 ![[UDP Header.png]]
 # Protocols and their Ports
 
-| Port      | Protocol        |
-| --------- | --------------- |
-| 53        | DNS             |
-| 67 and 68 | DHCP            |
-| 69        | TFTP            |
-| 80        | HTTP            |
-| 110       | POP3            |
-| 161       | SNMP            |
-| 443       | SSL/TLS (HTTPS) |
-| 514       | Syslog          |
-| 520       | RIP             |
+| Port      | Protocol                 |
+| --------- | ------------------------ |
+| 53        | DNS                      |
+| 67 and 68 | DHCP                     |
+| 69        | TFTP                     |
+| 80        | HTTP                     |
+| 110       | POP3                     |
+| 161       | SNMP                     |
+| 443       | SSL/TLS (HTTPS)          |
+| 514       | Syslog                   |
+| 520       | RIP                      |
+| 546       | Server->Client<br>DHCPv6 |
+| 547       | Client->Server<br>DHCPv6 |

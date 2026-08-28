@@ -9,7 +9,7 @@ The kernel is between the hardware and software that the user is running. It int
 - Management of character devices and device drivers
 
 >[!note] User and Kernel mode
->The user or [[Betriebssysteme#Kernelmodus|kernel mode]] refers to how privileged the access to hardware and restricted the abstraction is.
+>The user or [[Betriebssysteme - Operating Systems#Kernelmodus|kernel mode]] refers to how privileged the access to hardware and restricted the abstraction is.
 >*User mode*: slower but safer access and convenient abstraction
 >*Kernel mode*: fast access and code execution with limited abstraction; important  only for kernel developers
 
@@ -20,7 +20,7 @@ The kernel is between the hardware and software that the user is running. It int
 >A *thread* is a unit of execution in the context of a  process.
 
 *Task*
-The basis of implementing processes and threads is the data structure task_struct, defined in *shed.h*. This structure captures scheduling information, identifiers such as *Process ID (PID)*, signal handlers and other information about performance and security.
+The basis of implementing processes and threads is the data structure `task_struct`, defined in *shed.h*. This structure captures scheduling information, identifiers, such as *Process ID (PID)*, signal handlers and other information about performance and security.
 All other units are based on tasks, but tasks them self are not exposed outside of the kernel.
 
 *Threads*
@@ -46,7 +46,7 @@ Contains one or more process groups and represent a high-level user-facing unit 
 
 ### Processmodel
 - The first process that is executed on a device is called `init`, has the PID 1 and creates all other processes whether direct or indirect.
-- Processes run in [[Betriebssysteme#Kernelmodus|Usermode or Kernelmode]], the mode cannot be changed afterwards; application programms are not enabled to start a process in kernelmode, sys calls are used to componsate for this. 
+- Processes run in [[Betriebssysteme - Operating Systems#Kernelmodus|Usermode or Kernelmode]], the mode cannot be changed afterwards; application programms are not enabled to start a process in kernelmode, sys calls are used to componsate for this. 
 - New processes are created with the `fork()` sys call, creating a copy of the current proccess with a different PID, to execute a new task
 - Every process has a parent process, the process that called it; if the parent process is terminated before the child process, the child will be assigned to `init` to ensure child processes always have a parent process
 - If a child process is terminated, it is not completely removed from storage and the process table, it enters the `defunct` status and waits until the parent process calls `waitpid()` (also called Reaping), this way the parent process can examine the exit status of the child
@@ -64,7 +64,7 @@ Every process gets virtual memory. Both physical memory and virtual memory are d
 Every time the CPU accesses a process's virtual page, the CPU would have to translate the virtual address a process uses to the corresponding physical address.
 Modern CPU architectures support *translation lookaside buffer (TLB)* to speed up the process of translating the virtual address of the virtual page to the corresponding physical address.
 # Filesystem
-The Linux [[Betriebssysteme#Dateisysteme|filesystem]] is hierarchical single-root filesystem meaning at the top level is a single root directory `/`. All other directories are subdirectories of the root directory `/`. Under the root directory no individual files are stored, these are kept in the different subdirectories.
+The Linux [[Betriebssysteme - Operating Systems#Dateisysteme|filesystem]] is hierarchical single-root filesystem meaning at the top level is a single root directory `/`. All other directories are subdirectories of the root directory `/`. Under the root directory no individual files are stored, these are kept in the different subdirectories.
 
 >[!note]
 >System files are protected from user modification and can only be modified by the root user.
@@ -73,7 +73,7 @@ The Linux [[Betriebssysteme#Dateisysteme|filesystem]] is hierarchical single-roo
 | Directory | Description                                                                                                                      |
 | --------- | -------------------------------------------------------------------------------------------------------------------------------- |
 | `/`       | root filesystem, only contains other directories                                                                                 |
-| `/bin`    | binaries directory, contains executable files and [[Betriebssysteme#Systemprogramme\|Systemprogramme]]. Points to `/usr/bin`<br> |
+| `/bin`    | binaries directory, contains executable files and [[Betriebssysteme - Operating Systems#Systemprogramme\|Systemprogramme]]. Points to `/usr/bin`<br> |
 | `/dev`    | device directory, contains device files to address periherals                                                                    |
 | `/etc`    | Contains system and configuration files for users / services                                                                     |
 | `/home`   | Users' home directories                                                                                                          |
@@ -164,7 +164,7 @@ There is no one single shell, but multiple shell programs, with the standard she
   geeignet für Fehlerbehebung, POSIX-Tools sind direkt eingebaut und ist ideal für Rettungssysteme die von einem USB Stick starten
 
 >[!note]
->Der größte Unterschied zwischen den Shells ist sind nicht die Prompts, sondern wie die Shells  die Funktionen der [[Betriebssysteme#Systemprogramme|Systemprogramme]] erweitern können.
+>Der größte Unterschied zwischen den Shells ist sind nicht die Prompts, sondern wie die Shells  die Funktionen der [[Betriebssysteme - Operating Systems#Systemprogramme|Systemprogramme]] erweitern können.
 
 Die Konfiguration mit der die Shell ausgeführt wird heißt *Environment*, diese besteht aus der User und Group ID, dem aktuellen Arbeitsverzeichnis und Umgebungsvariablen.
 Diese werden aus Konfigurationsdateien gelesen:
@@ -188,7 +188,7 @@ Der Wert von PATH besteht aus einer Liste von absoluten Pfadangaben die mit Dopp
 - `Befehl <Dateiname`
   Der Inhalt der Datei wird als Eingabe gelesen, statt von der Tastatur
 - `Befehl1 | Befehl2`
-  [[Betriebssysteme#Pipes|Pipe]], leitet die Ausgabe von `Befehl1` als Eingabe an `Befehl2` weiter 
+  [[Betriebssysteme - Operating Systems#Pipes|Pipe]], leitet die Ausgabe von `Befehl1` als Eingabe an `Befehl2` weiter 
   Pipes können auch benutzt werden um mit `grep` Ausgaben zu filtern
   ```bash
   $ ls | grep txt
@@ -293,6 +293,144 @@ $ fileName
 >```
 >$ echo $PATH
 >```
+
+# Installing and Uninstalling Software
+## Updating the System
+To update a Debian-based system use:
+```
+$ sudo apt update
+```
+## Un-/ Installing Software from Repositories
+Installing software from repositories is the easiest method of installing software, as the repository contains all dependencies, gathers and installs them.
+To install software on an Ubuntu system use:
+```
+$ sudo apt install packageName
+```
+### Uninstall Packages and Dependencies
+To remove a package you can use `purge`, although it does not remove any dependencies that were installed for the package:
+```
+$ sudo apt purge packageName
+```
+
+To erase unused dependencies:
+```
+$ sudo autoremove
+```
+
+To remove the binaries but leaving the configuration and other files intact use
+```
+$ remove
+```
+## Un-/ Installing Individual Software Packages
+When installing packages from sources like GitHub or SourceForge you use local package manager utilities such as `rpm` and `dpkg`.
+>[!note]
+>The `downloadonly` option downloads the package without installing it so we have to install them manually at the command line.
+
+On a Ubuntu system:
+Download the package:
+```
+$ sudo apt install --download-only lynx
+```
+Using this method the downloaded package will be stored in `/var/cache/apt/archives` as a `.deb` package from which the package can be installed.
+
+>[!note]
+>The system will not allow you to install the package without installing the dependencies that can be found in the same directory:
+>```
+>$ ls -1 /var/cache/apt/archives
+>libidn11_1.33-2.2ubuntu2_amd64.deb 
+>lynx_2.9.0dev.5-1_amd64.deb 
+>lynx-common_2.9.0dev.5-1_all.deb
+>```
+
+Install the dependencies and then the package
+```
+$ sudo dpkg -i libidn11_1.33-2.2ubuntu2_amd64.deb
+
+$ sudo dpkg -i lynx-common_2.9.0dev.5-1_all.deb
+
+$ sudo dpkg -i lynx_2.9.0dev.5-1_amd64.deb
+```
+### Uninstall
+To uninstall a package you also have to uninstall it's dependencies. In the process you uninstall the dependencies first and then the package itself.
+```
+$ sudo apt purge lynx
+
+$ sudo apt purge lynx-common
+
+$ sudo apt purge libidn11
+```
+
+### Finding Package Dependencies
+To list the dependencies on an Ubuntu system use:
+```
+$ sudo apt show lynx
+```
+
+## Un-/ Installing Software from Source Code
+>[!warning]
+>You must satisfy dependencies for the software you install when installing and updating, if a previous version is not fully overwritten or removed version conflicts can occure.
+>You also need to install a full complement of development tools.
+
+### Building a Development Environment
+Install a code compiler and supporting software on a Ubuntu system with:
+```
+$ sudo apt install build-essential
+```
+
+### Download, Extract and Install Software
+Download the compressed source code:
+```
+$ wget https://invisible-mirror.net/archives/lynx/tarballs/lynx2.8.9rel.1.tar.gz
+```
+
+Extract the source code from the compressed archive:
+```
+$ tar zxvf lynx2.8.9rel.1.tar.gz
+```
+
+Change into the directory containing the source code:
+```
+$ cd lynx2.8.9rel.1
+```
+
+>[!note]
+>Before running `configure` always read the `README` file in the source code tree.
+>
+
+Run the `configure` command:
+```
+$ ./configure
+```
+The script fails as there are dependencies needed:
+```
+configure: error: No curses header-files found
+```
+
+Install the dependencies
+```
+sudo apt install lib32ncurses-dev
+```
+
+Run the `make` command
+```
+$ make
+```
+
+To install the software to its proper location and set the correct permissions use:
+```
+$ sudo make install
+```
+
+Remove all object code and other temporary files:
+```
+$ make clean
+```
+### Uninstall
+If the original `makefile` is still intact you can easily uninstall a package, if you do not want to keep all source trees on your system for every compiled program make a backup.
+The `makefile` must be in your current directory when uninstalling:
+```
+$ sudo make uninstall
+```
 
 # Scripting and Automation
 
@@ -1175,19 +1313,19 @@ sshd: ALL: DENY
 ### Implementing firewalld, iptables and nftables rules
 #### firewalld
 1. Delete the ssh service from firewalld's rules:
-   ```
-	$ sudo firewall-cmd --permanent --remove-service=ssh
-	```
+```
+$ sudo firewall-cmd --permanent --remove-service=ssh
+```
 2. Add a new zone 
-   ```
-	$ sudo firewall-cmd --permanent --new-zone=SSH_zone
-	$ sudo firewall-cmd --permanent --zone=SSH_zone --add-source=192.268.1.50
-	$ sudo firewall-cmd --permanent --zone=SSH_zone --add-service=ssh
-	``` 
+```
+$ sudo firewall-cmd --permanent --new-zone=SSH_zone
+$ sudo firewall-cmd --permanent --zone=SSH_zone --add-source=192.268.1.50
+$ sudo firewall-cmd --permanent --zone=SSH_zone --add-service=ssh
+``` 
 3. Reload the firewall to make the new configuration active:
-   ```
-	$ sudo firewall-cmd --reload
-	```
+```
+$ sudo firewall-cmd --reload
+```
 #### iptables
 Restrict SSH access with:
 ```
@@ -1269,139 +1407,6 @@ $ ssh-copy-id user@ip-address
 After these steps try to loggin into the remote system:
 ```
 $ ssh user@ip-address
-```
-
-# Installing and Uninstalling Software
-## Updating the System
-To update a Debian-based system use:
-```
-$ sudo apt update
-```
-## Un-/ Installing Software from Repositories
-Installing software from repositories is the easiest method of installing software, as the repository contains all dependencies, gathers and installs them.
-To install the text-based Lynx browser on an Ubuntu system use:
-```
-$ sudo apt install lynx
-```
-### Uninstall
-To uninstall the browser use:
-```
-$ sudo apt purge lynx
-```
->[!note]
->`purge` only removes the `lynx` package, leaving the dependencies on  your system.
->To erase those files you have to use `sudo autoremove`.
->To remove the binaries but leaving the configuration and other files intact use `remove`.
-
-## Un-/ Installing Individual Software Packages
-When installing packages from sources like GitHub or SourceForge you use local package manager utilities such as `rpm` and `dpkg`.
->[!note]
->The `downloadonly` option downloads the package without installing it so we have to install them manually at the command line.
-
-On a Ubuntu system:
-Download the package:
-```
-$ sudo apt install --download-only lynx
-```
-Using this method the downloaded package will be stored in `/var/cache/apt/archives` as a `.deb` package from which the package can be installed.
-
->[!note]
->The system will not allow you to install the package without installing the dependencies that can be found in the same directory:
->```
->$ ls -1 /var/cache/apt/archives
->libidn11_1.33-2.2ubuntu2_amd64.deb 
->lynx_2.9.0dev.5-1_amd64.deb 
->lynx-common_2.9.0dev.5-1_all.deb
->```
-
-Install the dependencies and then the package
-```
-$ sudo dpkg -i libidn11_1.33-2.2ubuntu2_amd64.deb
-
-$ sudo dpkg -i lynx-common_2.9.0dev.5-1_all.deb
-
-$ sudo dpkg -i lynx_2.9.0dev.5-1_amd64.deb
-```
-### Uninstall
-To uninstall a package you also have to uninstall it's dependencies. In the process you uninstall the dependencies first and then the package itself.
-```
-$ sudo apt purge lynx
-
-$ sudo apt purge lynx-common
-
-$ sudo apt purge libidn11
-```
-
-### Finding Package Dependencies
-To list the dependencies on an Ubuntu system use:
-```
-$ sudo apt show lynx
-```
-
-## Un-/ Installing Software from Source Code
->[!warning]
->You must satisfy dependencies for the software you install when installing and updating, if a previous version is not fully overwritten or removed version conflicts can occure.
->You also need to install a full complement of development tools.
-
-### Building a Development Environment
-Install a code compiler and supporting software on a Ubuntu system with:
-```
-$ sudo apt install build-essential
-```
-
-### Download, Extract and Install Software
-Download the compressed source code:
-```
-$ wget https://invisible-mirror.net/archives/lynx/tarballs/lynx2.8.9rel.1.tar.gz
-```
-
-Extract the source code from the compressed archive:
-```
-$ tar zxvf lynx2.8.9rel.1.tar.gz
-```
-
-Change into the directory containing the source code:
-```
-$ cd lynx2.8.9rel.1
-```
-
->[!note]
->Before running `configure` always read the `README` file in the source code tree.
->
-
-Run the `configure` command:
-```
-$ ./configure
-```
-The script fails as there are dependencies needed:
-```
-configure: error: No curses header-files found
-```
-
-Install the dependencies
-```
-sudo apt install lib32ncurses-dev
-```
-
-Run the `make` command
-```
-$ make
-```
-
-To install the software to its proper location and set the correct permissions use:
-```
-$ sudo make install
-```
-
-Remove all object code and other temporary files:
-```
-$ make clean
-```
-### Uninstall
-If the original `makefile` is still intact you can easily uninstall a package, if you do not want to keep all source trees on your system for every compiled program make a backup.
-The `makefile` must be in your current directory when uninstalling:
-```
-$ sudo make uninstall
 ```
 
 # Managing Storage

@@ -1,6 +1,6 @@
 #CCNA 
 
-Switches are a type of network infrastructure device, which are used to connect devices within a [[Networks#Local Area Network (LAN)|LAN]]. 
+Switches are a type of network infrastructure device, which are used to connect devices within a [[Network Concepts & Basics#Local Area Network (LAN)|LAN]]. 
 Devices are directly connected to the switch by a cable plugged into the device and to a port on the switch.
 
 >[!note]
@@ -9,12 +9,18 @@ Devices are directly connected to the switch by a cable plugged into the device 
 >[!note]
 >A port is a physical connector and serve as a interface between two devices in a network. For that reason is the term port and interface often used interchangeably. 
 
+# Architecture
+**Cross-Bar**: Es bestehen dedizierte Verbindungen zwischen allen Ports, sobald die Verbindung zwischen Quell- und Zielport bekannt ist, werden die Daten weitergeleitet ohne von anderem Datenverkehr beeinflusst oder blockiert zu werden.
+
+**Cell-Backplane**: Alle Ports kommunizieren über eine internen Bus. Frames werden in kleine *Cells* zerlegt. Jeder Cell wird ein Header mit der Adresse des Zielports hinzugefügt, wo die einzelnen Cells zu einem Frame zusammengefügt und an das Ziel gesendet werden.
 # Frame Forwarding Methods
 Switches use one of two forwarding methods:
 - **Store and forward switching**:
   The switch receives the frame, checks the CRC and forwards the frame if it is not corrupted
 - **Cut-through switching**:
   The switch forwards the frame before it is entirely received, the destination address of the frame must be read before the frame can be forwarded
+- **Adaptive switching**:
+  The switch initially operates in cut-through mode, if the error rate gets too high the switch automatically uses store and forward switching
 
 Store and forward switching reduces the amount of bandwidth consumed by corrupted data and is necessary for Quality of Service analysis where frame classification for traffic prioritization is necessary, f.e. *Voice over IP (VoIP)* has a priority over web-browsing
 ## Store and Forward Switching
@@ -55,9 +61,9 @@ There are two ways of memory buffering:
 
 ## boot system Command
 The switch attempts to automatically boot by using information in the BOOT environment variable. If this variable is not set, the switch attempts to load and execute the first executable file it can find.
-The IOS operating system then initializes the interfaces using the [[Cisco IOS CLI]] commands found in the startup-config file, called `config.txt` and is located in flash.
+The IOS operating system then initializes the interfaces using the [[Cisco IOS CLI]] commands found in the startup-config file, called `config.txt` which is located in flash.
 
-To set the BOOT environment variable we use the `boot system` command in [[Cisco IOS CLI#Global configuration mode| global configuration mode]]. 
+To set the BOOT environment variable use the `boot system` command in [[Cisco IOS CLI#Global configuration mode| global configuration mode]]. 
 ```
 S1(config)# boot system flash:/c2960-lanbasek9-mz.150-2.SE/c2960-lanbasek9-mz.150-2.SE.bin
 ```
@@ -282,15 +288,15 @@ When a Switch receives a frame on one of its ports, it examines the [[Ethernet#D
 >MAC addresses learned by a switch in this manner are known as *dynamic MAC addresses*—they are automatically (dynamically) learned. This is in contrast to *static MAC addresses*, which are manually (statically) configured, although that is quite rare. A switch will remove a dynamic MAC address from its MAC address table after 5 minutes of inactivity (if it doesn’t receive a frame from that MAC address for 5 minutes); this is called MAC aging.
 
 ## Frame flooding and forwarding
-After a Switch has learned the [[(OSI) Open Systems Interconnection-Modell#MAC Addresses|MAC address]] of each host, it can simply look up the destination MAC of a frame in its table and send the frame out of the right port. 
+After a Switch has learned the [[(OSI) Open Systems Interconnection-Modell#MAC Addresses|MAC address]] of each host, it can look up the destination MAC of a frame in its table and send the frame out of the right port. 
 >[!info]
 >Frames that are addressed to one destination host are known as *unicast frames*.
 >If the switch already has an entry for the destination MAC in its MAC address table it is called a *known unicast address*.
 >If the switch does not have an entry it is called a *unknown unicast frame*.
 
-When a Switch receives a unicast frame for a destination MAC address that it does not have an entry for, it *floods* the frame out all ports, except the port the frame was received on. This is done so the frame potentially reaches the destination host and the switch can learn the MAC and port combination when the destination host replies.
+When a Switch receives a unicast frame for a destination MAC address that it does not have an entry for, it broadcasts (*floods*) the frame out all ports, except the port the frame was received on. This is done so the frame potentially reaches the destination host and the switch can learn the MAC and port combination when the destination host replies.
 Hosts that receive the frame and notice that the destination MAC in the frame is different from their own MAC address will drop the frame.
-A switch that receives a flooded frame will also flood the frame out all ports.
+A switch that receives a braodcasted frame will also flood the frame out all ports.
 ![[Fram flooding.png]]
 ![[Frame flooding reply.png]]
 >[!note]
@@ -369,7 +375,7 @@ SW1(config-if)# duplex auto
 ```
 
 ## Management Access and SVI Configuration
-To prepare  a switch for remote management access, the switch must have *switch virtual interface (SVI)* configured with an IP address and subnet mask or an IPv6 address and prefix. To access the switch from a remote network, the switch needs a default gateway. 
+To prepare  a switch for remote management access, the switch must have a *switch virtual interface (SVI)* configured with an IP address and subnet mask or an IPv6 address and prefix. To access the switch from a remote network, the switch also needs a default gateway. 
 
 To configure the SVI you first need to connect your computer via a console cable to the console port of the switch and [[(VLAN) Virtual LAN#VLAN creation|create the VLAN]].
 - **Step 1**: Configure the Management Interface
@@ -497,10 +503,13 @@ SW1(config)# spanning-tree vlan 1 root primary
 >This method is not recommended as configuring a switch as `secondary` does not guarantee that it will be set as the root bridge if the original fails. Another reason is that setting a switch to `primary` does not always work as the command cannot set the priority to 0.
 >The best method to set a switch as the root bridge is by setting the priority to 0.
 ## Security Configuration
+
+To ensure [[LAN Security]] the following steps should be implemented.
 ### Port Security
 
 #### Secure Unused Ports
-It is best practice to disable all unused switch ports, by either navigating to each individual unused port or by defining a range of ports and then using the `shutdown` command:
+It is best practice to disable all unused switch ports, by either navigating to each individual unused port or by defining a range of ports: `Switch(configif-range)# shutdown`
+
 ```
 Switch(config)# interface range fa0/8 - 24
 Switch(configif-range)# shutdown
@@ -510,9 +519,10 @@ Switch(configif-range)# shutdown
 
 #### Enable Port Security
 Port security limits the number of valid MAC addresses allowed on a port.
-To enable port security navigate to the port and use the `switchport port-security` command.
+To enable port security use: `Switch(config-if)# switchport port-security` 
+
 >[!important]
->The `switchport port-security` command can only be used on manually configured [[(VLAN) Virtual LAN#Access Port Assignment|access]] or [[(VLAN) Virtual LAN#Trunk Configuration|trunk]] ports.he number of valid MAC addresses allowed on a port.
+>The `switchport port-security` command can only be used on manually configured [[(VLAN) Virtual LAN#Access Port Assignment|access]] or [[(VLAN) Virtual LAN#Trunk Configuration|trunk]] port. 
 
 ```
 Switch(config)# interface f0/1
@@ -530,24 +540,26 @@ Switch# show port-security interface f0/1
 ```
 #### Limit MAC Addresses
 Set a maximum number of MAC addresses allowed on a port use:
-```
-Switch(config-if)# switchport port-security maximum value
+`Switch(config-if)# switchport port-security maximum addressNumber`
 
+```
 S1(config)# interface f0/1
 S1(config-if)# switchport port-security maximum 50
 ```
 #### Learn MAC Addresses
 On a secure port the switch can learn MAC addresses in three ways:
-- **Manually Configures**
+- **Manually Configure**
   The administrator manually configures a static MAC address with the following command for each address
-  ```
-  Switch(config-if)# switchport port-security mac-address macAddress (vlan vlanName)
+  `Switch(config-if)# switchport port-security mac-address macAddress (vlan vlanName)`
+```
   Switch(config-if)# switchport port-security mac-address aa:bb:cc:11:22:33 (vlan HQ)
-  ```
+```
 - **Dynamically Learned**
-  When the `switchport port-security`command is entered, the current source MAC for the device connected to the port is automatically secured but is not added to the startup configuration. If the switch is rebooted, the port will have to re-learn the device's MAC address.
+  When the `switchport port-security`command is entered, the current source MAC for the device connected to the port is automatically secured, but it is not added to the startup configuration. 
+  If the switch is rebooted, the port will have to re-learn the device's MAC address.
 - **Dynamically Learned Sticky**
-  With this command the switch learns the MAC address dynamically and "stick" it to the running configuration. When saving the running config the MAC address is saved to NVRAM.
+  With this command the switch learns the MAC address dynamically and adds it to the running configuration. 
+  When saving the running config the MAC address is saved to NVRAM.
   ```
   Switch(config-if)# switchport port-security mac-address sticky
   ```
@@ -559,39 +571,52 @@ On a secure port the switch can learn MAC addresses in three ways:
 Security *violation modes* are used to configure the behavior of a `port-security` enabled port when a security violation occurs.
 These modes are:
 - **shutdown**
-  the port is shut down and all communication is stopped
+  the port is shut down and all communication is stopped; default
 - **restrict**
   frames that violate the MAC address limit are discarded, but communication with already known MAC is continued, the violation counter is incremented with each violating frame, generates a Syslog message and SNMP Traps/Informs
 - **protect**
   frames that violate the MAC address limit are discarded, communication is continued and the violation counter is not incremented
 
+
+| Mode     | Discards Offending Traffic | Sends Syslog Message | Increases Violation Counter | Shuts Down Port |
+| -------- | -------------------------- | -------------------- | --------------------------- | --------------- |
+| Protect  | Yes                        | No                   | No                          | No              |
+| Restrict | Yes                        | Yes                  | Yes                         | Yes             |
+| Shutdown | Yes                        | Yes                  | Yes                         | Yes             |
+
+
 To configure a violation mode on a port use:
+`S1(config-if)# switchport port-security violation {protect | restrict | shutdown}`
+
 ```
 S1(config)# interface f0/1
 S1(config-if)# switchport port-security violation restrict
 ```
-#### Secure MAC address aging
+
+**Error-disabled State**
+When a violation in the `shutdown` mode occurs, the port is physically shutdown, is placed in the error-disabled state and no traffic is sent or received on it.
+To activate the port enter the port interface then:
+1. `S1(config-if)# shutdown`
+2. `S1(config-if)# no shutdown`
+#### MAC address aging
 >[!note] Reminder
 >MAC address aging refers to the time a MAC address is stored in the MAC address table before it is discarded. The timer resets whenever a frame from the corresponding address is received.
 
 By default secure MAC addresses do not age and stay in the address table as long as the port it was learned on stays up.
 To enable secure MAC address aging use 
+`Switch(config-if)# switchport port-security aging { static | time minutesNumber | type absolute | inactivity}`
+
 ```
 SW1(config)# interface f0/1
-SW1(config-if)# switchport port-security aging time minutes
-
 SW1(config-if)# switchport port-security aging time 5
-```
-
- **Secure MAC address aging types**
-The default aging type is *absolute* meaning that the timer is not reset upon receiving a frame from the same MAC address.
-You can change this by switching to the *inactivity* aging type, which resets the timer.
-```
-SW1(config)# interface f0/1
-SW1(config-if)# switchport port-security aging type aging-type
-
 SW1(config-if)# switchport port-security aging type inactivity
 ```
+
+**Parameters**
+- `static`: Enable aging for statically configured secure addresses 
+- `time`: Set the aging time between 0 to 1440 minutes, if `0` is set aging is disabled
+- `type absolute`: The addresses age out exactly after the set time and are removed; default 
+- `type inactivity`: The addresses age out only if there is no data traffic for the specified time period
 
  **Static Secure MAC Address Aging**
 Manually configured static MAC address do not age out and usually need to be manually removed. However this can be changed with:
@@ -601,72 +626,20 @@ SW1(config-if)# switchport port-security aging static
 ```
 
 #### Verify Port Security
-- Port Security for all interfaces:
-  ```
-  S1# show port-security
-  ```
+- **Port Security for all interfaces**:
+  `S1# show port-security`
 - **Port Security for a Specific Interface**:
-  ```
-  S1# show port-security interface interface
+  `S1# show port-security interface interfaceID`
   
+```
   S1# show port-security interface fastethernet 0/1
-  ```
+```
 - **Verify Learned MAC Addresses**
-  ```
-  S1# show run interface interface
+  `S1# show run interface interfaceID`
   
-  S1# show run interface fa0/1
-  ```
+``` 
+S1# show run interface fa0/1
+```
 - **Verify Secure MAC Addresses**
-    ```
-  S1# show port-security address  
-    ```
+  `S1# show port-security address  `
 
-### Mitigating VLAN Attacks
-VLAN hopping can be accomplished  in three ways:
-- Spoofing DTP messages from the attacking host to cause the switch to enter trunking mode. From here, the attacker can send traffic tagged with the target VLAN and the switch then delivers the packets to the destination.
-- Introducing a rogue switch and enabling trunking. The attacker can then access all the VLANs on the victim switch from the rogue switch.
-- Another type of VLAN hopping attack is a double-tagging attack. 
-
-#### Steps to mitigate VLAN hopping
-1. Disable DTP (auto-trunking) negotiations on non-trunking ports by using the `switchport mode access` interface configuration command.
-2. Disable unused ports and put them in an unused VLAN
-3. Manually enable the trunk link on a trunking port by using the `switchport mode trunk` command
-4. Disable DTP (auto-trunking) negotiations n trunking ports by using the `switchport nonegotiate` command
-5. Set the native VLAN to a VLAN other than VLAN 1 by using the `switchport trunk native vlan vlan-number` command.
-
-### Mitigating DHCP Attacks
-In a DHCP poisoning attack an attacker configures a rogue DHCP server that leases IP addresses so the clients uses it as their default gateway. 
-
-#### DHCP Snooping 
-DHCP snooping is a security feature on Cisco switches that examines and filters DHCP messages. 
-To enable and activate DHCP snooping use:
-```
-SW1(config)# ip dhcp snooping
-SW1(conifg)# ip dhcp snooping vlan vlan-id
-
-SW1(conifg)# ip dhcp snooping vlan 4
-```
-
-You can also activate DHCP Snooping on multiple VLANs, as it is advised to enable DHCP snooping in every VLAN that has hosts using DHCP.
-```
-SW1(config)# ip dhcp snooping vlan 1-10
-SW1(config)# ip dhcp snooping vlan 1,2,3-5,6,7-10
-```
-
-==How DHCP snooping works==
-
-**Trusted and untrusted ports**
-Packets received on untrusted ports are filtered by DHCP snooping and all ports are untrusted by default. Frames received on trusted ports are allowed, but you have to manually configure each trusted port with:
-```
-SW1(conifg)# interface g0/1
-SW1(config-if)# ip dhcp snooping trust
-```
-
-Ports that face towards the DHCP server should be trusted and DHCP snooping will forward DHCP messages on those ports without inspection.
-Ports that face away from the server should be untrusted and will be inspected as follows:
-- If it is a DHCP server (OFFER, ACK or NAK) message discard it
-- If it is a DHCP client message (DISCOVER, REQUEST, DECLINE or RELEASE) inspect it further 
-- If a client successfully leases an IP address, create a new entry in the DHCP Snooping binding table 
-
-### Dynamic ARP Inspection

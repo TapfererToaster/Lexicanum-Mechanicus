@@ -1,3 +1,6 @@
+CSV Dateien sind Textdateien in denen ein Datensatz pro Zeile steht, wobei die einzelnen Daten durch einen Separator getrennt werden.
+Der Separator ist üblicherweise ein Komma, kann aber auch eine Semikolon, Doppelpunkt,... sein.
+
 ```CSV
 [name,age,city,email]
 [John Doe,30,New York,john@example.com]

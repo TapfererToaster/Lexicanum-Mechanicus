@@ -26,7 +26,7 @@ Jedes einzelne Datum in einer Datenbank weist zwei dieser Kriterien auf, wodurch
 - **Graphendatenbanken**:
   speichern Datensätze als Knoten und Verknüpfungen als Kanten eines Graphen und ermöglichen so die Abbildung vielfältiger Beziehungen zwischen Daten
 >[!note]
->Diese eignen sich sehr gut für [[Abominable Intelligence - Silica Animus#Datenanalyse|Datenanalyse]],Vektorsuche oder die Modellierung von Netzwerken und Hierarchien. 
+>Diese eignen sich sehr gut für [[Abominable Intelligence – Silica Animus#Datenanalyse|Datenanalyse]],Vektorsuche oder die Modellierung von Netzwerken und Hierarchien. 
 >[Neo4j](https://neo4j.com/) ist ein Open-Source Tool dafür.
 - **Volltextdatenbanken**:
   Kein gesonderter Datenbanktyp, sondern eine Implementierung von effektiven Volltextsuchen 

@@ -1,16 +1,28 @@
-#CCNA 
+ #CCNA 
 
 >[!warning]
 >The OSI model is not used in networking and is rather a reference that helps when learning about networking.
 >The [[TCP-IP Modell]] is the model used in networking and is more important for actual networking.
 
-
 Das *Open Systems Interconnection (OSI)* Modell besteht aus einem Regelsatz, Prozeduren und Formaten, die Netzwerkkommunikation ermöglichen und beim erstellen von Netzwerksystemen helfen und erklären, wie diese funktionieren.
 Das Modell basiert auf einem Vorschlag der [[Organizations#International Organization for Standardization (ISO)|International Organization for Standardization (ISO)]].
 It defines seven layers each having a certain function to enable communication. 
 ![[OSI-Summery-table.png|420x411]]
+
+Das Modell wurde ab 1977 entwickelt um ein einheitliches Architekturmodell das die Kommunikation in offenen Systemen beschreibt. 
+1978 wurde das Modell ISO 7498 und 1984 überarbeitet als OSI Modell veröffentlicht.
+
+**Funktionsschnittstellen**
+Über *Service Access Points (SAP)* Schnittstellen stellt jede Schicht der nächsthöheren Methoden und Dienste zur Verfügung.
+
+**Header**
+Bei der encapsulation, fügt jede Schicht, außer Layer 1, einen Header an die enthaltenen Daten an, dieser enthält Steuerinformationen die zur Kommunikation auf gleicher Schichtebene dienen.
+
+**Aufgaben und Kontrolle**
+Verschiedene Aufgaben und Mechanismen, wie Fehler- oder Flusskontrolle, sind in mehreren Schichten implementiert.
+Sollte ein Fehler in einer Schicht auftreten wird eine Meldung an die übergeordnete Schicht gegeben und es wird versucht mit einem anderen Mechanismus den Fehler zu umgehen.
 # 1. Physische Schicht (Physical, Layer 1)
-Die Physische Schicht ist die unterste Schicht im OSI Modell und bezieht sich auf das physische Medium das den Datenbitstrom überträgt, bzw. die 1 und 0 die über das Netzwerk gesendet werden.
+Die Physische Schicht ist die unterste Schicht im OSI Modell und bezieht sich auf das physische Medium das den Datenbitstrom überträgt, bzw. die 1 und 0 die über das Netzwerk gesendet werden. In ihr wird definiert was für die Übertragung der Bits notwendig ist und wie sie erfolgt.
 
 **Protocol Data Unit**: Bits
 
@@ -20,13 +32,16 @@ Die Physische Schicht ist die unterste Schicht im OSI Modell und bezieht sich au
 Zu den Hauptaufgaben der 1.Schicht gehören: 
 - **Hardware Spezifikationen**:
    - Eigenschaften der Übertragungsmedien:
-    Kabel (CAT 6/ Glasfaser), Stecker, Funktransceiver, Netzwerkkarten (NIC), und anderen Hardware Geräten
+    Kabel (CAT / Glasfaser), Funktransceiver, Netzwerkkarten (NIC), und anderen Hardware Geräten
+    - Geometrie und Pinbelegung der Stecker
 - **Kodierung und Signalisierung**:
-   - wandelt Daten/ Bits in Signale um die über das Netzwerk gesendet werden können
+   - wandelt Daten/ Bits in Signale (z.B. elektrische, optische) um die über das Medium gesendet werden können
    - zulässiger Amplitudenbereich
    - Start- und Stoppsignale
    - Umwandlung der Bit-Folgen in Daten der nächsthöheren Schicht und umgekehrt
 - **Übertragung und Empfang**:
+	- Aufbau von Verbindungen (Datenleitung, Steuerleitung, Taktgebung)
+	- Übertragungsmodus (Halb-, Vollduplex)
    - senden und empfangen der Daten nach der Kodierung
    - Versand- und Empfangsmethoden für Bits
    - Unterscheidung der Signalen bei gemeinsam genutzten Medien
@@ -36,7 +51,7 @@ Zu den Hauptaufgaben der 1.Schicht gehören:
 >[[Ethernet]], USB
 
 # 2. Datensicherungsschicht (Data Link, Layer 2)
-Diese Schicht ist für die Fehlererkennung und die Flusskontrolle für Frames in der physischen Verbindung verantwortlich, um aus dem physikalischen Stromfluss einen verlässlichen Datenfluss zu erzeugen.
+Diese Schicht ist für die Fehlererkennung und die Flusskontrolle für Frames in der physischen Verbindung verantwortlich, um aus dem physikalischen Stromfluss einen verlässlichen Datenfluss zu erzeugen und umgekehrt.
 
 **Protocol Data Unit:** Frames 
 
@@ -54,33 +69,22 @@ Folgende Aufgaben gehören zu dieser Schicht:
   stellt die Verbindung zwischen den lokalen Netzwerkgeräten her
 - **Media Access Control (MAC)**
   definiert die Zugriffskontrolle der Netzwerkgeräte
-  >[!info]
-  >Schicht 2 Switches versenden Frames mithilfe der MAC Adresse der Geräte
 - **Dataframing**
-  encapsulating data (Layer 3 *packets*) into Layer 2 *frames*, which will be send in Layer 1
+  encapsulating data (Layer 3 *packets*) into Layer 2 *frames*, or transforms the bits received from Layer 1 into frames 
 - **Fehlererkennung**
   nutzt das CRC-Feld um zu prüfen ob Frames korrekt empfangen wurden and rejects corrupt frames
->[!info] VLAN-Tagging
->Wenn ein Frame in einen VLAN-fähiges Netzwerk eintritt, wird in Schicht 2 dem Frame ein Tag angehängt in dem seine VLAN-ID vermerkt ist. Jeder Frame muss einem/ seinem VLAN exakt zugeordnet werden können. Ist ein Frame untagged wird er im nativen VLAN versendet.
->Beispiel:
->Ein Switch empfängt einen Frame, der für ein spezifisches VLAN getagged ist und sendet ihn weiter zu einem Switch in demselben VLAN. Nachdem der Switch den Frame erhält entfernt er den VLAN Tag bevor der Frame den Port verlässt.
 
 >[!example] **Protokolle:**
 >Point-to-Point (PPP), ATM, [[(ARP) Address Resolution Protocol]], [[Ethernet]], [[WLAN|Wi-Fi]], High-Level Data Link Control (HDLC), Frame Relay, Asynchronous Transfer Mode (ATM), X.25
-
-At each hop along the path, a router performs the following Layer 2 functions:
-1. Accepts a frame from a medium
-2. De-encapsulate the frame
-3. Rr-encapsulate the packet into a new frame
-4. Forward the new frame to the next hop
 ## Sublayers
 ![[Data-Link Sublayers.png]]
 
 ### Logical Link Control (LLC) Sublayer
 The logical link control sublayer, defined in [IEEE 802.2](https://en.wikipedia.org/wiki/IEEE_802.2), communicates between the networking software at the upper layers and the hardware at the lower layers.
-It takes the network protocol data, typically an IPv4 or IPv6 packet and adds Layer 2 control information to help deliver that packet to the destination node. 
-It also places information inside the frame that identifies which network protocol is being used for the fram, this allows multiple Layer 3 protocols(IPv4, IPv6) to use the same network interface or media.
+It takes the network protocol data, such as an IPv4 or IPv6 packet and adds Layer 2 control information to help deliver that packet to the destination node. 
+It also places information inside the frame that identifies which network protocol is being used for the frame, this allows multiple Layer 3 protocols(IPv4, IPv6) to use the same network interface or media.
 ### Media Access Control (MAC) Sublayer
+Diese Schicht steuert den Sendevorgang und die Adressierung von Frames
 
 #### Standards of the MAC sublayer
 - [[Ethernet#Sublayers|Ethernet Standard]] 
@@ -88,26 +92,25 @@ It also places information inside the frame that identifies which network protoc
 **Characteristics**
 MAC addresses are 6 bytes or 48 bits long and are written using the [[Number Systems#Hexadecimal|Hexadecimal Number System]].
 There are also different notation conventions:
--  0cf5.a452.b101 (Cisco IOS) 
-- 0C-F5-A4-52-B1-01 (Windows) 
-- 0c:f5:a4:52:b1:01 (macOS)
+-  `0cf5.a452.b101` (Cisco IOS) 
+- `0C-F5-A4-52-B1-01` (Windows) 
+- `0c:f5:a4:52:b1:01` (macOS)
 
-**Organizationally Unique Identifier (OUI)**
-To ensure that a MAC address is unique the first half of the address (3 bytes) is an organizationally unique identifier assigned to the manufacturer by the IEEE. The second half, the Vendor-assigned address, is then used to assign a unique address to each device.
+To ensure that a MAC address is unique the first half of the address (3 bytes) is an *organizationally unique identifier (OUI)*, that is assigned to the manufacturer by the IEEE. The second half is assigned by the vendor, identifying each device with an unique ID.
 
 **Unicast MAC Addresses**
 This address is used to deliver a frame from a single transmitting device to a single destination device.
 
 **Broadcast MAC Addresses**
-- It has a destination MAC address of FF-FF-FF-FF-FF-FF in hexadecimal (48 ones in binary).
-- It is flooded out all Ethernet switch ports except the incoming port.
-- It is not forwarded by a router
+- destination MAC address of `FF-FF-FF-FF-FF-FF` in hexadecimal (48 ones in binary).
+- frames are flooded out all Ethernet switch ports except the incoming port.
+- frames are not forwarded by a router
 
 **Multicast MAC Addresses**
-- There is a destination MAC address of 01-00-5E when the encapsulated data is an IPv4 multicast packet and a destination MAC address of 33-33 when the encapsulated data is an IPv6 multicast packet.
-- There are other reserved multicast destination MAC addresses for when the encapsulated data is not IP, such as Spanning Tree Protocol (STP) and Link Layer Discovery Protocol (LLDP).
-- It is flooded out all Ethernet switch ports except the incoming port, unless the switch is configured for multicast snooping.
-- It is not forwarded by a router, unless the router is configured to route multicast packets.
+- A IPv4 multicast packet has a destination MAC of `01-00-5E`; a IPv6 multicast packet has a destination MAC address of `33-33`
+- There are other reserved multicast destination MAC addresses for other protocols, such as Spanning Tree Protocol (STP) and Link Layer Discovery Protocol (LLDP).
+- frames are flooded out all Ethernet switch ports except the incoming port, unless the switch is configured for multicast snooping.
+- frames are not forwarded by a router, unless the router is configured to route multicast packets.
 ## Access Control Methods
 
 >[!note]
@@ -116,7 +119,7 @@ This address is used to deliver a frame from a single transmitting device to a s
 In *contention-based multiple access networks*, all nodes are operating in half-duplex, competing for the use of the medium, as only one device can send at a time
 #### Carrier sense multiple access with collision detection (CSMA/CD)
 This control method was used by legacy Ethernet LANs where hubs were employed.
-The workings behind it are, that a computer determines if a device is currently transmitting data, by checking if the signal amplitude is higher than normal on the media or the NIC compares data transmitted with data received.
+A computer determines if a device is currently transmitting data, by checking if the signal amplitude is higher than normal on the media or the NIC comparing the amplitude when data is transmitted with data received.
 1. **Carrier Sense**
 A device that wants to transmit data first listens if another is currently sending data  
 2. **Multiple Access**
@@ -151,11 +154,13 @@ Networks that use this access control are:
 >This layer provides services to exchange the individual pieces of data over the network between identified end devices.
 > 
 
+Die Netzwerk Schicht hat als Aufgeben die Wegfindung (routing) von Paketen über Netzwerkknoten, damit diese ihr Ziel erreichen (message forwarding), sowie die Kontrolle der Pakete.
+
 **Protocol Data Unit**: Packets
 
 Diese Schicht definiert wie miteinander verbundene Netzwerke folgende Punkte behandeln:
 - **Logische IP-Adressierung**
-  jedes Gerät das über das Netzwerk kommuniziert, benötigt eine manchmal Schicht/ Layer 3 Adresse
+  jedes Gerät das über das Netzwerk kommuniziert, benötigt eine Layer 3 Adresse
 - **DNS-Server**
   wandelt einen URL Namen in eine IP-Adresse um
 - **Fully Qualified Domain Name (FQDN)**
@@ -168,10 +173,11 @@ Diese Schicht definiert wie miteinander verbundene Netzwerke folgende Punkte beh
   verpackt Daten von höheren Schichten in Datagramme (Pakete)
 - **Fehlerbehebung und Diagnose**
   ermöglicht Geräten, die Datenverkehr weiterleiten möchten, Informationen über den Status von Hosts auf dem Netzwerk oder dem Gerät selbst auszutauschen
+
 >[!info] Zusätzliche Funktionen von Schicht 3
 >- **Internet Protocol Security (IPSec)**
 >  Protokoll-Suite besteht aus offenen Standards, die eine private, sichere Kommunikation über IP-Netzwerke mithilfe von Kryptography gewährleisten.
->- **Adress Resolution PRotocoll (ARP)**
+>- **Adress Resolution Protocoll (ARP)**
 >  befindet sich zwischen Schichten 2 und 3; ermittelt die zu einer Netzwerkadresse (IP-Adresse) zugehörige Hardwareadresse; dies ermöglicht Kommunikation über ein Netzwerk nur durch MAC-Adressen
 >- **Internet Control Message Protocol (ICMP)**
 >  dient meist in Betriebssystemen für vernetzte Computer zum Austausch von Informations- und Fehlermeldungen; z.B. ping
@@ -185,14 +191,12 @@ Diese Schicht definiert wie miteinander verbundene Netzwerke folgende Punkte beh
 
 >[!example] **Protokolle**
 >IP, ICMP, VPN, SSL/TLS
-
 ## Forwarding Decision
 ### Host Forwarding Decision
 A host can send a packet to:
 - **Itself** - A host can ping itself by sending a packet to a special IPv4 address of 127.0.0.1 or an IPv6 address ::1, which is referred to as the loopback interface. Pinging the loopback interface tests the TCP/IP protocol stack on the host.
 - **Local host** - This is a destination host that is on the same local network as the sending host. The source and destination hosts share the same network address.
 - **Remote host** - This is a destination host on a remote network. The source and destination hosts do not share the same network address
-
 ## Default Gateway
 To communicate with devices on remote networks you need a default gateway, which can route traffic to remote networks. 
 On a network, a default gateway is usually a [[Router#Router as Gateways|Router]] with the following features:
@@ -205,11 +209,15 @@ On a network, a default gateway is usually a [[Router#Router as Gateways|Router]
 >
 
 Bietet einen End-to-end Kommunikationspfad zwischen den niedrigeren Schichten und den Anwendungen der höheren Schichten.
+Des Weiteren ist diese Schicht für die Segmentierung der Daten, die Initiierung des erneuten Senden von Segmenten und die Überwachung der Netzlast (Congestion Control) zwischen den Benachbarten Nodes.
 (Enables end-to-end communication between running applications on different hosts.)
+
+**Protocol Data Unit**: Segments
+
 Protokolle dieser Schicht:
 - **Real-Time Transport Protocol (RTP)**
   spezifiziert wie Programme die Übertragung von Multimedia-Daten in Echtzeit über Unicast- oder Multicast-Netzwerkdienste verwalten
-- **Real-Time Streaming Protcol (RTSP)**
+- **Real-Time Streaming Protocol (RTSP)**
   Steuert Streaming Medien Server und Sitzungen zwischen Endpunkten
 - **Real Time Messaging Protocol (RTMP)**
   Protokoll zum streamen von Audio, Video und Daten über das Internet zwischen einem Flash-Player und einem Server
@@ -218,16 +226,26 @@ Protokolle dieser Schicht:
 >[[(TCP) Transmission Control Protocol]],  [[(UDP) User Datagram Protocol]]
  
 # 5. Sitzungsschicht (Session, Layer 5)
-Ermöglicht Geräten, Sitzungen aufzubauen, zu verwalten und zu beenden.
-Anhaltende logische Verbindung von zwei Software-Anwendungsprozessen, über die Daten über einen längeren Zeitraum austauschen können.
+Ermöglicht Geräten, Sitzungen aufzubauen, zu verwalten und zu beenden, diese sind anhaltende logische Verbindung von zwei Software-Anwendungsprozessen, über die Daten über einen längeren Zeitraum austauschen können.
+
+Diese Schicht wird benutzt um *Sessions*, logische Verbindungen, aufzubauen, zu verwalten und zu beenden. 
+Sessions dienen dazu Daten über einen längeren Zeitraum zwischen zwei Prozessen auszutauschen.
+
 >[!summary]
 >Is responsible for establishing, maintaining and synchronizing communication between applications running on different hosts. 
+
+Die Aufgaben diese Schicht sind:
+- Namensauflösung
+- Flusskontrolle
+- Synchronisation
+  Prüfpunkte werden in die Daten eingefügt, sollte es zu einem Verbindungsabbruch kommen müssen nur die Daten nach dem letzten Prüfpunkt übertragen werden.
+
 
 >[!example] **Protokolle**
 >NetBIOS, PPTP, Network File System (NFS), Remote Procedure Call (RPC)
 
 # 6. Darstellungsschicht (Presentation, Layer 6)
-Wandelt systemabhängige Darstellungen der Daten in eine unabhängige Form um und ermöglicht einen korrekten Datenaustausch zwischen unterschiedlichen Systemen. 
+Wandelt systemabhängige Darstellungen von Daten in ein unabhängiges allgemeines Standardformat (*Abstract Syntax Notation One (ASN.1)*) um und ermöglicht einen korrekten Datenaustausch zwischen unterschiedlichen Systemen.
 (Ensures that data is delivered in a form that the application layer can understand.)
 
 >[!summary]
@@ -239,7 +257,15 @@ The presentation layer has three primary functions:
 - Compressing data in a way that can be decompressed by the destination device.
 - Encrypting data for transmission and decrypting data upon receipt.
 
-As shown in the figure, the presentation layer formats data for the application layer, and it sets standards for file formats. Some well-known standards for video include Matroska Video (MKV), Motion Picture Experts Group (MPG), and QuickTime Video (MOV). Some well-known graphic image formats are Graphics Interchange Format (GIF), Joint Photographic Experts Group (JPG), and Portable Network Graphics (PNG) format.
+ The presentation layer formats data for the application layer, and it sets standards for file formats. Some well-known standards for video:
+- Matroska Video (MKV)
+- Motion Picture Experts Group (MPG)
+- QuickTime Video (MOV). 
+
+Some well-known graphic image formats:
+- Graphics Interchange Format (GIF)
+- Joint Photographic Experts Group (JPG)
+- Portable Network Graphics (PNG) format
 
 >[!info] Zusätzliche Funktionen der Darstellungsschicht
 >- Übersetzung zur Verbindungen von verschiedenen Computertypen miteinander, Windows-, macOS und Linux-Server sowie Mainframes können auf demselben Netzwerk kommunizieren
@@ -249,13 +275,13 @@ As shown in the figure, the presentation layer formats data for the application 
 >[!example] Protokolle
 >JPEG, MPEG, ASCII, Unicode
 
-
 # 7. Anwendungsschicht (Application, Layer 7)
 
 >[!summary]
 >Contains protocols used for process-to-process communitation
 
-This layer provides the interface between the applications used to communicate, and the underlying network over which messages are transmitted. Application layer protocols are used to exchange data between programs running on the source and destination hosts.
+This layer provides the interface between applications and the network over which messages are transmitted.
+Application layer protocols are used to exchange data between programs running on the source and destination hosts.
 
 Stellt Anwendungsdienste für den Nutzerzugriff zur Verfügung. 
 Protokolle dieser Schicht sind:
@@ -274,6 +300,7 @@ The data and header information that are built in the bottom four layers have sp
 
 |       Layer       |   PDU    |
 | :---------------: | :------: |
+|     Layer 5-7     |   Data   |
 | Transport Layer 4 | Segments |
 |  Network Layer 3  | Packets  |
 | Data Link Layer 2 |  Frames  |

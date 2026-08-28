@@ -1,13 +1,14 @@
 #CCNA 
 # Transmission
-WLAN uses the air as an *unbound medium*, unlike a *bound media* like copper or fiber-optic cable, meaning that the wireless signals propagate freely in open space, radiating in all directions from the source. This unbound nature allows greater mobility and flexibility, as devices do not need to be physically connected with a network cable. 
-However it also introduces some challenges:
+WLAN uses the air as an *unbound medium*, unlike a *bound media* like copper or fiber-optic cable, meaning that the wireless signals propagate freely in open space, radiating in all directions from the source. 
+This allows for greater mobility and flexibility, as devices do not need to be physically connected with a network cable. 
+However it introduces some challenges:
 - All devices within range of a wireless device receive that device's signals
   data privacy within a wireless LAN is a great concern and communication is usually encrypted
 - wireless devices must contend for airtime
   Devices must operate in half-duplex, only one device can transmit at a time and CSMA/CD or CSMA/CA must be implemented
 - signal interference can be a major issue 
-  Other WLAN signals, microwave ovens, bluetooth devices can disrupt and interfere with your WLAN signals
+  Other WLAN signals, microwave ovens, Bluetooth devices can disrupt and interfere with your WLAN signals
 - Wireless communication are regulated by various international and national bodies
 - Wireless signal coverage area must be considered
   as wireless signals travel through space, they lose strength, this is called *free-space path loss (FSPL)*; additionally the electromagnetic waves that are used as signals are affected by objects that are in their way
@@ -72,7 +73,7 @@ Because of the overlap between the channels it is important to use non-overlappi
 
 ### 5 GHz band
 This band spans from 5.150 to 5.895 GHz and is less crowded with other technologies. 
-The channels of the 5 GHz band do not overlap and can be combined to support higher data transfers rates, although resulting in fewer available channels.
+The 24 channels of the 5 GHz band do not overlap and can be combined to support higher data transfers rates, although resulting in fewer available channels.
 ![[5 GHz band channels.png]]
 ### 6 GHz band
 The 6 GHz band was adopted in 2020 in the 802.11ax (Wi-Fi 6E) and 802.11be (Wi-Fi 7) standards, it ranges from 5.925 GHz to 7.125 GHz. It provides more non-overlapping channels than the 5GHz band and can also be combined to form wider channels, enhancing data transfer rates.
@@ -230,7 +231,7 @@ A repeater is an AP that extends the range of a wireless network by transmitting
 ![[Repeater.png]]
 
 >[!attention]
->A repeater might resemble a MBSS, but they serve different [[Networks]] and function differently.
+>A repeater might resemble a MBSS, but they serve different [[Network Concepts & Basics]] and function differently.
 >- A repeater AP is a standalone device that extends the signal of a single AP without special configuration or infrastructure.
 >- A mesh AP is part of a larger mesh network where each AP routes traffic through the best path withing the mesh.
 
@@ -252,17 +253,36 @@ To configure an Autonomous AP you can use the CLI, Telnet, SSH or a web based GU
 ## Lightweight APs
 ![[Lightweight AP.png]]
 
-*Lightweight APs (LWAP)* offload many of their more complex, non-real-time functions to a *wireless LAN controller (WLC)*, while the LWAP performs [[(OSI) Open Systems Interconnection-Modell#Media Access Control (MAC) Sublayer|media access control (MAC) operations]], this separation is called *split-MAC architecture*.
-The WLC, which is used to centralize control and simplify operations, is responsible for management functions such as RF management (setting the channel and transmit power), client authentication and association, Quality of Service and Security. This  allows for *self-healing coverage*, if one LWAP stops working the WLC can increase the transmit power of a nearby LWAP to maintain the coverage area.
-The LWAP handles real-time functions like transmitting and receiving RF signals, encryption of frames, sending beacon messages and responding to client's probe requests.
+*Lightweight APs (LWAP)* offload many of their more complex, non-real-time functions to a *wireless LAN controller (WLC)*, while the LWAP performs [[(OSI) Open Systems Interconnection-Modell#Media Access Control (MAC) Sublayer|media access control (MAC) operations]], this separation is called *split-MAC architecture*. The WLC is used to centralize control and simplify operations.
 
-LWAPs are connected to the wired LAN via access ports. Because access ports only support a single VLAN, the ports are set to the [[(VLAN) Virtual LAN#Management VLAN|management VLAN]]. Translating between SSIDs and VLANs is offloaded to the WLC. The *Control and Provisioning of Wireless Access Points (CAPWAP)* protocol is used to establish tunnels through which LWAPs send frames from clients to the WLC, which translates them to Ethernet frames [[(VLAN) Virtual LAN#VLAN Tagging|tagged]] to the appropriate VLAN.
-![[CAPWAP.png]]
->[!note]
->CAPWAP establishes two tunnels, a data tunnel, used to tunnel traffic to and from the clients, and a control tunnel, used for communication, configuration and management between the LWAP and the WLC.
->![[CAPWAP tunnels.png]]
->The data tunnel is by default not encrypted, but can be enabled.  
->CAPWAP uses *Datagram Transport Layer Security (DTLS)*, a TLS protocol that uses UDP instead of TCP.
+**WLC functions**:
+- management functions such as RF management (setting the channel and transmit power)
+- client authentication and association
+- Quality of Service and Security
+- Frame translation to other protocols
+- Termination of 802.11 traffic on a wired interface
+
+> [!NOTE]
+> This  allows for *self-healing coverage*, if one LWAP stops working the WLC can increase the transmit power of a nearby LWAP to maintain the coverage area.
+
+**LWAP functions**:
+- transmitting and receiving RF signals
+- encryption and decryption of frames
+- sending beacon messages and responding to client's probe requests
+- Packet acknowledgement and retransmission
+
+> [!NOTE]
+> LWAPs are connected to the wired LAN via access ports. Because access ports only support a single VLAN, the ports are set to the [[(VLAN) Virtual LAN#Management VLAN|management VLAN]]. Translating between SSIDs and VLANs is offloaded to the WLC. 
+
+### Control and Provisioning of Wireless Access Points (CAPWAP)
+The *Control and Provisioning of Wireless Access Points (CAPWAP)* protocol is used to establish tunnels through which LWAPs send frames from clients to the WLC, that translates them to Ethernet frames [[(VLAN) Virtual LAN#VLAN Tagging|tagged]] to the appropriate VLAN.
+
+![[CAPWAP.png|602x254]]
+
+CAPWAP establishes two tunnels, a data tunnel, used to tunnel traffic to and from the clients, and a control tunnel, used for communication, configuration and management between the LWAP and the WLC.
+![[CAPWAP tunnels.png|612x200]]
+The data tunnel is by default not encrypted, but can be enabled.  
+CAPWAP uses *Datagram Transport Layer Security (DTLS)*, a TLS protocol that uses UDP instead of TCP, and UDP ports 5246, 5247.
 
 ### WLC Deployment
 ![[WLC Deployment.png|542x228]]
@@ -285,7 +305,10 @@ This is the default LWAP operational mode, offering BSSs for clients and tunneli
 **FlexConnect**
 ![[FlexConnect.png|482x180]]
 
-In this mode the LWAP can locally switch client traffic between the wired and wireless LANs, without tunneling the data to the WLC, resulting in reduced latency and conserving bandwidth. FlexConnect can be configured on a per-SSID basis and can locally switch traffic between enabled SSIDs and the wired LAN even when the connection to the WLC is lost.
+In this mode the LWAP can locally switch client traffic between the wired and wireless LANs, without tunneling the data to the WLC, reducing latency and conserving bandwidth. FlexConnect can be configured on a per-SSID basis and can locally switch traffic between enabled SSIDs and the wired LAN even when the connection to the WLC is lost.
+It has two modes of operations:
+- **Connected**: The WLC is reachable and performs all of its CAPWAP functions
+- **Standalone**: The WLC is unreachable and the AP performs WLC functions such as switching client data traffic locally and performing client authentication locally.
 
 **Bridge**
 In this mode the LWAP can form a wireless mesh with other LWAPs, without every LWAP being directly connected to the wired network.
@@ -331,9 +354,15 @@ Network device firmware updates and security patches can be automatically deploy
 By simplifying the processes *operating expenses (OpEx)*, the costs of maintaining the network, are reduced. 
 
 # Security
->[!note]
->Imagine you are in a room full of people and you want to have a private conversation with your friend at the other side of the room, but all you can do is shout at the top of your lungs.
->That how communication in a wireless LAN works.
+>[!quote]
+>"Imagine you are in a room full of people and you want to have a private conversation with your friend at the other side of the room, but all you can do is shout at the top of your lungs.
+>Thats how communication in a wireless LAN works."
+
+## Threats
+- Interception of data
+- Wireless intruders
+- Denial of Service (DoS)
+- Rogue APs: Unauthorized APs that are installed in the network
 
 ## The CIA triad in wireless LANs
 
@@ -353,10 +382,12 @@ The original 802.11 standard defined the *Wired Equivalent Privacy (WEP)* securi
 ### Open System and Shared Key Authentication
 *Open System Authentication* and *Shared Key Authentication* are the two methods of authentication defined by WEP. 
 
+**Open System Authentication**
 Open System Authentication does not exchange credentials, a client simply sends an authentication request and the AP sends a authentication response unless the request itself is faulty (f.e. invalid formatting). This is done to authenticate that both devices are valid 802.11 devices.  
 >[!note]
 >OSA is used in the *Client Association Process*.
 
+**Shared Key Authentication**
 Shared Key Authentication uses a static WEP key (Wi-Fi password) on the AP, that each client has to know to authenticate itself. 
 The process used for it is:
 1. The client sends an authentication request
@@ -376,6 +407,7 @@ Integrity is ensured by appending a 32 bit checksum called the *integrity check 
 
 ## Wi-Fi Protected Access (WPA)
 ![[WPA Genarations.png]]
+
 WPA was developed by the Wi-Fi Alliance as an interim enhancement after the vulnerabilities of WEP were discovered, until the IEEE developed a more permanent solution, the 802.11i standard.
 WPA3 is as of 2020 the latest WPA standard and offers:
 - superior security protocols
@@ -460,9 +492,76 @@ It uses the *Advanced Encryption Standard (AES)*, specifically AES *counter mode
 ### Galois/Counter Mode Protocol (GCMP)
 *GCMP* is a used by WPA3 and offers improved security and efficiency, which is necessary for the faster data rates of the newer 802.11 standards.
 It uses AES counter mode encryption with a key length of 128 or 256 bits and *Galois Message Authentication Code (GMAC)* for its data integrity checksum.
+
+## Zugangskontrolle
+
+**Remote Authentication Dial-In User Service (RADIUS)**
+*RADIUS* ist ein IEEE 802.1X standardisiertes Authentifizierungsprotokoll.
+
+**DIAMETER**
+*DIAMETER* ist das Nachfolge Protokoll von RADIUS und wird für AAAA-Authentifizierung benutzt.
+
 # Configuration on Cisco Devices
 #Cisco_CLI 
+
+## Basic Network Setup
+1. Log into the Router via a web browser
+2. Change the default admin passwort
+3. Log in as admin
+4. Change the default DHCP IPv4 addresses
+5. Renew the IP address
+6. Log in the router with the new IP address
+
+## Basic Wireless Setup 
+1. View the WLAN defaults
+2. Change the network mode
+3.  Configure the SSID
+4. Configure the channel 
+5. Configure the security mode
+6. Configure the passphrase
+
+## Basic WLAN on a WLC
+1. Create the WLAN
+2. Apply and enable the WLAN
+3. Select the interface
+4. Secure the WLAN
+5. Verify operational WLAN
+6. Monitor the WLAN 
+7. View wireless client details
+
+## Simple Network Management Protocol (SNMP)
+1. Click Management in the Router web interface
+2. Click SNMP
+3. Click Trap Receivers
+4. Click New
+5. Enter Name and IP of the SNMP server 
+
+## Configure RADIUS Server Information
+1. Click Security
+2. Click Radius
+3. Click Authentication
+4. Click New
+5. Enter the IP  and the password shared between the WLC and the RADIUS server
+
+## Configuring a new WLAN Interface
+1. Click Controller > Interfaces > New
+2. Enter a name and VLAN ID
+3. Configure the port number and the IP addresses of the host and the Gateway
+4. Enter the IP of the DHCP server
+
+## Configure DHCP scope
+1. Click Controller > Internal DHCP server > DHCP scope > New
+2. Enter a name
+3. Set the DHCP scope and set Status to enabled
+
+## Configure a WPA2 Enterprise WLAN
+1. Click WLAN > Create New and Go
+2. Configure name, SSID and ID
+3. Set Status to enabled and set correct VLAN
+4. Click the Security Tab and click WPA2 and 802.1X
+5. Click the AAA Servers tab and select the correct RADIUS server
 ## Initial Setup
+
 ![[WLAN Initial setup.png]]
 ## Switch Configuration
 SW1 connects AP1 to the wired infrastructure
@@ -485,7 +584,7 @@ SW1(config-if-range)# switchport access vlan 10
 SW1(config-if-range)# spanning-tree portfast
 ```
 
-In the split-MAC architecture, the WLC is responsible for translating between VLANs and WLANs (SSIDs), so it must connect to SW1via a trunk link to support multiple VLANs, for redundancy and additional throughput capacity, it is common to connect the WLC to the network via a [[Link Aggregation#Link Aggregation Control Protocol (LACP)|Link Aggregation Group]] (LAG).
+In the split-MAC architecture, the WLC is responsible for translating between VLANs and WLANs (SSIDs), so it must connect to SW1via a trunk link to support multiple VLANs, for redundancy and additional throughput capacity, it is common to connect the WLC to the network via a [[Link Aggregation - Etherchannel#Link Aggregation Control Protocol (LACP)|Link Aggregation Group]] (LAG).
 ```
 # Configures 0/1 and F0/2 as members of a static LAG
 SW1(config-if-range)# interface range f0/1-2

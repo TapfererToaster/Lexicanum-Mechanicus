@@ -156,7 +156,7 @@ The password is stored as a hash.
 
 To configure the enable secret use the command `enable secret`
 ```
-Router(config)# confienable secret cisco
+Router(config)# enable secret cisco
 ```
 
 ## Configure vty password
@@ -166,6 +166,21 @@ Router(config)# line vty 0 15
 Router(config)# password cisco
 Router(config)# login
 Router(config)# exit
+```
+## SSH 
+SSH requires:
+- a username and password
+  `R1(config)# username userName secret passWord`
+- authentication by the local database is optional
+  `R1(config)# login local`
+
+```
+R1(config)# crypto key generate rsa general-keys modulus 2048
+R1(config)# username Admin secret 1234
+R1(config)# ip ssh version 2
+R1(config)# line vty 0 4
+R1(config-line)# transport input ssh
+R1(config-line)# login local
 ```
 
 # MAC Address Table
@@ -410,3 +425,6 @@ Connection Version Mode Encryption  Hmac                State          Username
 
 # Set clock
 - `Router# clock set 14:30:00 8 Jul 2026`
+
+# Prevent Domain Look up 
+- `no ip domain-lookup`

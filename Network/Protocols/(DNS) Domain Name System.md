@@ -12,6 +12,7 @@ This means that when you type `example.com` in your browser, it tries to resolve
 >The most used software is *Berkley Internet Name Domain (BIND)*.
 
 # Hierarchy
+![[DNS-Hierarchy.png|514]]
 Die oberste Ebene der Hierarchy ist eine spezielle Zone mit einem leeren String als Name, der durch die Root-Nameserver der ICANN verwaltet wird und erhält Verweise auf alle Top-Level-Domains.
 
 Es gibt zwei organisatorisch Arten von Top-Level-Domains, zwischen denen es technisch keine Unterschiede gibt.
@@ -38,3 +39,26 @@ Name:    google.com
 Addresses:  2a00:1450:4001:81c::200e
           142.250.186.142
 ```
+
+# Ablauf
+![[DNS ablauf.png]]
+
+Wenn Sie also die Website „www.beispiel.de“ aufrufen wollen geschieht folgendes:
+1. Ihr Computer überprüft seinen lokalen Cache, ob ein Eintrag zu der Webseite vorhanden
+ist, etwa weil sie diese schon vor kurzem aufgerufen haben. Falls es hier keinen Eintrag
+gibt, wird eine (rekursive) DNS-Anfrage an den konfigurierten DNS-Server gestellt.
+2. Der DNS-Server wird meistens von einem Internet Service Provider bereitgestellt, man
+kann aber auch selbst einen auswählen. Dieser überprüft ebenfalls seinen Cache nach
+einem Eintrag zu dieser Webseite, wird er ebenfalls nicht fündig stellt er eine (iterative)
+Anfrage an einen DNS Root Server.
+3. Die Root Server sind die oberste Instanz im DNS-System und leiten Anfragen zu den
+richtigen Top-Level-Domain Servern weiter.
+In unserem Fall wird die Anfrage nach „www.beispiel.de“ mit einem Verweis auf den
+TLD-Server, der für die Domäne „.de“ zuständig ist, beantwortet.
+4. Der TLD-Server besitzt Einträge über die sogenannten „Nameserver“ oder auch
+autoritativen Server, die für die gesuchte Domäne, „beispiel.de“, zuständig sind und
+weist den DNS-Server an diesen weiter.
+5. Die autoritativen Server haben nun endlich die Einträge der IP-Adressen zum DomänenNamen. Der gesuchte Eintrag wird nun vom autoritativen Server an den DNS-Server
+gesendet, dieser speichert den Eintrag in seinem Cache und sendet ihn schließlich an
+ihren Rechner.
+6. Nun kann ihr Rechner die gewünschte Webseite aufrufen.

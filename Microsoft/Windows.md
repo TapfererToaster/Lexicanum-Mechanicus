@@ -1,5 +1,5 @@
 # Dateisystem
-Im Windows [[Betriebssysteme#Dateisysteme|Dateisystem]] hat jeder Datenträger und Partition einen eigenen Verzeichnisbaum. Die Partitionen werden durch Buchstaben in einer automatisch gewählten Reihenfolge benannt:
+Im Windows [[Betriebssysteme - Operating Systems#Dateisysteme|Dateisystem]] hat jeder Datenträger und Partition einen eigenen Verzeichnisbaum. Die Partitionen werden durch Buchstaben in einer automatisch gewählten Reihenfolge benannt:
 - *A*: das erste Diskettenlaufwerk
 - *B*: das zweite Diskettenlaufwerk
 - *C*: die erste Partition auf der ersten Festplatte 
@@ -59,3 +59,8 @@ Dateien werden als Erstes im aktuellen Arbeitsverzeichnis gesucht und anschließ
 	- `A`: Archiv 
 - `type`
   zeigt den Inhalt einer Textdatei an
+
+## Netzwerk
+- `ipconfig /release`: releases all current IPv4 addresses
+- `ipconfig /renew`: attempts to renew the IPv4 addresses
+- `ipconfig /all`: shows the current IP configuration

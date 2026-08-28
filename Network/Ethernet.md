@@ -1,6 +1,6 @@
 #CCNA 
 
-Ethernet is a LAN technology, which uses [[Cables, Connectors and Ports#Copper Twisted-Pair Connections|twisted-pair]] ,[[Cables, Connectors and Ports#Fiber-optic connections| fibrer-optics]] links and coaxial cables.
+Ethernet is a [[Network Concepts & Basics#Local Area Network (LAN)|LAN]] technology, which uses [[Cables, Connectors and Ports#Copper Twisted-Pair Connections|twisted-pair]] ,[[Cables, Connectors and Ports#Fiber-optic connections| fiber-optics]] and coaxial cables.
 It operates in the [[(OSI) Open Systems Interconnection-Modell#2. Datensicherungsschicht (Data Link, Layer 2)|data link]] and the [[(OSI) Open Systems Interconnection-Modell#1. Physische Schicht (Physical, Layer 1)|physical layer]] of the OSI-Model and is defined in the IEEE 802.2 and 802.3 standards.
 # Sublayers
 ![[Data-link Ethernet MAC sublayer.png]]
@@ -15,7 +15,7 @@ Ethernet operates on the [[(OSI) Open Systems Interconnection-Modell#Media Acces
 - **Ethernet Error detection**: 
   The frame includes a *frame check sequence (FCS)* trailer for error detection
 
-## Accessing Media
+## Media Standards
 IEEE 802.3 also includes the specification (speed, cable types and distances) of different Ethernet communications standards over different media (copper, fibre, ...).
 - IEEE 802.3u Fast Ethernet
 - IEEE 802.3z Gigabit Ethernet over Fiber
@@ -29,7 +29,43 @@ IEEE 802.3 also includes the specification (speed, cable types and distances) of
 Ethernet also uses various standards for [[Cables, Connectors and Ports#Copper Twisted-Pair Connections|TP cabling]], some of them are:
 ![[TP-Ethernet Standards.png]]
 
-Each of these standards support a maximum cable length of 100 meters.
+| Speed    | Speed-derived<br>Name         | IEEE task Group | Informal Name | Cable Cat |
+| -------- | ----------------------------- | --------------- | ------------- | --------- |
+| 10 Mbps  | Ethernet                      | IEEE 802.3i     | 10Base-T      | Cat 3     |
+| 100 Mbps | Fast Ethernet                 | IEEE 802.3u     | 100Base-T     | Cat 5     |
+| 1 Gbps   | Gigabit Ethernet (GbE)        | IEEE 802.3ab    | 1000Base-T    | Cat 5e    |
+| 10 Gbps  | 10 Gigabit Ethernet (10GbE)   | IEEE 802.3an    | 10GBase-T     | Cat 6a    |
+| 100 Gbps | 100 Gigabit Ethernet (100GbE) |                 |               |           |
+
+**Ethernet**
+
+| Informal Name | Speed   | IEEE task Group | Cable | Reach  | Cable type |
+| ------------- | ------- | --------------- | ----- | ------ | ---------- |
+| 10Base-T      | 10 Mb/s | IEEE 802.3i     | Cat 3 | 100 m  | TP         |
+| 10Base-F      | 10 Mb/s | IEEE 802.3j     |       | 1000 m | Fiber      |
+**Fast Ethernet**
+
+| Informal Name | Speed    | IEEE task Group | Cable | Reach  | Cable type |
+| ------------- | -------- | --------------- | ----- | ------ | ---------- |
+| 100Base-T     | 100 Mb/s | IEEE 802.3u     | Cat 5 | 100 m  | TP         |
+| 100Base-FX    | 100 Mb/s | IEEE 802.3u     |       | 2000 m | Fiber      |
+**Gigabit-Ethernet (GbE)**
+
+| Informal Name | Speed    | IEEE task Group | Cable      | Reach | Cable type |
+| ------------- | -------- | --------------- | ---------- | ----- | ---------- |
+| 1000Base-TX   | 1 Gb/s   | IEEE 802.3ab    | Cat 5e     | 100 m | TP         |
+| 2,5GBase-T    | 2,5 Gb/s | IEEE 802.3bz    | Cat 5e     | 100 m | TP         |
+| 5GBase-T      | 5 Gb/s   | IEEE 802.3bz    | Cat 6      | 100 m |            |
+| 1000Base-SX   | 1 Gb/s   | IEEE 802.3z     | Multimode  | 550 m | Fiber      |
+| 1000Base-LX   | 1 Gb/s   | IEEE 802.3z     | Singlemode | 10 km | Fiber      |
+| 1000Base-ZX   | 1 Gb/s   |                 | Singlemode | 70 km | Fiber      |
+**10-Gigabit-Ethernet (10GbE)**
+
+| Informal Name               | Speed   | IEEE task Group | Cable      | Reach | Cable Type |
+| --------------------------- | ------- | --------------- | ---------- | ----- | ---------- |
+| 10GBase-T                   | 10 Gb/s | IEEE 802.3an    | Cat 6a     | 100 m | TP         |
+| 10GBase-SR<br>(Short Reach) | 10 Gb/s | IEEE 802.3ae    | Multimode  | 300 m | Fiber      |
+| 10GBase-LR<br>(Long Reach)  | 10 Gb/s | IEEE 802.3ae    | Singlemode | 10 km | Fiber      |
 
 >[!note]
 >The different names names of the standards are derived from 
@@ -37,9 +73,30 @@ Each of these standards support a maximum cable length of 100 meters.
 > - the name of the [[Organizations#Institute of Electrical and Electronics Engineers (IEEE)|IEEE]] task group that defined the it
 > - an informal name by the IEEE that indicates the speed and cable type (standards for copper cable end with T)
 > - name of the cable standard as defined by Telecommunications Industry Association (TIA) and Electronic Industries Alliance (EIA), as the cables themselves are not defined, but only used by the IEEE
+
+**100-Gigabit-Ethernet (100GbE)**
+
+| Informal Name | Speed    | IEEE Task Group | Cable      | Reach | Cable Type |
+| ------------- | -------- | --------------- | ---------- | ----- | ---------- |
+| 100GBase-CR10 | 100 Gb/s | IEEE 802.3bj    |            | 7 m   | Twinaxial  |
+| 100GBase-SR4  | 100 Gb/s | IEEE 802.3ba    | Multimode  | 100 m | Fiber      |
+| 100GBase-SR10 | 100 Gb/s | IEEE 802.3ba    | Multimode  | 100 m | Fiber      |
+| 100GBase-LR4  | 100 Gb/s | IEEE 802.3ba    | Singlemode | 10 km | Fiber      |
+| 100GBase-ER4  | 100 Gb/s | IEEE 802.3ba    | Singlemode | 40 km | Fiber      |
+**Terabit Ethernet (TbE)**
+
+| Informal Name | Speed    | IEEE Task Group | Cable      | Reach | Cable Type |
+| ------------- | -------- | --------------- | ---------- | ----- | ---------- |
+| 200GBase-DR4  | 200 Gb/s | IEEE 802.3bs    | Singlemode | 500 m | Fiber      |
+| 200GBase-FR4  | 200 Gb/s | IEEE 802.3bs    | Singlemode | 2 km  | Fiber      |
+| 200GBase-LR4  | 200 Gb/s | IEEE 802.3bs    | Singlemode | 10 km | Fiber      |
+| 400GBase-FR8  | 400 Gb/s | IEEE 802.3bs    | Singlemode | 2 km  | Fiber      |
+| 400GBase-LR8  | 400 Gb/s | IEEE 802.3bs    | Singlemode | 10 km | Fiber      |
+| 400GBase-SR16 | 400 Gb/s | IEEE 802.3bs    | Multimode  | 100 m | Fiber      |
+| 400GBase-DR4  | 400 Gb/s | IEEE 802.3bs    | Singlemode | 500 m | Fiber      |
 # Frames 
 Ethernet frames have a minimum size of 64 bytes and an expected maximum of 1518 bytes, including the destination MAC address field through the check sequence (FCS). 
-If the size of a frame it less than the minimum or greater than the maximum, the receiver drops the frame and consideres it invalid. 
+If the size of a frame it less than the minimum or greater than the maximum, the receiver drops the frame and considers it invalid. 
 Frames, which are less than 64 bytes in length are considered "collision fragments" or "runt frames", frames with more than 1500 bytes of data are considered "jumbo" or "baby giant frames".
 
 >[!important]
@@ -51,9 +108,9 @@ Frames, which are less than 64 bytes in length are considered "collision fragmen
 ### Preamble and Start Frame Delimiter (SFD)
 >[!note]
 The *Preamble* and the *Start Frame Delimiter (SFD)* are not part of the Ethernet frame but are sent with each frame.
->They are not considered part of the Ethernet frame, as they are a function of Layer 1 which does not contain Layer 2 data.
+>They are not considered part of the Ethernet frame, as they are a function of Layer 1, which does not contain Layer 2 data.
 
-The Preamble and SFD are allows the receiving device to synchronize its *receiver clock*. The clock is used to determine the precise length of 1 bit.
+The Preamble and SFD allows the NIC of the receiving device to synchronize its *receiver clock*. The clock is used to determine the precise length of 1 bit.
 - The *Preamble* is 7 bytes (56 bits) long an is a series of alternating 1 and 0 (f.e. 10101010).
 - The *SFD* is 1 byte in length and has the bit pattern 10101011. It signals that the Preamble is finished and the frame is going to start.
 ### Destination and Source

@@ -1,6 +1,6 @@
 #CCNA 
-*VLANs* provide segmentation and organizational flexibility in a [[Switches|switched]] network and are based on logical connections instead of physical connections.
-They allow admins to separate the network based on factors such as teams or application.
+VLANs are virtual [[Network Concepts & Basics#Local Area Network (LAN)|LANs]], based on logical connections, that exist on a physical [[Network Concepts & Basics#Shared and Switched Networks|switched]] network and provide segmentation and organizational flexibility by allowing admins to separate the network based on factors such as teams or application.
+
 Benefits of VLANs are:
 - **Smaller broadcast domains**
 	- Dividing a network into VLANs reduces the number of devices in the broadcast domain
@@ -17,6 +17,32 @@ Benefits of VLANs are:
 - **Simpler project and application management**
 	- VLANs aggregate users and network devices to support business or geographic requirements
 
+# IEEE 802.1Q
+VLANs wurden im IEEE 802.1Q Standard normiert, hier wird auch die Verlängerung des Ethernet Frames um vier Byte definiert um zusätzliche Informationen, wie VLAN tagging, zu speichern.
+Auch das GARP VLAN Registration Protocol (GVRP) wurde hier definiert
+
+# VLAN Variants
+## Static | Port-based VLAN
+Hier werden Ports an einem Switch manuell konfiguriert und VLANs zugewiesen.
+
+## Dynamic VLAN
+Hier erfolgt die Konfiguration und Zuweisung zu VLANs nicht manuell, sondern dynamisch durch den Inhalt der Frames.
+
+**MAC Address-based VLANs**
+Hier wird die Zuordnung zu einem VLAN nicht über den Port, sondern über die MAC Adresse des Computers festgelegt. Dadurch ist der Computer nicht mehr statisch an einen physischen Port gebunden und ist auch beim Anschluss an einen anderen Switch dem richtigen VLAN automatisch zugewiesen.
+
+**Protokollbasierte VLANs**
+Hier wird die Zuordnung zu einem VLAN anhand vom Protokolltypen festgelegt.
+
+**Anwendungsbasierte VLANS**
+Hier wird die Zuordnung zu einem VLAN anhand von Applikationen, z.B. durch die IP-Adresse und den Port einer Anwendung.
+Dadurch kann man Gruppen von Benutzern die die gleiche Applikation nutzen abbilden.
+
+>[!note]
+>Für diese VLAN werden Multilayer-Switche benötigt
+
+**Layer-3 VLANs**
+Hier erfolgt die Zuordnung zu einem VLAN über die IP-Adresse.
 # Types of VLAN
 ## Default VLAN
 The default VLAN on a Cisco switch is VLAN 1 and unless explicitly configured all switch ports belong to it.
@@ -63,9 +89,14 @@ To support Voice over IP (VoIP) a separate VLAN with the following characteristi
 - Delay of less than 150 ms across the network
 
 To meet these requirements the entire network has to be designed to support VoIP.
-
 # VLAN Tagging
-The standard [[Ethernet#Frames|Ethernet frame header]] does not contain information about the VLAN to which the frame belongs. To add these information the IEEE 802.1Q header is used in a process called *tagging*. This header includes a 4-byte tag inserted into the original Ethernet frame between the Source and EtherType field, specifying the VLAN.
+The standard [[Ethernet#Frames|Ethernet frame header]] does not contain information about the VLAN to which the frame belongs.
+To add these information the IEEE 802.1Q header is used in a process called *tagging*. This header includes a 4-byte tag inserted into the original Ethernet frame between the Source and EtherType field, specifying the VLAN.
+
+>[!info] 
+>Wenn ein Frame in einen VLAN-fähiges Netzwerk eintritt, wird in Schicht 2 dem Frame ein Tag angehängt in dem seine VLAN-ID vermerkt ist. Jeder Frame muss einem/ seinem VLAN exakt zugeordnet werden können. Ist ein Frame untagged wird er im nativen VLAN versendet.
+>Beispiel:
+>Ein Switch empfängt einen Frame, der für ein spezifisches VLAN getagged ist und sendet ihn weiter zu einem Switch in demselben VLAN. Nachdem der Switch den Frame erhält entfernt er den VLAN Tag bevor der Frame den Port verlässt.
 ## VLAN tag fields
 ![[VLAN tag fields.png]]
 
@@ -412,7 +443,6 @@ The other switches in server mode are now *Secondary Servers* and are functional
 **Extended-Range VLANs**
 Before Version 3 only the normal-range VLANs 1-1005 were available for use, the extended-range VLANs 1006-4094 were reserved for internal application.
 
-
 # Inter-VLAN Routing
 Hosts in one VLAN cannot communicate with hosts in other VLANs, unless there is a router or a Layer 3 switch.
 *Inter-VLAN routing* is the process of forwarding network traffic from one VLAN to another VLAN.
@@ -425,9 +455,12 @@ A legacy method of inter VLAN routing was using a Router and connecting it with 
  The *router on a stick* method only needs one Ethernet port, which is configured as an 802.1Q trunk and connected to a trunk port on a Layer 2 switch.
 ### Subinterfaces 
 This method requires the creation of *subinterfaces*, which send and receive tagged frames, for each VLAN to be routed.
-To create a subinterface use `interface interface-id.subinterface-id`.
+To create a subinterface on the router use `interface interface-id.subinterface-id`.
 After that you configure the subinterface to respond to 802.1Q encapsulated traffic from a specified VLAN with `encapsulation dot1q vlan-id [native]`. The `native` keyword is used to set the native VLAN to something other than VLAN 1.
 You also have to set a IP address to the subinterface, which will serve as a default gateway.
+
+>[!note]
+>You first have to set the encapsulation before assigning an IP address otherwise an error occurs
 
 **Example**
 #Cisco_CLI 
@@ -446,80 +479,102 @@ R1(config-subif)# exit
 ```
 
 ## Layer 3 Switch/ SVI inter-VLAN routing
-![[Layer 3 Switch VLAN routing.png]]
-This method uses a *Layer 3 switch* and *switched virtual interfaces (SVI)*.
-The advantages of using Layer 3 switches :
+![[Layer 3 Switch Routing.png|579]]
+This method uses a *Layer 3 switch* and [[Switches#Management Access and SVI Configuration|switched virtual interfaces (SVI)]].
+The advantages of Layer 3 switches :
 - much faster than router-on-a-stick 
 - no need for external links from the switch to the router
 - not limited to one link because Layer 2 EtherChannels can be used as trunk links between the switches to increase bandwidth.
 - lower latency because data does not need to leave the switch in order to be routed to a different network.
 - They more commonly deployed in a campus LAN than routers.
 
-### Switch Configuration
+
+### Configuration
+
+**Switching Configuration**
+
 #Cisco_CLI 
-1. Create VLANs
+1. **Create VLANs**
+   `D1(config)# vlan vlanID`
+   `D1(config-vlan)# name vlanName`
+
+Beispiel:
 ```
-D1(config)# vlan 10
-D1(config-vlan)# name LAN10
 D1(config-vlan)# vlan 20
 D1(config-vlan)# name LAN20
 ```
-2. Create the SVI VLAN interfaces.
+2. **Create the SVI VLAN interfaces.**
+   `D1(config)# interface vlan vlanID`
+   `D1(config-if)# description DescriptionText`
+   `D1(config-if)# ip address ipAddress netMask`
+   `D1(config-if)# no shutdown`
+
+Beispiel:
 ```
-D1(config)# interface vlan 10
-D1(config-if)# description Default Gateway SVI for 192.168.10.0/24
-D1(config-if)# ip add 192.168.10.1 255.255.255.0
-D1(config-if)# no shut
-D1(config-if)# exit
-D1(config)#
 D1(config)# int vlan 20
 D1(config-if)# description Default Gateway SVI for 192.168.20.0/24
 D1(config-if)# ip add 192.168.20.1 255.255.255.0
 D1(config-if)# no shut
 D1(config-if)# exit
 ```
-3. Configure access ports
+- **Configure access ports**
+   `D1(config)# interface interfacePort`
+   `D1(config-if)# description DescriptionText`
+   `D1(config-if)# switchport mode access`
+   `D1(config-if)# switchport access vlan vlanID`
+
+Beispiel:
 ```
-D1(config)# interface GigabitEthernet1/0/6
-D1(config-if)# description Access port to PC1
-D1(config-if)# switchport mode access
-D1(config-if)# switchport access vlan 10
-D1(config-if)# exit
-D1(config)#
 D1(config)# interface GigabitEthernet1/0/18
 D1(config-if)# description Access port to PC2
 D1(config-if)# switchport mode access
 D1(config-if)# switchport access vlan 20
 D1(config-if)# exit
 ```
-4. Enable IP routing
+
+> [!tip]
+> Remember that you must configure trunks when VLAN communication across switches is desired
+> 
+
+- **Configure trunk ports**
+  `D1(config-if)# switchport mode trunk`
+  `D1(config-if)# switchport trunk native vlan vlanID`
+  `D1(config-if)# switchport trunk encapsulation dot1q`
+
+Beispiel: 
 ```
-D1(config)# ip routing
+D1(config)# interface g0/1
+D1(config-if)# switchport mode trunk
+D1(config-if)# switchport trunk native vlan 99
+D1(config-if)# switchport trunk encapsulation dot1q
 ```
 
-### Routing
-![[Layer 3 Switch Routing.png]]
+
+**Routing Configuration**
 If VLANs are to be reachable by other Layer 3 devices, they mus be advertised using static or dynamic routing. To enable routing on a Layer 3 switch, a *routed port* must be configured.
 
 A routed port (G0/0/1) is created by disabling the switchport feature on a Layer 2 port with `no switchport`, which converts it into a Layer 3 interface.
 
-#### Configuration
 #Cisco_CLI 
-1. Configure the routed port
+1. Enable IP routing
+   `D1(config)# ip routing`
+
+2. Configure the routed port
+   `D1(config)# interface interfacePort`
+   `D1(config-if)# no switchport`
+   `D1(config-if)# ip address ipAddress netMask`
+   
+Beispiel:
 ```
-D1(config)# interface GigabitEthernet0/0/1
+D1(config)# interface g0/0/1
 D1(config-if)# description routed Port Link to R1
 D1(config-if)# no switchport
 D1(config-if)# ip address 10.10.10.2 255.255.255.0
 D1(config-if)# no shut
 D1(config-if)# exit
 ```
-2. Enable routing
-```
-D1(config)# ip routing
-```
 3. Configure routing
-   Configure the OSPF routing protocol to advertise VLAN 10 and VLAN 20 netoworks
+   (Configure the OSPF routing protocol to advertise VLAN 10 and VLAN 20 networks)
 ```
 D1(config)# router ospf 10
 D1(config-router)# network 192.168.10.0 0.0.0.255 area 0
@@ -531,6 +586,9 @@ D1(config-router)# network 10.10.10.0 0.0.0.3 area 0
 D1# show ip route | begin Gateway
 ```
 
+**IPv6 routing**
+1. **Enable IPv6 unicast routing**
+   `D1(config)# ipv6 unicast-routing`
 ## Troubleshooting
 
 ![[VLAN Troubleshooting.png]]

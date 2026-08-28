@@ -533,7 +533,7 @@ used to store random-access files, objects that have been randomly written and r
 - **Block Blob**
 used to store text or binary files, objects that have been ordered, are consecutive and not random; f.e. backups
 - **Append Blob**
-used to store objects that have been sonsecutibely added after the last piece of information stored in the Blob; f.e. log files
+used to store objects that have been consecutively added after the last piece of information stored in the Blob; f.e. log files
 
 ## Queue Storage
 Asynchronous messages can be stored in Azure Queues, which are managed within an application programmatically. This management is done when a URL is used to access messages in Azure Queues, and all requests are authenticated.
@@ -557,3 +557,14 @@ They are used to define  the settings and configurations that can be applied to 
 
 ==S.128==
 
+### **Storage Tiers**
+
+**Storage Tiers** legen fest, wie häufig auf Daten zugegriffen wird und wie sie gespeichert werden. Es gibt die Stufen **Hot** (häufiger Zugriff), **Cool** (seltener Zugriff) und **Archive** (langfristige Aufbewahrung). Dadurch können Speicherkosten optimiert werden.
+
+### **Storage Replication**
+
+**Storage Replication** sorgt dafür, dass Daten automatisch mehrfach gespeichert werden, um sie vor Ausfällen zu schützen. Je nach gewählter Replikationsart werden die Daten innerhalb eines Rechenzentrums, über mehrere Rechenzentren oder sogar über verschiedene Regionen hinweg kopiert. Dadurch werden Verfügbarkeit und Datensicherheit erhöht.
+
+### **Storage Copying**
+
+**Storage Copying** bezeichnet das Kopieren von Daten innerhalb von Azure oder zwischen lokalen Systemen und Azure. Es wird verwendet, um Daten zu sichern, zu migrieren oder zwischen verschiedenen Storage Accounts und Regionen zu übertragen. Hierfür können Werkzeuge wie **AzCopy** oder **Azure Storage Explorer** genutzt werden.

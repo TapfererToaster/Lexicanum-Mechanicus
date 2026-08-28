@@ -26,7 +26,7 @@ Der Ressourcen Manager ermöglicht es festzulegen, welche Dateitypen wo gespeich
 Die Datenträgerdeduplizierung erfasst Dateien die mehrmals auf einem Datenträger vorhanden sind und erfasst binär die Daten und Unterschiede. Die Unterschiede der Dateien wird für jede Version gespeichert, wodurch sich die Datenmenge reduzieren lässt.
 
 **NTFS**
-[[Betriebssysteme#New Technology File System (NTFS)|NTFS]] ist das standard Dateisystem von Windows Betriebssystemen.
+[[Betriebssysteme - Operating Systems#New Technology File System (NTFS)|NTFS]] ist das standard Dateisystem von Windows Betriebssystemen.
 
 **ReFS**
 Das *Resilient File System* ist ein, mit Windows Server 2012 erschienenes, Dateisystem, das vor allem für die Bereitstellung von Dateien in einem Netzwerk spezialisiert ist. 
@@ -116,3 +116,12 @@ Um einen virtuellen Switch zu erstellen klickt man auf der rechten Seite unter "
 Nach der Erstellung kann man unter` Systemsteuerung > Netzwerk und Internet > Netzwerk- und Freigabecenter > Adaptereinstellungen` überprüfen ob die virtuellen Switche erkannt wurden.
 - Ein externer Switch wird dann als der Netzwerkadapter für das lokale LAN und Internetzugriff erkannt und muss eine dementsprechende Konfiguration aufweisen.
 - Ein lokaler Switch ist mit den VMs verbunden und sollte als Default gateway für diese eingerichtet werden.
+
+## VMs
+Nach Erstellen der VM kann man unter `Einstellungen` > `DVD-Laufwerk` Keine auswählen um die ISO Image auszuwerfen und einer anderen VM zur Installation geben.
+
+## Prüfpunkte
+Prüfpunkte sind eine Kopie des Systems zu einem bestimmten Zeitpunkt und werden eingesetzt, sollte es nötig sein zu einem Systemzustand zurückzukehren.
+Um einen Prüfpunkt zu erstellen wählt man die jeweilige VM aus und benutzt den Punkt `Prüfpunkt`.
+
+# Active Directory

@@ -3,8 +3,8 @@ Machine Learning Verfahren lernen selbständig aus strukturierten Datenmengen, i
 Es wird zwischen drei Arten unterschieden:
 
 **Supervised Learning** (Überwachtes Lernen)
-Die Algorithmen erhalten als erstes Beispieldaten, bei denen die gewünschten Schlussfolgerungen schon bekannt sind. Dadurch wird ihnen Schritt für Schritt die Interpretation solcher Daten beigebracht, bis die gleichartig organisierte Daten mit unbekannter Schlussfolgerung interpretieren können.
-Werden die Algorithmen nicht genug trainiert kommt es zu *Underfitting*, hierbei werden selbst die Trainingsdaten nicht gut interpretieren können. 
+Die Algorithmen erhalten als erstes Beispieldaten, bei denen die gewünschten Schlussfolgerungen schon bekannt sind. Dadurch wird ihnen Schritt für Schritt die Interpretation solcher Daten beigebracht, bis sie gleichartig organisierte Daten mit unbekannter Schlussfolgerung interpretieren können.
+Werden die Algorithmen nicht genug trainiert kommt es zu *Underfitting*, hierbei werden selbst die Trainingsdaten nicht gut interpretiert. 
 Wird zu viel trainiert, liefert der Algorithmus richtige Ergebnisse für Testdaten, jedoch falsche Ergebnisse für Testdaten.
 
 **Unsupervised Learning** (Unüberwachtes Lernen)

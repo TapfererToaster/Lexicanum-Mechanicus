@@ -18,7 +18,7 @@ A DHCP server dynamically assigns, or leases, an IPv4 address from a pool of add
 A client leases the information from the server for an administratively defined period of time, after which the client has to request a new one.
 
 When you enter a location with a wireless hotspot or access point, the DHCP client of your device contacts the local DHCP server.
-In home networks and small businesses wireless router are used and is both DHCP client and server. The router receives the public IPv4 address and configuration from the ISP and distributes addresses to internal hosts.
+In home networks and small businesses wireless router are used, which are both DHCP client and server. The router receives the public IPv4 address and configuration from the ISP and distributes addresses to internal hosts.
 
 # Operations
 1. **DHCP Discover (DHCPDISCOVER)**
@@ -31,47 +31,35 @@ In home networks and small businesses wireless router are used and is both DHCP 
    When receiving the DHCPREQUEST the server may verify the lease information with an ICMP ping to the assigned address and create a new ARP entry.
 
 ## Steps to Obtain a Lease
-1. DHCP Discover (DHCPDISCOVER)
-2. DHCP Offer (DHCPOFFER)
-3. DHCP Request (DHCPREQUEST)
-4. DHCP Acknowledgment (DHCPACK)
+1. DHCP Discover (`DHCPDISCOVER`)
+2. DHCP Offer (`DHCPOFFER`)
+3. DHCP Request (`DHCPREQUEST`)
+4. DHCP Acknowledgment (`DHCPACK`)
 
 ## Steps to Renew a Lease
-1. DHCP Request (DHCPREQUEST)
-2. DHCP Acknowledgement (DHCPACK)
+1. DHCP Request (`DHCPREQUEST`)
+2. DHCP Acknowledgement (`DHCPACK`)
 
 # Configure DHCPv4 Server
 #Cisco_CLI 
 1. Exclude IPv4 Addresses
-```
-Router(config)# ip dhcp excluded-address low-address [high-address]
-```
+   `Router(config)# ip dhcp excluded-address firstAddress [lastAddress]`
 2. Define a DHCPv4 Pool Name
-```
-Router(config)# ip dhcp pool pool-name
-Router(dhcp-config)#
-```
+   `Router(config)# ip dhcp pool poolName`
+   `Router(dhcp-config)#`
 3. Configure the DHCPv4 Pool
-```
-# Define the address pool.
-network network-address [mask | / prefix-length]
-
-# Define the default reouter or gateway
-default-router address ([address2... .address8])
-
-# Define DNS server
-dns-server address ([address2...address8])
-
-# Define the domain name
-domain-name domain
-
-# Define the duration of the DHCP lease
-lease {days [hours [minutes]]| infinite}
-
-# Define the NetBIOS WINS server
-netbios-name-server address [address2...address8]
-```
-
+	- Define the address pool: 
+	  `network networkAddress [mask | / prefix-length]`
+	- Define the default router or gateway: 
+	  `default-router ipAddress`
+	- Define DNS server:
+	  `dns-server ipAddress`
+	- Define the domain name:
+	  `domain-name domainName`
+	- Define the duration of the DHCP lease
+	  `lease {days [hours [minutes]]| infinite}`
+	- Define the NetBIOS WINS server
+	  `netbios-name-server address ipAddress`
 ## Configuration Example
 ```
 # Exclude IPv4 addresses
@@ -99,32 +87,17 @@ R1#
 ```
 
 ## Verification Commands
--  Verify the DHCPv4 Configuration
-```
-R1# show running-config | section dhcp
-```
-- Verify DHCPv4 Bindings
-```
-R1# show ip dhcp binding
-```
-- Verify DHCPv4 Statistics
-```
-show ip dhcp server statistics
-```
-- Verify DHCPv4 Client Received IPv4 Addressing
-```
-C:\Users\User> ipconfig /all
-```
-
+-  Verify the DHCPv4 Configuration:  `R1# show running-config | section dhcp`
+- Verify DHCPv4 Bindings: `R1# show ip dhcp binding`
+- Verify DHCPv4 Statistics: `show ip dhcp server statistics`
 ## Disable the Cisco IOS DHCPv4 Server
-The DHCPv4 service is enabled by default. To disable the service, use the `no service dhcp` command and to re-enable the server process use `service dhcp`.
-```
-R1(config)# no service dhcp
-R1(config)# service dhcp
-```
+- Disable DHCP:  `no service dhcp` 
+- Enable DHCP: `service dhcp`.
 
+> [!NOTE]
+> The DHCPv4 service is enabled by default. 
 ## DHCPv4 Relay
-Usually clients are not in the same subnet as server, so they are unable to receive services like DHCP or DNS. The `ip helper-address` command allows these services to function even when in different subnets.
+When using a DHCP Server usually the clients are not in the same subnet as the server, so they are unable to receive services like DHCP or DNS. The `ip helper-address` command allows these services to function even when in different subnets.
 
 >[!note]
 >The IP addresses of the Router serial interfaces that are attached to switch/router are used as the helper addresses. 
@@ -135,9 +108,19 @@ R1(config-if)# ip helper-address 192.168.11.6
 R1(config-if)# end
 ```
 
-# Configure DHCPv4 Client
-#Cisco_CLI 
+> [!NOTE]
+> Besides DHCP the following services are also relayed:
+> - Port 37: Time
+> - Port 49: TACACS
+> - Port 53: DNS
+> - Port 67: DHCP/BOOTP server
+> - Port 68: DHCP/BOOTP client
+> - Port 69: TFTP
+> - Port 137: NetBIOS name service
+> - Port 138: NetBIOS datagram service
 
+# Configure Router as DHCPv4 Client
+#Cisco_CLI 
 To configure a router as a DHCPv4 client use the `ip address dhcp` command on the interface connected to the DHCP server.
 - Configure an Ethernet interface as a DHCP client
 ```

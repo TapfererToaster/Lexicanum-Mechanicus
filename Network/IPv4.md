@@ -28,12 +28,11 @@ In a multicast transmission one device sends a message to a selected set of othe
 # Types of IPv4 Addresses
 ## Public and Private Addresses
 
-> [!important]
-> *Public addresses* are globally routed between ISP routers.
-> 
-> *Private addresses* are blocks of addresses that are used to address internal hosts within a network. These were introduced in 1996 with the [RFC 1918: Address Allocation for Private Internets](https://www.rfc-editor.org/rfc/rfc1918). (See also [RFC 6598](https://datatracker.ietf.org/doc/html/rfc6598))
-> 
-> | Network Address and Prefix | RFC 1918 Private Address Range |
+*Public addresses* are globally routed between ISP routers.
+
+*Private addresses* are blocks of addresses that are used to address internal hosts within a network. These were introduced in 1996 with the [RFC 1918: Address Allocation for Private Internets](https://www.rfc-editor.org/rfc/rfc1918). (See also [RFC 6598](https://datatracker.ietf.org/doc/html/rfc6598))
+
+| Network Address and Prefix | RFC 1918 Private Address Range |
 | -------------------------- | ------------------------------ |
 | 10.0.0.0/8                 | 10.0.0.0 - 10.255.255.255      |
 | 172.16.0.0/12              | 172.16.0.0 - 172.31.255.255    |
@@ -42,7 +41,12 @@ In a multicast transmission one device sends a message to a selected set of othe
 >[!info] [[Router#Routing|Routing]] to the internet
 >When a packet is send to a destination that is outside the network, the source IP address is a private address, which must be translated to a public address before forwarded to an ISP.
 >The address is translated using *Network Address Translation (NAT)*.
+### Network Address Translation (NAT) / Port and Address Translation (PAT)
+Da private IP Adressen nicht weitergeleitet werden, müssen diese durch *NAT* in eine öffentliche 
+Adresse umgewandelt werden.
 
+*NAT*: wandelt private Adressen in öffentliche Adressen um, da private nicht gerouted werden
+*PAT*: wandelt eine private Adresse mit Port in eine öffentliche Adresse um; kann mehrere private Adressen in eine öffentlich Adresse bündeln
 ## Special Use IPv4 Addresses
 Addresses that can not be assigned to hosts, or with restrictions on how the devices interact within a network are called special use addresses.
 
@@ -105,6 +109,7 @@ The *Suffix length*  or *CIDR-Notation* is used to separate the *Network portion
 The netmask is always a series of 1s followed by a series of 0s.
 
 ![[IPv4 address structure.png]]
+
 # Header
 The IPv4 header consists of 14 fields (the "Option" field is optional) and has a length of at least 20 bytes (without the "Option" field) and a maximum 60 bytes.
 
@@ -273,6 +278,12 @@ R1(config-if)# ip address 172.25.191.129 255.255.255.128
 ```
 
 ## Variable-Length Subnet Masking (VLSM)
+
+>[!note]
+>If you have a set number of required host addresses (x) you can calculate the needed number of bits with:
+>- $\log_{2}(x)$
+
+
 *Variable-Length Subnet Masking (VLSM)*  divides a address block into multiple subnets of variable size.
 ![[VLSM.png]]
 ![[VLSM Network.png]]
@@ -282,22 +293,23 @@ The order in which the subnets should be assigned is:
 2. Assign the second-largest subnet after it
 3. Repeat the process until all subnets have been assigned
 
-### Assigning Toronto LAN A's Subnet
-Toronta LAN A requires 122 host addresses. To determine the number of host bits that are needed we can use $2^y -2$ and figure out that 7 bits are needed ($2^7-2=126$). 
+### Assigning Tor LAN A's Subnet
+Tor LAN A requires 122 host addresses. To determine the number of host bits that are needed we can use $\log_{2}(x)$ and rounding up the resulting number:
+$\log_{2}(122)=6,93$ => 7 bits are needed
 We add 1 bit to the network portion, which leaves 7 host bits and we get the subnet `10.89.100.0 /25`
 ![[VLSM Toronto LAN.png]]
-### Assigning Tokyo LAN A's Subnet
-Now we have to identify the address block of Tokyo LAN A. We already know that the network address is `10.89.100.128`, as the last IP address of Toronto LAN A is `10.89.100.127`. 
-To determine how many host bits are needed to accommodate for Tokyo LAN A's 59 required hosts. We can again use $2^y -2$ and to determine that 6 bits are required ($2^6-2=62$).
+### Assigning Tok LAN A's Subnet
+We already know that the network address is `10.89.100.128`, as the last IP address of Tor LAN A is `10.89.100.127`. 
+To determine how many host bits are needed to accommodate for Tokyo LAN A's 59 required hosts. We can again use$\log_{2}(x)$ and to determine that 6 bits are required.
 We again add 1 bit to the network portion and increase the netmask to `/26`.
 
 ![[VLSM Tokyo LAN A.png]]
-### Assigning Toronto LAN B and Tokyo LAN B
-We again check how many host bits are needed to accommodation for the LANs requirements and set borrow the bits accordingly.
-Toronto LAN B:
+### Assigning Tor LAN B and Tok LAN B
+We again check how many host bits are needed to accommodation for the LANs requirements and set bits accordingly.
+Tor LAN B:
 ![[VLSM Toronto LAN B.png]]
 
-Tokyo LAN B:
+Tok LAN B:
 ![[Tokyo LAN B.png]]
 ### Assigning the WAN
 The WAN connection between R1 and R2 is a point-to-point connection, requiring only 2 host addresses. 

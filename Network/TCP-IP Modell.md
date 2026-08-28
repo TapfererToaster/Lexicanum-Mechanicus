@@ -3,12 +3,30 @@
 The TCP/IP model defined in RFC 1122 has four layers, however network engineers reference a five-layer TCP model, as it is more useful for understanding networking.
 
 ![[TCP-IP model.png]]
+
+# Protocols and their Ports
+Protocols and services are identified by a port number, which are numeric identifier used to keep track of conversations between a client and server. Every message contains a source and destination port.
+Clients are preconfigured to use a port that is registered for a service, which are assigned and managed by the *Internet Corporation for Assigned Names and Numbers (ICANN)*. 
+A port that is assigned to a specific service or protocol can only be used to communicate with that specific service or protocol.
+
+The ports are split into three categories:
+- **Well-Known Ports**: Ports 1-1023
+  Destination ports that are associated with common network application
+- **Registered Ports**: Ports 1024-49151
+  These ports can be used by organization to register specific applications
+- **Private Ports**: Ports 49152-65535
+  Often used as source ports and can be used by any application
+
+>[!note]
+>IP packets contain the source and destination ports as well as the source and destination IP addresses. 
+>The combination of the source/ destination IP address and source/ destination port is known as a *socket*.
+
 # The Layers
 Each layer provides an essential function to enable communication over a network.
 The communication could be a web browser communicating with a web server.
 
 ![[Network communication.png]]
-- Layer
+
 ## Physical Layer
 
 > [!important] Definition

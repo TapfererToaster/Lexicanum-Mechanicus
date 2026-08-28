@@ -15,28 +15,6 @@ Meaning Openflow is used to directly interface with the hardware tables (f.e. fo
 Decoupling the control and data plane exposes two new interfaces:
 - *Northbound API*: allows external applications to interact with the network controllers
 - *Southbound API*: used by the network controller to define the packet forwarding in the data plane
-# Network Functions Virtualization (NFV)
-*Network functions virtualization (NFV)* refers to VMs that that operate as network devices (router, firewall, load balancer, intrusion detection system, etc.), which are traditionally deployed as hardware. 
-## Virtual Switching
-Virtual switches are software-based switches that reside in the hypervisor kernel and provide network connectivity between VMs/containers and the node, which connects to external networks, but also functions such as MAC learning, link aggregation and more. 
-Virtual switches allow to rapidly create new network functions in software.
->[!note]
->Common virtual switches are: 
->- VMware vSwitch
->- Microsoft Hyper-V Virtual Switch
->- a Linux bridge
->- Open vSwitch (OVS)
-
-## Network Virtualization
-Network virtualization can be achieved by using an overlay-based protocol such as *Virtual Extensible LAN (VXLAN)* to build connectivity between hypervisor-based virtual switches.
-This creates Layer 2 connectivity and tunneling between VMs that run on different physical hosts independent of the physical network. This means that the physical network could be Layer 2, Layer 3 or a combination.
-
->[!note] Underlay and Overlay Network
->- *Underlay Network*: the physical network that you physically cable up
->- *Overlay Network*: virtualized network that dynamically creates tunnels between virtual switches 
-
-Network virtualization solutions use a centralized control plane to distribute the mapping information between the overlay and underlay networks. This centralized approach limits the scalability, interoperability and flexibility, which gives way to alternatives like *Ethernet VPN (EVPN)*. EVPN is a distributed protocol, in which every network device distributes the mapping information (via *Border Gateway Protocol (BGP)*) to the rest of the network to establish VXLAN tunnels.
-
 # Bare Metal Switching
 ![[Bare Metal Switching.png]]
 
