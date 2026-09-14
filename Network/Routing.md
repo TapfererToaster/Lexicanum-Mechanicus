@@ -229,22 +229,8 @@ Hierzu gehören *Routing Information Protocol (RIP)* und *Open Shortest Path Fir
 
 *Externe Routingprotokolle* werden im Internet und zwischen Autonomen Systemen verwendet.
 Hierzu gehört das *Border Gateway Protocol (BGP)*.
-# Troubleshooting
-- `ping`: `R1# ping 192.168.2.1 source 172.16.3.1`
-- `traceroute`: `R1# traceroute 192.168.2.1`
-- `R1# show ip route`
-- `show ip interface brief`
-- `show cdp neighbors`
-## Connectivity problem
-- Ping the remote LAN: `R1# ping 192.168.2.1 source 172.16.3.1`
-- Ping the next hop router
-- Verify routing table
 
-# Autonome Systeme 
-Router in einem *Autonomen System* kennt nur andere *interne Router* innerhalb des AS. 
-Für Interdomain Routing sind externe Router, Border-Router, zuständig um Kommunikation zwischen AS zu ermöglichen, und so von ISPs verwendet wird.
-![[Autonome Systeme.png]]
-# Routing Protokolle
+# Routing Protocols 
 ## Routing Information Protocol (RIP)
 RIP arbeitet nach dem Distanz-Vektor-Algorithmus, der Weg wird anhand der geringsten Anzahl der Hops zwischen Quell- und Zielnetz getroffen, wobei die maximale Anzahl an Hops 15 beträgt.
 Router verschicken im 30 Sekundentakt Routinginformationen an seine Nachbarn.
@@ -264,3 +250,28 @@ Versionen:
 - Version 2 (RFC 2328)
 - Version 3 (RFC 2740)
 
+## Border Gateway Protocol (BGP)
+Das *BGP* nutzt den Path-Vektor Algorithmus, welcher den Weg anhand der geringsten Anzahl von Hops auswählt.
+- *iBGP*: internal BGP
+  wird innerhalb von autonomen Systemen verwendet
+- *eBGP*: external BGP
+  wird zwischen autonomen Systemen verwendet
+
+Versionen:
+- BGP (RFC 1163)
+- BGPv4 (RFC 4760)
+# Troubleshooting
+- `ping`: `R1# ping 192.168.2.1 source 172.16.3.1`
+- `traceroute`: `R1# traceroute 192.168.2.1`
+- `R1# show ip route`
+- `show ip interface brief`
+- `show cdp neighbors`
+## Connectivity problem
+- Ping the remote LAN: `R1# ping 192.168.2.1 source 172.16.3.1`
+- Ping the next hop router
+- Verify routing table
+
+# Autonome Systeme 
+Router in einem *Autonomen System* kennt nur andere *interne Router* innerhalb des AS. 
+Für Interdomain Routing sind externe Router, Border-Router, zuständig um Kommunikation zwischen AS zu ermöglichen, und so von ISPs verwendet wird.
+![[Autonome Systeme.png]]

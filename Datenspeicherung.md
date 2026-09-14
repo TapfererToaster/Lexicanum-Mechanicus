@@ -40,6 +40,18 @@ Einige haben Hardware-RAID integriert.
 # Storage Area Network (SAN)
 Ein SAN ist ein Netzwerk, das  zum Speichern von Daten benutzt wird.
 
+## Topologies
+Most SAN environments within a fabric fall into three types:
+**Collapsed Core**
+In this topology servers and storage devices are connected to core switches.
+There is single management per fabric.
+
+**Core-Edge Topology**
+In this topology servers connect to edge switches and storage devices connect to one or more core switches
+
+**Edge-Core-Edge Topology**
+In this topology servers and storage devices connect to edge switches which are connected to one or more core switches.
+
 # Interfaces und Verbindungen
 **Fibre Channel (FC)**
 Fibre Channel nutzt das SCSI-3 Protokoll und kann mit einem FC Switch kombiniert werden.

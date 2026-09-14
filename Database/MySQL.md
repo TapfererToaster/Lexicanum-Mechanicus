@@ -1,4 +1,4 @@
-MySQL ist eine weitverbreitet [[Datenbanken#Relationale Datenbanken|relationale Datenbank]].
+MySQL ist eine weitverbreitet [[Databases#Relationale Datenbanken|relationale Datenbank]].
 
 > [!NOTE]
 > [MariaDB](https://mariadb.com/docs/) ist eine verwandte Datenbank, welche wie MySQL von Michael Widenius entwickelt wurde und MySQL sehr ähnlich ist, jedoch mit größerer Open-Source Regelungen.

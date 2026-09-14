@@ -83,6 +83,9 @@ Twisted-Pair cables can have different buildups, which protect them from interfe
 Rollover cables are used to connect a PC to the console port of legacy network devices.
 ![[Rollover Cable.png]]
 # Fiber-optic connections
+
+>[!note]
+>Die schon in den 1980er Jahren verlegten Glasfaserkabel für Kabelfernsehen, besaßen in der ursprünglichen Version keine Rückkanalfähigkeit, es konnten also nur Daten empfangen nicht aber gesendet werden.
 ## Anatomy
 A fiber-optic cable is made up of a glass core surrounded by multiple layers:
 

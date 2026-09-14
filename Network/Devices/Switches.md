@@ -45,6 +45,9 @@ There are two ways of memory buffering:
 	- all frames are stored in a memory buffer shared by all ports which is dynamically allocated
 	- enables to store larger frames with fewer dropped frames
 
+# Port Mirroring
+Port Mirroring ermöglicht es den Datenverkehr eines anderen Gerätes zu lesen, indem man einen Port auf einen anderen spiegelt. 
+
 # Basic Switch Stuff
 
 ## Switch Boot Sequence

@@ -1111,7 +1111,7 @@ VLAN interfaces are useful when a host needs to communicate on multiple VLANs at
 #### Creating, Configuring and deleting VLAN interfaces
 To **create** a VLAN interface use:
 ```
-$ ip link add link parent-device vlan-device type vlan id vlan-id
+$ ip link add link parentDevice vlanDevice type vlan id vlanID
 $ ip link add link eth0 eth0.100 type vlan id 100
 ```
 - *parent-device*: the physical adapter with which the interface is associated, f.e. `eth0` or `ens33`

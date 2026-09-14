@@ -31,6 +31,8 @@ Examples:
 - **Advanced Encryption Standard (AES)**:
   was adopted as a standard in 2001 and its key size can be 128, 192 or 256 bits long.
 
+>[!note]
+>Quantum computer will not be able to crack symmetric encryption with long keys
 # Asymmetric Encryption
 ![[Asymmetric Cryptography.png]]
 *Asymmetric encryption* uses a pair of keys, one to encrypt and the other to decrypt the data. The two keys are referred to as *public* and *private* key. 
@@ -43,6 +45,10 @@ For example, RSA uses 2048, 3072 and 4096 bit keys, while 2048 is the recommende
 
 The basis for asymmetric encryption are a group of mathematical problems that are easy to compute in one direction but extremely difficult to reverse.
 
+Applications that use asymmetric encryption are:
+- SSH
+- OpenPGP
+- HTTP
 ## Analogy
 When using asymmetric encryption to two parties must negotiate and agree on symmetric encryption ciphers and keys. How do they agree on a key without transmitting the key for people to see?
 

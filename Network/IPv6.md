@@ -97,6 +97,6 @@ If another device responds with a NA message the address is not unique and the O
 - **Source IPv6 Address** - This 128-bit field identifies the IPv6 address of the sending host.
 - **Destination IPv6 Address** - This 128-bit field identifies the IPv6 address of the receiving host.
 
-| Header | Next-Header-Code | Beschreibung |
-| ------ | ---------------- | ------------ |
-|        |                  |              |
+# Privacy Extension 
+Da jedes Gerät eine eigene IP Adresse hat wäre es möglich dieses immer zu identifizieren.
+Um dies zu verhindern gibt es Privacy Extensions [RFC8981](https://www.rfc-editor.org/info/rfc8981/).

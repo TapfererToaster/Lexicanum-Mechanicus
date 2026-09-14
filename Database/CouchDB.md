@@ -1,4 +1,4 @@
-CouchDB ist eine Open-Source [[Datenbanken#Dokumentorientierte Datenbanken|dokumentenbasierte Datenbank]].
+CouchDB ist eine Open-Source [[Databases#Dokumentorientierte Datenbanken|dokumentenbasierte Datenbank]].
 
 Diese ist dabei ein Webserver der über den TCP-Port 5984 kommuniziert. Anfragen werden dabei über eine [[(API) Application Programming Interface|RESTful API]] angenommen und Antworten im JSON-Format gesendet.
 Zusätzlich gibt es Bibliotheken für gängige Programmiersprachen.

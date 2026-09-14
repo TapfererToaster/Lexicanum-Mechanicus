@@ -22,10 +22,6 @@ At each hop along the path, a router performs the following Layer 2 functions:
 4. Forward the new frame to the next hop
 
 [[Routing]]
-
-# Tunneling
-Beim *Tunneling* werden Daten eines Protokolls in der payload eines anderen Protokolls transportiert. Am Ziel wird der Transportrahmen entfernt und die ursprünglichen Daten können verarbeitet werden.
-Dies kann benutzt werden um z.B. IPv6 Pakete über ein IPv4 Netzwerk transportiert werden.
 # Router Configuration
 #Cisco_CLI 
 We use the [[Cisco IOS CLI]] to configure the router.

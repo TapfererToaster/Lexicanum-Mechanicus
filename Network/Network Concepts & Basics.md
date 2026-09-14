@@ -62,27 +62,7 @@ Ein PowerLAN überträgt Daten nicht über Ethernetkabel, sondern über das Stro
 Umfasst eine Stadt, Gemeinde oder Region in einem Umkreis von 100 km und mehr.
 
 ## Wide Area Network (WAN)
-Umfasst mehrere Städte, eine Region oder ein ganzes Land.
-### Datenfernübertragung
-Die Datenfernübertragung basiert auf dem *Point-to-Point Protocol*, welches die Authentifizierung mittels Usernamen und Password überprüft und daraufhin werden Netzwerkdetails zwischen Einwahlknoten des ISP und des PCs verhandelt, sowie eine IP-Adresse zugewiesen.  
->[!note]
->Die schon in den 1980er Jahren verlegten Glasfaserkabel für Kabelfernsehen verlegt wurden, besaßen in der ursprünglichen Version keine Rückkanalfähigkeit, es konnten also nur Daten empfangen nicht aber gesendet werden.
-#### Digital Subscriber Line (DSL)
-Bei DSL Leitungen werden meistens bestehende Kupferleitungen der Telefongesellschaften benutzt. 
-Zum Anschließen von DSL wird an den TAE-Anschluss ein *Splitter* angeschloßen, der hochfrequente DSL-Signale und die niedrigfrequenten normalen Telefonsignale voneinander trennt.
-Für den Ausgang der DLS Signale wird an eine RJ-11 Twisted-Pair-Buchse ein DLS-Modem angeschloßen, welches wiederum per USB oder Ethernet Kabel mit dem Computer verbunden.
-Wird jedoch statt RJ-11 Ethernet verwendet, kommt das PPP over Ethernet (PPPoE) Protokoll zum Einsatz.
-
->[!note]
->Der Begriff Modem ist im Kontext von DSL falsch, da keine Analog-Digital-Umwandlung stattfindet.
-
-
-Anstatt von DSL-Modems werden auch DSL-Router benutzt die statt einzelnen Rechnern mehrere Geräte anschließen können, zusätzlich kann in diesen Routern ein internet Splitter verbaut sein. 
-**Asymmetric DSL (ADSL)**
-Bei ADSL sind die Download und Upload Raten unterschiedlich.
-
-**Symmetric DSL (SDSL)**
-Bei SDLS sind Upload und Download Raten gleich.
+Ein [[Wide Area Network (WAN)]] dient der Datenübertragung über große Distanzen die mehrere Städte, eine Region oder ein ganzes Land umfassen.
 ## Global Area Network (GAN)
 Umfasst mehrere Länder, einen Kontinent oder die ganze Welt.
 ## Backbone
@@ -121,3 +101,58 @@ Bei der Planung eines Netzwerkes sollten einige Aspekte berücksichtigt werden:
 - **Shared Networks**: all devices inside the network share the same media, resulting in the need for Access control methods, such as CSMA/CD and CSMA/CA
   f.e. legacy hub networks, WLAN
 - **Switched Networks**: all devices inside the network have their own connection with the network 
+
+# Netzwerküberwachung und -management
+**Netzwerküberwachung**
+Statusmeldungen und Betriebswerte der Netzwerkkomponenten werden zentral gespeichert. Bei Über- oder Unterschreitung von gesetzten Werten kann eine Aktion, z.B. eine Warnung oder ein Alarm, ausgeführt werden.
+
+**Netzwerkmanagement**
+Neben der Überwachung der Netzwerkkomponenten, können diese zentral konfiguriert und gesteuert werden.
+
+**Systemmanagement**
+Hier werden nicht nur die Netzwerkkomponente überwacht, sondern auch deren Bestandteile, wie Lüfter, Netzteil, Festplatten, usw.
+
+Zur Netzwerküberwachung können Protokolle wie [[(SNMP) Network Management Protocol]] oder Sniffer wie [[Wireshark]] eingesetzt werden.
+
+# -net Types
+**Internet**
+Das [[Internet]] ist das größte WAN/GAN, das weltweit Geräte miteinander verbindet.
+
+**Intranet**
+Intranet ist die Bezeichnung für ein lokales Netz, das Internetprotokolle, IPv4 und IPv6, verwendet um Geräte miteinander zu verbinden und z.B. Server bereitzustellen. 
+
+**Extranet**
+Laut ISO/IEC 2382 ist eine Extranet eine Erweiterung eines firmeneigenen Intranets das Zugriffe für externe Benutzer ermöglicht.
+
+# Tunneling
+Beim *Tunneling* werden Daten eines Protokolls in der payload eines anderen Protokolls transportiert. Am Ziel wird der Transportrahmen entfernt und die ursprünglichen Daten können verarbeitet werden.
+Dies kann benutzt werden damit z.B. IPv6 Pakete über ein IPv4 Netzwerk oder Daten in einem VPN verschlüsselt über ein öffentliches Netz transportiert werden können.
+
+Tunnelingprotokolle:
+- Layer 2 Tunneling Protocol (L2TP)
+- Internet Protocol Security (IPsec)
+- OpenVPN
+
+# Privatsphäre
+## Nutzerdaten im Internet
+Sobald eine Verbindung mit einem anderen Rechner oder Server besteht, ist diesem vom ISP [[Organizations#Regional Internet Registries (RIR)|vergebene]] IP-Adresse des Senders bekannt, welche Rückschlüsse auf den ungefähren Standorts des Nutzers ermöglicht. Speichert der ISP die IP Adressen kann man zusätzlich den angemeldeten Nutzernamen herausfinden.
+Metadaten wie Verbindungsdaten oder Betreffzeilen werden auch oft unverschlüsselt übertragen. selbst bei verschlüsselten Mails oder dem Verbindungsaufbau per HTTPS.
+
+>[!note]
+>Man kann grundsätzlich davon ausgehen, dass alle Datenübertragungen und Tätigkeiten im Internet abgehört werden, Schutz dagegen ist nur eine starke Verschlüsselung.
+
+## Anonymisierungs-Netzwerke
+Anonymisierungs-Netzwerke, wie Tor, bieten Schutz durch Proxys, genauer zufällig verbundenen Rechnern aus einem registrierten Pool. 
+Der Ziel-Server erfährt so nicht die IP Adresse des Clients und die Daten werden verschlüsselt im Netz übertragen, dies führt jedoch zu einer geringen Übertragungsrate.
+
+## Nutzerprofile
+Die Datensammlung von Nutzern ist möglich durch:
+- Cookies
+- Supercookies (Local Shared Objects, Flash Cookies)
+- Tracking
+- Browser-Fingerprints 
+- Clock-Skew Fingerprints
+- installierte Apps
+
+Diese können einen Nutzer bzw. ein Gerät auch bei Benutzung eines Anonymisierungs-Netzwerkes identifizieren.
+

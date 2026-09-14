@@ -5,10 +5,10 @@
 
 
 Python ist eine Multiparadigmen Sprache, hat also Aspekte einer imperativen, objektorientierten und funktionalen Programmiersprache.
-Der Quellcode wird während der Laufzeit des Programmes vom *Python-Interpreter* übersetzt. Kompiliert wird der Code durch einen *Just-in-Time* Compiler, bei dem der Code nicht Zeile für Zeile während der Ausführung übersetzt wird, sondern wird viel schneller übersetzt und im Arbeitsspeicher oder auf einem Datenträger zwischengespeichert.
+Der Quellcode wird während der Laufzeit des Programmes vom *Python-Interpreter* übersetzt. Kompiliert wird der Code durch einen *Just-in-Time* Compiler, bei dem der Code nicht Zeile für Zeile während der Ausführung übersetzt wird, sondern wird viel schneller übersetzt und im Arbeitsspeicher oder auf einem Datenträger zwischengespeichert wird.
 
 >[!note]
->Auf den meisten [[Linux]] Distributionen ist Python vorinstalliert und man kann mit `python3 datei_name` auf der Konsole Programme ausführen. 
+>Auf den meisten Linux Distributionen ist Python vorinstalliert und man kann mit `python3 datei_name` auf der Konsole Programme ausführen. 
 >Mit `python3` wird auf der Konsole ein Interpreter gestartet 
 # Syntax
 In Python werden Anweisungen nicht mit einem Semikolon beendet, sondern mit einem Zeilenumbruch.
@@ -663,6 +663,9 @@ print(f"{x:10}")
 print(f"x:<")
 print(f"x:>")
 ```
+
+**Automatically format Output**
+`pprint` automatically formats Python objects for printing.
 ### .Format
 Die Syntax entspricht der von f-Strings jedoch werden Platzhalter und nicht die Variablen in die geschweifte Klammern geschrieben
 **Platzhalter**
@@ -705,23 +708,6 @@ x = input("text")
 
 secret = input("Tell me a secret")
 print("Hmmm...", secret, "I will not tell anyone.")
-```
-
-## Kommandozeilenargumente lesen
-Um Argumente einzulesen die bei der Ausführung des Programms in die Kommandozeile eingegeben werden, benutzt man `argv` aus dem `sys` Modul.
-Die Eingabe wird als Liste übergeben wobei der Name des Programms an erster stelle ist (`sys.argv[0]`). 
-Weitere Argumente werden dann an die Liste hinzugefügt:
-```Python
-import sys
-
-progName = sys.argv[0]
-x = sys.argv[1]
-y = sys.argv[2]
-```
-
-Für eine beliebige Menge von Input kann man ein Slice benutzen
-```Python
-x = sys.argv[1:]
 ```
 # Operatoren
 
@@ -1061,7 +1047,7 @@ Um eine Kopie von komplexen Objekten zu erzeugen kann `copy.deepcopy()` benutzt 
 ```Python
 y = copy.deepcopy(x)
 ```
-# Funktionen
+# Functions
 Funktionen helfen Code zu modularisieren und dessen Wiederverwendbarkeit zu erhöhen.
 
 >[!note]
@@ -1156,6 +1142,36 @@ x = lambda Parameter: Anweisung
 plus = lambda x,y: x+y
 ```
 
+**Functions as Objects**
+Functions are objects and can stored in other data structures , f.e. lists
+```Python
+def func1:
+	code
+def func2:
+	code
+	
+list = [func1, func2]
+```
+
+## Function Decorators
+*Function Decorator* is a special syntax for functions which take other functions as arguments.
+
+>[!note]
+>Python functions are objects so functions can take other functions as an argument.
+
+```Python
+def decorator(wrappedFunc):
+	def wrapper();
+		code
+		wrappedFunc()
+		code
+	return wrapper
+
+# Indicate the function that should be wrapped by the decorator function
+@decorator
+def func():
+	code
+```
 ## Eingebaute Funktionen
 -  `abs()`: Liefert den Betrag einer Zahl 
 - `exec()`: Führt einen Befehl aus 
@@ -1174,6 +1190,7 @@ Das Modul `sys` stellt Funktionen zur Arbeit mit Dateien bereit.
 
 **Öffnen von Dateien**
 Für den Zugriff auf Dateien werden diese mit `open()` geöffnet, dadurch wird ein Objekt erstellt dessen Methoden zum Lesen und Schreiben in der Datei verwendet wird.
+Der Standardmodus ist read.
 ```python
 varName = open("datei", "mode = x")
 
@@ -1277,6 +1294,9 @@ text3 = datei.readline()
 print(text3)
 ```
 
+>[!tip]
+>OS use different line endings, f.e. Windows `\r\n`, Linux `\n`. 
+>To correct the ending to your current OS you can read from a file and write each line into a new file, Python handles the line endings.
 ### formatierte Dateien
 Eine Datei ist formatiert, wenn der Inhalt in einer Struktur festgelegt ist und somit genau bekannt ist an welcher Stelle welche Informationen stehen, wodurch man auf diese zugreifen und verändern kann ohne den restlichen Inhalt zu beeinflussen.
 
@@ -1309,6 +1329,59 @@ text = datei.read()
 zeilen = text.split(chr(10)) 
 ```
 
+## JSON
+To read and write [[(JSON) JavaScript Object Notation|JSON]] files you can use the `json` module.
+
+**Read**
+To read a JSON file you have to open the file in mode `r` and use the function `load()`
+```Python
+import json
+
+datei = open("file.json","r")
+text = json.load(datei)
+datei.close()
+```
+
+It is then stored as a directory.
+
+**Write**
+To write a dictionary as a JSON file open it in mode `w` and using the `.dump()` function, 
+```Python
+import json
+
+datei = open("file.json","w")
+text = json.dump(text, datei)
+```
+
+## YAML
+To work with [[YAML]] files you can use [PyYAML](https://pypi.org/project/PyYAML/)
+
+>[!note]
+>PyYAML is not in the Python Standard Library, so it needs to be installed.
+
+**Read**
+To read a YAML file open it in `r` mode and use `.safe_load()`
+```Python
+import yaml
+
+datei = open("file.yml", "r")
+text = yaml.safe_load(datei)
+datei.close()
+```
+
+It is stored as a list containing a dictionary.
+
+**Write**
+To write into a YAML file use `.dump()`
+```Python
+import yaml
+
+datei = open("file.yml", "r")
+yaml.dump(text, datei)
+```
+
+## XML
+
 ## Serialisierung
 *Serialisierung* speichert ein Objekt als Bytefolge in eine Datei, wenn ein Objekt aus einer Datei geladen wird spricht von *Deserialisierung*.
 
@@ -1339,7 +1412,52 @@ file = open("datei", "rb")
 obj1 = pickle.load(file)
 file.close()
 ```
-## Suchen von Dateien und Inhalten
+
+## Verwaltung von Dateien
+Die Module `os` und `shutil` bieten Funktionen zur Verwaltung von Dateien
+**Existenz überprüfen**
+```Python
+if os.path.exists("file.xy"):
+	print("Exists")
+else:
+	print("Does not exist")
+```
+
+**Datei kopieren**
+```Python
+shutil.copy("file.xy", "copyFile.xy")
+```
+
+**Datei umbenennen**
+```Python
+shutil.move("file.xy","newName.xy")
+```
+
+**Datei entfernen**
+```Python
+os.remove("file.xy")
+```
+
+## Directories
+- Get the current working directory
+  `cur_dir = os.getcwd()`
+- Change the current working directory
+  `os.chdir()`
+### Paths
+**os.path**
+The [`os.path` module](https://docs.python.org/3/library/os.path.html) offers methods for creating and manipulating paths. 
+It also interprets pathnames based on the current operating system.
+>[!note]
+>f.e. Windows uses `\`; Unix-like uses `/` to separate directories in a pathname
+
+**os.walk**
+`os.walk` is a function that is used to walk paths.
+It returns a generator that returns a tuple for each iteration, consisting of of the current path, a list of directories and a list of files. 
+
+```Python
+for parentPath, directories, files in os.walk(path)
+```
+### Suchen von Dateien und Inhalten
 **glob()**
 Die Funktion `glob()` aus dem Modul `glob` kann benutzt werden um nach Dateien (im aktuellen Verzeichnis) zu suchen und diese in einer Liste zu speichern.
 ```Python
@@ -1415,31 +1533,146 @@ for (dir,subdir,diles) in walk("testdir"):
 	print("Dir: {}, subdirectories: {}, files: {}".format(dir, subdir,files))
 ```
 
-## Verwaltung von Dateien
-Die Module `os` und `shutil` bieten Funktionen zur Verwaltung von Dateien
-**Existenz überprüfen**
+# Command Line 
+If a module is called from the command line it the global `name` variable is set to the string `main`, because of this  it is a convention that modules running on the command line end with a `if` statement that checks if this is the case and executes code.
 ```Python
-if os.path.exists("file.xy"):
-	print("Exists")
-else:
-	print("Does not exist")
+def func()
+	code
+	
+if __name__ == '__main__':
+	func()
 ```
 
-**Datei kopieren**
+## Kommandozeilenargumente lesen
+**sys.argv**
+>[!note] 
+>`argv` should not be used in production code, unless you specifically want an argument parser.
+
+To read arguments from the command line use `argv` from the `sys` module, which returns a list of arguments passed at runtime. If the script is executed from the command line the first argument `[0]` is the name of the script.
+Weitere Argumente werden dann an die Liste hinzugefügt:
 ```Python
-shutil.copy("file.xy", "copyFile.xy")
+import sys
+
+scriptName = sys.argv[0]
+x = sys.argv[1]
+y = sys.argv[2]
 ```
 
-**Datei umbenennen**
+Für eine beliebige Menge von Input kann man ein Slice benutzen
 ```Python
-shutil.move("file.xy","newName.xy")
+x = sys.argv[1:]
 ```
 
-**Datei entfernen**
+## Tools schreiben
+**argparse**
+The [`argparse` module](https://docs.python.org/3/library/argparse.html) uses parser objects, to which commands and flags are attached to. The parser then parses the arguments, and the results can be used to call code.
+
+Create an `ArgumentParser` object:
 ```Python
-os.remove("file.xy")
+parser = argparse.ArgumentParser()
 ```
 
+Position-based commands or flags are added to the parser with `add_argument()`, which are position-dependent. 
+The first argument is the name of the new command or flag, if the name begins with a dash `-` it is treated as an optional flag argument.
+```Python
+parser.add_argument(name)
+```
+
+To access the arguments of the parser use `parse_args()` 
+```Python
+args = parser.parse_args()
+print(args.argumentName)
+```
+
+Subcommands and subparsers are used to group commands and to create a hierarchy of commands 
+```Python 
+parser = argparse.ArgumentParser()
+subparser = parser.add_subparsers()
+subparser1 = subparsers.add_parser()    
+```
+
+**click**
+ The `click` module  was developed to work with the web framework `flask`
+ It uses *function decorators* to bind the command-line interface directly with functions, enabling to tie flags and options directly to the parameters of the functions using the `command` and `option` decorators.
+ - `command` indicates that a function should be accessible through the command-line
+ - `option` adds an argument to the command-line and links it with the parameter of the same name
+
+```Python
+import click
+
+@click.command()
+@click.option("--flag",help="Explanation")
+@click.option("--flag2", default=x)
+def func(flag, flag2):
+	code
+```
+
+Commands are grouped together using `click.group()` and `.add_command`
+```Python
+@click.group()
+def cli():
+	pass
+	
+@click.group
+def groupfunc():
+	pass
+	
+cli.add_command(groupfunc)
+
+@groupfunc.command()
+def func():
+	code
+```
+
+**fire**
+`fire` uses introspection of the code to create interfaces, based on a methods name and arguments automatically.
+You can expose a function to the shell by using it as a argument for `fire.Fire`
+```Python
+import fire
+
+def func():
+	code
+	
+fire.Fire(func)
+```
+
+To expose multiple functions you can use `fire.Fire` without arguments
+```Python
+import fire
+
+def func1():
+	code
+def func2():
+	code
+	
+fire.Fire()
+```
+
+To group functions a class must be defined with the functions as its method
+```Python
+import fire
+
+class Funcs():
+	def func1():
+		code
+		
+	def func2():
+		code
+		
+fire.Fire(Funcs)
+```
+
+To define multiple groups/classes of functions you should then implement a overarching class 
+```Python
+import fire
+
+class Cli():
+	def __init__(self):
+		self.funcs = Funcs
+		self.seperateFunc = func3
+		
+fire.Fire(Cli)
+```
 # OOP
 ## Klasse
 In Klassen werden die Eigenschaften und Funktionen von Objekten gespeichert.
@@ -1499,7 +1732,6 @@ class Name:
 		Anweisung
 ```
 ### Methoden 
-
 Methoden sind ähnlich wie Funktionen und bestimmen was ein Objekt ausführen kann.
 ```Python
 def meth(self,x)
@@ -1658,10 +1890,24 @@ next(x)
 ```
 
 The iterator can also be used with a for loop
+
+**Character Classes**
+Character classes are premade character sets
+- `\w`: [a-zA-Z0-9_]
+- `\d`: [0-9]
+
+To search for multiple characters or words use the `+` modifier
+- `\w+`
+- `\d+`
+
+```Python
+x.search("\d+")
+```
 # Systemnahe Programmierung
 ## Prozesse
 Mit dem Befehl `fork()` aus dem `os` Modul kann man in Unix Systemen einen neuen [[Betriebssysteme - Operating Systems#Prozessverwaltung|Prozess]] erzeugen, der eine identische Kopie eines ursprünglichen Prozesses erstellt. 
-Die Prozesse werden dann eingesetzt um unterschiedliche Aufgaben zu erfüllen, um sie zu unterscheiden gibt `fork()` im ursprünglichen *Parent* Prozess die Prozess ID des *Child* Prozesses zurück und im Child Prozess `0`. 
+Die Prozesse werden dann eingesetzt um
+unterschiedliche Aufgaben zu erfüllen, um sie zu unterscheiden gibt `fork()` im ursprünglichen *Parent* Prozess die Prozess ID des *Child* Prozesses zurück und im Child Prozess `0`. 
 ```python
 import os
 
@@ -1673,6 +1919,16 @@ else:
 	print("Parent process. Child: {}".format(pid))
 ```
 
+**subprocess Modul**
+The `subprocess` module can be used when needing to run applications outside of Python from within Python code, f.e. command-line applications (shell commands, Bash scripts,...).
+It can run the commands and collect the output.
+
+The `subprocess.run()` function can be used to run commands, it  returns a `CompletedProcess` instance. 
+F.e. run the `ls` shell command with the `-l` flag
+```Python
+subproc = subprocess.run(['ls','-l'],capture_output=True, universal_newlines=True)
+print(subproc.stdout)
+```
 ## Pipes
 [[Betriebssysteme - Operating Systems#Pipes|Pipes]] werden durch den Befehl `os.fork()` erzeugt wobei zwei Variablen zugewiesen werden müssen.
 ```python
@@ -1719,27 +1975,90 @@ import socket
 tcpSock = socket.socket(
 	socket.AF_INET,
 	socket.SOCK_STREAM,
-	socket.getprotobyname('tcp')
 )
 
 # UDP socket
 udpSock = socket.socket(
 	socket.AF_INET,
-	socket.SOCK.DGRAM,
-	socket.getprotobyname('udp')
+	socket.SOCK_DGRAM,
 )
 ```
 
+- `socket.getprotobyname('protocol')`
 **Adressen und Ports**
 - `socket.gethostbyname(hostname)`
-  wandelt den hostnamen in die entsprechende IP Adresse um, benötigt jedoch Zugriff auf einen DNS-Dienst oder Server; Rückgabewert ist der Hostname und die IP-Adresse in ASCII Zeichen
+  wandelt den H ostnamen in die entsprechende IP Adresse um, benötigt jedoch Zugriff auf einen DNS-Dienst oder Server; Rückgabewert ist der Hostname und die IP-Adresse in ASCII Zeichen
 - `socket.getservbyname(service, protocol)`
   statt der Portnummer kann das bei den "Well-known" Ports der Dienst und das Transportprotokoll angegeben werden
   ```python
   port = socket.getservbyname('ftp', 'tcp')
   ```
 
-**Verbindungen und Datenaustausch**
+## TCP
+- `sock.connect(dest)`
+  stellt eine Verbindung zu einem TCP Host her
+- `sock.send(binary)`
+  sendet einen Binär-String der nur aus ASCII Zeichen bestehen darf
+- `sock.recv(buffersize)`
+  wartet auf Daten vom Host und nimmt Daten in Größe des buffersize auf in Form eines Binärstrings
+- `sock.bind((addr,port))`
+  bindet ein Socket an eine IP-Adresse und einen Port
+- `sock.listen(max_queue)`
+  wandelt ein mit `bind()` gebundenes Socket ein lauschendes um und wartet auf einen Verbindungsversuch; `max_queue` gibt die maximale Größe der Warteschlange von Clientverbindungen an
+- `(clientsocket, remote_addr) = sock.sccept()`
+  wenn eine Verbindung eingeht, wird der Rest des Programms bzw. die nächste Programmzeile ausgeführt
+- `sock.bind(ip,port)`
+  pass the IP address and port number on which the server should listen on
+
+**Client**
+```Python
+import socket
+
+# create a socket
+client = socket.socket(
+	socket.AF_INET, 
+	socket.SOCK_STREAM
+)
+
+# connect 
+client.connect(ipAddress,port)
+
+# Send data
+client.send(b"data")
+
+# Receive data
+response = client.recv(size)
+
+# close the connection
+client.close()
+```
+
+
+**Server**
+```Python
+import socket
+
+# Server configuration
+HOST = 'ipAddress'  
+PORT = portNumber        
+
+# Create a TCP/IP socket
+with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server:
+    # Bind the socket to the port
+    s.bind((HOST, PORT))
+    # Listen for incoming connections
+    s.listen()
+    print(f"Server listening on {HOST}:{PORT}")
+
+    # Accept a new connection
+    conn, addr = server.accept()
+    with conn:
+        print(f"Connected by {addr[0]}:{addr[1]}")
+        # Receive data from the client
+        data = conn.recv(buffersize)
+        # Send data to the client
+        conn.send(b'data')
+```
 - **UDP**
 Bei einem UDP Socket kann man nach der Erstellung Daten sofort Senden und Empfangen benutzt 
 	- `sock.bind((destAddr, port))`
@@ -1749,19 +2068,6 @@ Bei einem UDP Socket kann man nach der Erstellung Daten sofort Senden und Empfan
 	- `sock.recvfrom(buffersize)`
 	  empfängt ein UDP-Datagramm; `buffersize` gibt die Größe des Lesepuffers in Integer an; gespeichert wird das Paket in zwei Variablen, eine für die Daten und eine für die IP-Adresse des Senders
 
-- **TCP**
-	- `sock.connect(dest)`
-	  stellt eine Verbindung zu einem TCP Host her
-	- `sock.send(binary)`
-	  sendet einen Binär-String der nur aus ASCII Zeichen bestehen darf
-	- `sock.recv(buffersize)`
-	  wartet auf Daten vom Host und nimmt Daten in Größe des buffersize auf in Form eines Binärstrings
-	- `sock.bind((addr,port))`
-	  bindet ein Socket an eine IP-Adresse und einen Port
-	- `sock.listen(max_queue)`
-	  wandelt ein mit `bind()` gebundenes Socket ein lauschendes um und wartet auf einen Verbindungsversuch; `max_queue` gibt die maximale Größe der Warteschlange von Clientverbindungen an
-	- `(clientsocket, remote_addr) = sock.sccept()`
-	  wenn eine Verbindung eingeht, wird der Rest des Programms bzw. die nächste Programmzeile ausgeführt
 
 ## Internet
 Das Modul `urllib` enthält Untermodule die zum Laden und Senden von Daten aus und in das Internet.
@@ -2110,4 +2416,65 @@ next(y)
 Generator comprehensions can be used to write one-line generators, by writing
 ```Python
 gen = (x for x in yList)
+```
+
+# Cryptography
+The [`cryptography` library](https://pypi.org/project/cryptography/) is a third party package that offers functions for cryptography.
+## Symmetric Encryption
+Fernet is an implementation of the AES algorithm
+```Python
+from cryptography.fernet import Fernet
+key = Fernet.generate_key()
+fKey = Fernet(key)
+plaintext = data
+# Encrypt data
+encrypted = f.encrypt(plaintext)
+# Decrypt data
+fKey.decrypt(enrypted)
+```
+
+## Asymmetric Encryption
+```Python
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives.asymmetric import rsa
+
+private_key = rsa.generate_private_key(public_exponent=x, key_size=y, backend=default_backend())
+
+publicKey = private_key.public_key()
+
+plaintext = data
+
+from cryptography.hazmat.primitives.asymmetric import padding
+from cryptography.hazmat.primitives import hashes
+
+# encrypt data
+encrypted = public_key.encrypt(
+	message,
+	padding.OAEP(mgf=padding.MGF1(algorithm=hashes.SHA256(),
+	algorithm=hashes.SHA256(),
+	label=None))
+	
+# decrypt data
+decrypted = private_key.decrypt(
+	encrypted,
+	padding.OAEP(mgf=padding.MGF1(algorithm=hashes.SHA256()),
+	algorithm=hashes.SHA256(),
+	label=None))
+```
+## Hashing
+The [`hashlib` library ](https://docs.python.org/3/library/hashlib.html) offers algorithms for hashing data.
+- SHA1
+- SHA224
+- SHA384
+- SHA512
+- MD5
+
+Example: Hashing with MD5
+```Python
+import hashlib
+data = "Secret data"
+encodedata = data.encode()
+hashMD5 = hashlib.md5()
+hashMD5.update(encodedata)
+hashMD5.digest()
 ```
