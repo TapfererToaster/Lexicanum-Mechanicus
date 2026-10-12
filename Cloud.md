@@ -1,5 +1,5 @@
 #AZ-900 
-Cloud computing is the delivery of services and infrastructure, such as VMs, storage, databases and networking, as well as IoT, machine learning (ML) and AI using a consumption based pricing model.
+Cloud computing offers services and infrastructure, such as VMs, storage, databases and networking, as well as IoT, machine learning (ML) and AI using a consumption based pricing model.
 Cloud computing allows the user to up- or downscale the services or infrastructure they need, f.e. if the needed computing power increases you increase your IT footprint instead of building a new data center.
 
 >[!note]
@@ -102,10 +102,20 @@ Characteristics:
 - Allows the tenant to use resources on the cloud providers public cloud and other resources on on-premises private cloud, which can be connected with Microsoft ExpressRoute
 - Allows to extend computing resource capacity to a public cloud
 - Private cloud hardware must be maintained by the tenant, public cloud hardware is maintained by the cloud provider
+
+## Multicloud
+Multicloud involves using multiple cloud providers for different 
 # Service Types
 ![[Service Types 1.png|700x274]]
+
+## Metal as a Service (MaaS)
+>[!note]
+>MaaS is the name of a service offered by Canonical.
+
+With MaaS you have full control over hardware, although similar services could also be offered  
+in another XaaS
 ## Infrastructure as a Service (IaaS)
-When using IaaS you rent the hardware in the datacenter of the cloud provider and can host virtual machines and infrastructure services.
+When using IaaS you rent the hardware in the datacenter of the cloud provider and can host virtual machines and infrastructure services, such as accessing object storage, provision software-defined networks and software-defined storage.
 
 Characteristics:
 - The tenant creates Virtual Machines (installing OS and software), storage, and computing resources 
@@ -127,6 +137,7 @@ Microsoft IaaS resources:
 ## Platform as a Service (PaaS)
 Using PaaS the cloud provider is responsible for the hardware as well as maintaining operating systems, middleware, development tools, databases and business intelligence services.
 The tenant hosts their application, code, data and business logic.
+PaaS further has tools for development, database management and high-level services for "point and click" integration.
 
 Characteristics:
 - Provides a ready-to-use environment and platform with pre-deployed resources, development frameworks, languages and runtimes. This allows for fast deployment of applications, code business logic, data, ...

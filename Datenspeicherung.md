@@ -39,7 +39,6 @@ Einige haben Hardware-RAID integriert.
 
 # Storage Area Network (SAN)
 Ein SAN ist ein Netzwerk, das  zum Speichern von Daten benutzt wird.
-
 ## Topologies
 Most SAN environments within a fabric fall into three types:
 **Collapsed Core**
@@ -51,6 +50,10 @@ In this topology servers connect to edge switches and storage devices connect to
 
 **Edge-Core-Edge Topology**
 In this topology servers and storage devices connect to edge switches which are connected to one or more core switches.
+
+## VSAN
+A [[(VSAN) Virtual Storage Area Network|Virtual Storage Area Network (VSAN)]] is a virtual SAN isolating devices that are connected to the same fabric, allowing the creation of multiple logical SANs over one physical SAN
+Each VSAN contains its own Fibre Channel fabric services.
 
 # Interfaces und Verbindungen
 **Fibre Channel (FC)**

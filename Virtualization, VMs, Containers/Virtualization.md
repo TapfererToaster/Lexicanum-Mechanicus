@@ -3,8 +3,8 @@
 ![[Traditional vs virtualization vs containerisation.png]]
 
 **Traditional approach**
-Applications are installed on an OS, which is directly installed on the hardware. Having multiple applications on the one server, often lead to resource starvation or conflicts with processes and libraries (Dynamic Link Libraries (DLL) hell).
-The solution to this problem was to host each application on its own physical server. This introduces problems; you needed multiple physical server, which would need more rack space, which needed more floor space, cabling, power, cooling, etc. Additionally if you had over-resourced and under-utilized servers, it would cost a lot of money and had very little output. 
+Applications are installed on an OS, which is directly installed on the hardware. Having multiple applications on one server, often lead to resource starvation or conflicts with processes and libraries (Dynamic Link Libraries (DLL) hell).
+To prevent this each application should be on its own physical server. This introduces problems; the need for multiple physical server, which would need more rack space, which need more floor space, cabling, power, cooling, etc. Additionally server can be over-resourced and under-utilized, resulting in high costs and little output. 
 
 **Virtualization approach**
 Through virtualization you can use multiple [[Virtual Machines]] on a single physical server, which means that you can run multiple applications on a single server, resulting in greater resource utilization, less floor space, power and cooling as well as fewer cost to deliver the same output as the traditional approach.
@@ -31,12 +31,19 @@ Abstraction means to remove dependencies and filtering out characteristics that 
 >*Containerisation* is about the abstraction at the OS level, while *virtualisation* is about the abstraction at the hardware level.
 
 # Virtualization vs. Containerisation
-**Virtualization**
-The hardware is abstracted, which allows multiple compute instances (VMs) to share a single hosts hardware. Each VM runs with its own isolated OS. 
+## Virtualization
+The hardware is abstracted, which allows multiple compute instances (VMs) to share a single hosts hardware. 
+Each VM runs with its own isolated OS. 
 Der Zugriff der VMs auf die Hardwarekomponenten des Hosts wird dabei durch Konfigurationseinstellungen und Treiber gesteuert.
 
+There are two types of hardware virtualization:
+- paravirtual
+- hardware virtual machine
 
-**Containerization** / **Anwendungsvirtualisierung**
+
+
+## Containerization 
+**Anwendungsvirtualisierung**
 Bei einer virtualisierten Anwendung wird diese nicht im Betriebssystem eines Computers registriert, sondern erhält eine isolierte Umgebung in de sie mit minimalen Rechten ausgeführt wird. 
 
 # Network Functions Virtualization (NFV)

@@ -3,15 +3,17 @@
 
 # YAML 
 
+[`yamllint`](https://github.com/adrienverge/yamllint) can be used to check YAML files for correct syntax and other things.
+
 ## Start and End of a Document
-The beginning of a document is marked by three dashes `---`, but they are not strictly required.
+The beginning of a document is marked by three dashes `---`, but are not strictly required.
 The end of an YAML file is marked by three dots `...`, but no error is thrown if they are not written.
 ## Comments
-Comments are start with a hashmark `#` like in Python or Ruby.
+Comments start with a hashmark `#` like in Python or Ruby.
 ## Indentation and Whitespace
 Like Python, YAML uses space indentation.
 ## Strings
-Strings do not need to be quoted in YAML. A good practice nonetheless is to double-quote variables and other expressions; and single-qoute values that should not be evaluated, like version numbers.
+Strings do not need to be quoted in YAML. A good practice is to double-quote variables and other expressions and single-quote values that should not be evaluated, like version numbers.
 ## Booleans 
 YAML provides a variety of boolean values, but you can just use `true` and `false`.
 ## Lists

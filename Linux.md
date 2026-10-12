@@ -1206,6 +1206,10 @@ $ /usr/sbin/sysctl net.ipv6.conf
 ```
 
 The `0` value indicates that IP forwarding is disabled, you can enable it
+
+>[!warning]
+>Debian 13 deprecated `/etc/sysctl.conf` and uses `/etc/sysctl.d`
+
 - nonpersistently with: 
   ```
   $ sysctl -w net.ipv4.ip_forward=1
@@ -1287,6 +1291,13 @@ Services that are only occasionally used or leave the system on a vulnerable sta
 The simplest method to secure network daemons is to use secure versions of the services you want to provide, f.e. using DNSSEC for a DNS server, LDAPS for Lightweight Directory Access Protocol (LDAP) server and HTTPS for web server.
 Some secure services are:
 ![[Secure Services Network Daemons.png]]
+
+# Secure Shell
+
+**Add a SSH key**
+```
+$ ssh-add /path/to/private/key
+```
 ## Secure Shell Daemon
 The Secure Shell Daemon (SSHD) is available on almost every Linux system and is the most common network daemon. It has built-in security, but is still vulnerable so further methods are needed to reduce the damage potential attacks can cause.
 ### Limiting access to SSHD from specific hosts
@@ -1452,9 +1463,9 @@ $ sudo du -h /var/log
  Swap space is a Linux disk partition that is used by the kernel to write inactive programs from memory to disk or activating programs from disk to memory, thus leaving more RAM for active programs.
 
 ## RAM-Based Temporary Space (ramfs and tmpfs)
-`ramfs` and `tmpfs` are both RAM-based temporary filesystems, whose files are exist in memory but are not written to disk.
-`tmpfs` writes temporary files and caches to memory rather than disk and writes files to swap space to save resources.
-`tmpfs` replaced `ramfs` and is the default for all contemporary Linux distributions.
+`ramfs` and `tmpfs` are RAM-based temporary filesystems, whose files exist in memory but are not written to disk. `tmpfs` replaced `ramfs` and is the default for all contemporary Linux distributions.
+
+`tmpfs` writes temporary files and caches to memory and writes files to swap space to save resources.
 
 ## Adding a New Disk to a System
 ### Installing the Disk
@@ -1681,14 +1692,13 @@ Syslog Meldungen bestehen aus:
 	- *warn*: Warnung
 	- *info*: reine Information
 	- *debug*: willkürliche Meldung zur Programmfehlersuche
-## Monitoring System Health 
+## Monitoring System 
 To check performance and format system statistics you can use [`sysstat`](https://github.com/sysstat/sysstat).
  After installing, edit the `/etc/default/systat` file and change `ENABLED=false` to `ENABLED=true`, then restart the service:
  ```
  $ sudo service sysstat restart
  ``` 
  The package contains different binaries:
- 
  ![[Sysstat binaries.png]]
  
  Another tool you can use is `vmstat`.

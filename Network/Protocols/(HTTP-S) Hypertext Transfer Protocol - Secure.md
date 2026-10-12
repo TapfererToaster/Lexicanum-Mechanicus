@@ -77,7 +77,7 @@ The commands and methods used by the web browser to the web server are:
 >[!note]
 >[[(Telnet) Teletype Network|Telnet]] can be used to connect to web servers and communicate with them.
 
-Diese Methoden werden dann zusammen mit mehreren Headerwerten als *Query-String* versendet.
+Diese Methoden werden zusammen mit mehreren Headerwerten als *Query-String* versendet.
 **Beispiel einer GET-Request**
 ```HTTP
 GET / HTTP/1.1 

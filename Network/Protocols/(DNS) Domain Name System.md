@@ -62,3 +62,10 @@ weist den DNS-Server an diesen weiter.
 gesendet, dieser speichert den Eintrag in seinem Cache und sendet ihn schließlich an
 ihren Rechner.
 6. Nun kann ihr Rechner die gewünschte Webseite aufrufen.
+
+# Lookup
+**Forward-Lookup**
+Bei einer *Forward-Lookup* Anfrage fragt ein Host nach der IP Adresse für einen FQDN.
+
+**Reverse-Lookup**
+Bei einer *Reverse-Lookup* Anfrage fragt ein Host nach dem FQDN für eine IP Adresse.

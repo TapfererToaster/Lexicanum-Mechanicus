@@ -1534,14 +1534,6 @@ for (dir,subdir,diles) in walk("testdir"):
 ```
 
 # Command Line 
-If a module is called from the command line it the global `name` variable is set to the string `main`, because of this  it is a convention that modules running on the command line end with a `if` statement that checks if this is the case and executes code.
-```Python
-def func()
-	code
-	
-if __name__ == '__main__':
-	func()
-```
 
 ## Kommandozeilenargumente lesen
 **sys.argv**
@@ -1564,6 +1556,16 @@ x = sys.argv[1:]
 ```
 
 ## Tools schreiben
+
+If a module is called from the command line it the global `name` variable is set to the string `main`, because of this  it is a convention that modules running on the command line end with a `if` statement that checks if this is the case and executes code.
+```Python
+def func()
+	code
+	
+if __name__ == '__main__':
+	func()
+```
+
 **argparse**
 The [`argparse` module](https://docs.python.org/3/library/argparse.html) uses parser objects, to which commands and flags are attached to. The parser then parses the arguments, and the results can be used to call code.
 
@@ -1605,6 +1607,9 @@ import click
 @click.option("--flag2", default=x)
 def func(flag, flag2):
 	code
+	
+if __name__ == "__main__"
+	func()
 ```
 
 Commands are grouped together using `click.group()` and `.add_command`
@@ -1673,6 +1678,8 @@ class Cli():
 		
 fire.Fire(Cli)
 ```
+
+
 # OOP
 ## Klasse
 In Klassen werden die Eigenschaften und Funktionen von Objekten gespeichert.
@@ -1906,8 +1913,7 @@ x.search("\d+")
 # Systemnahe Programmierung
 ## Prozesse
 Mit dem Befehl `fork()` aus dem `os` Modul kann man in Unix Systemen einen neuen [[Betriebssysteme - Operating Systems#Prozessverwaltung|Prozess]] erzeugen, der eine identische Kopie eines ursprünglichen Prozesses erstellt. 
-Die Prozesse werden dann eingesetzt um
-unterschiedliche Aufgaben zu erfüllen, um sie zu unterscheiden gibt `fork()` im ursprünglichen *Parent* Prozess die Prozess ID des *Child* Prozesses zurück und im Child Prozess `0`. 
+Die Prozesse werden dann eingesetzt um unterschiedliche Aufgaben zu erfüllen, um sie zu unterscheiden gibt `fork()` im ursprünglichen *Parent* Prozess die Prozess ID des *Child* Prozesses zurück und im Child Prozess `0`. 
 ```python
 import os
 
@@ -1921,15 +1927,44 @@ else:
 
 **subprocess Modul**
 The `subprocess` module can be used when needing to run applications outside of Python from within Python code, f.e. command-line applications (shell commands, Bash scripts,...).
-It can run the commands and collect the output.
+It can run the commands and collect the output. 
 
-The `subprocess.run()` function can be used to run commands, it  returns a `CompletedProcess` instance. 
-F.e. run the `ls` shell command with the `-l` flag
+The `subprocess.run()` function can be used to run commands.
+It returns an `CompleteProcess` object with the args:
+- `returncode`
+- `stdout`
+- `stderr`
+- `check_returncode`
+
+**Example**: run the `ls` shell command with the `-l` flag
 ```Python
 subproc = subprocess.run(['ls','-l'],capture_output=True, universal_newlines=True)
 print(subproc.stdout)
 ```
-## Pipes
+
+>[!note]
+>It is advised to avoid using strings with the `.run()` function, as it can be used as an accidental backdoor.
+>Rather the command should be invoked as items in a list, like in the example above.
+
+**Setting timeouts**
+When invoking processes it is advised to create a default timeout. This could be done by setting a timeout value and catching the exception and logging it:
+```Python
+import logging
+import subprocess
+
+try: 
+	subprocess.run(["command"], timeout = x)
+except:
+	logging.exception("Command timed out")
+```
+
+### Multiprocessing
+Multiprocessing is the only way to use all cores on a machine when using the standard library in Python.
+
+>[!tip]
+>Containers are a good alternative to multiprocesses, f.e. if a process should be invoked many times without interprocess communication.
+
+## Pipes 
 [[Betriebssysteme - Operating Systems#Pipes|Pipes]] werden durch den Befehl `os.fork()` erzeugt wobei zwei Variablen zugewiesen werden müssen.
 ```python
 reader, writer = os.pipe()
@@ -1938,6 +1973,9 @@ reader, writer = os.pipe()
 ## Threads
 Das Modul `threading` bietet Funktionen zum Erstellen und Arbeiten mit [[Betriebssysteme - Operating Systems#Threads|Threads]].
 Threads haben Zugriff auf alle globalen Daten und Objekte des übergeordneten Threads.
+
+> [!warning]
+> Threads in Python will not use all cores and can often behave nondeterministic, switching between cores and resulting in slower code execution.
 
 **Erzeugung von Threads**
 Um einen Thread zu erzeugen muss ein Objekt der Klasse `Thread` erstellt werden und dessen Konstruktor per `target=` den Namen einer Callback-Funktion übermitteln die in dem Thread ausgeführt werden soll. 
@@ -2087,8 +2125,20 @@ x.close()
 urllib.request.urlretrive("URL","Path/to/file")
 ```
 
-# Module
-Module stellen vordefinierte Funktionen zur Verfügung.
+## Load Testing
+You can use [molotov](https://molotov.readthedocs.io/en/stable/) to create load test for servers
+# Modules und Packages
+A *module* is a single file that contains functions,
+A *package* is a directory containing multiple modules and a `__init__.py` file.
+
+## Native Python Packaging
+To create packages for PyPI you need:
+- https://pypi.org/project/setuptools/ 
+- https://pypi.org/project/twine/
+  used to push packages to the Python Package Indes (PyPI)
+
+**Package Files**
+- setup.py: contains information that describes the package to `setuptools`, located at the top-level directory of the package
 ## Eigene Module 
 Um eigene Module zu erstellen werden die gewünschten  Funktionen und Code in eine eigene Datei geschrieben, wobei der Dateiname gleichzeitig der Name des Moduls ist.
 Das Modul kann dann mit `import Modulname` importiert und benutzt werden, sofern sich beide im selben Verzeichnis befinden.
@@ -2113,15 +2163,15 @@ Um Module zu importieren wird `import` benutzt:
 - `re` ermöglicht das Arbeiten mit [[Reguläre Ausdrücke|regulären Ausdrücken]]
 - `datetime` erlaubt die Arbeit mit Uhrzeit und Datum 
 
-# Externe Module
+## Externe Module
 Python Module sind in dem [Python Package Index (PyPI)](https://pypi.org/) verfügbar, diese können mit `pip` und für Python 3 `pip3` installiert, aktualisiert und deinstalliert werden.
-## NumPy
+### NumPy
 Dieses Modul ist für das Rechnen und Operieren mit Arrays optimiert und deswegen auch für lineare Algebra geeignet. 
 
 > [!NOTE]
 > Es wird für Machine Learning eingesetzt und ist Teil von *Scientific Python (SciPy)* einer Sammlung von wissenschaftlich-mathematischen Modulen.
 
-### Arrays
+**Arrays**
 Um (mehrdimensionale) Arrays zu erzeugen benutzt man `numpy.array([array])`
 ```python
 import numpy
@@ -2175,7 +2225,7 @@ Nuller Matrizen können mit `.zeros()` erstellt werden
 numpy.zeros([3,4])
 ```
 
-## math 
+### math 
 In diesem Modul befinden sich mathematische Funktionen 
 - https://docs.python.org/3/library/math.html
 
@@ -2478,3 +2528,29 @@ hashMD5 = hashlib.md5()
 hashMD5.update(encodedata)
 hashMD5.digest()
 ```
+
+# Testing
+## pytest
+https://docs.pytest.org/en/stable/
+
+**Conventions**
+- The testing directory needs to be named `tests`
+- files need to start with "test", f.e. `test_simple.py`
+- Test functions need to start with "test_", f.e. `def testsSimple()`
+- Test classes need to start with "Test", f.e. `class TestSimple`
+- Test methods need to start with "test_": f.e. `test_simple(self)`
+
+**Hooks**
+Hooks can be used to interact with the framework at different points in the runtime.
+
+**conftest.py**
+This file is used extend the functionality of `pytest`, without needing to install plug-ins.
+
+**Fixtures**
+Fixtures are functions that can be injected into a test, with a defined scope.
+They can be defined in a test method or function to be injected at runtime.
+
+## testinfra
+[Testinfra](https://testinfra.readthedocs.io/en/latest/) can be used to write test for infrastructure.
+
+[^1]: 

@@ -241,7 +241,7 @@ Versionen:
 - IPv6 RIPnG ([RFC 2080](https://www.rfc-editor.org/info/rfc2080/))
 
 ## Open Shortest Path First (OSPF)
-OSPF basiert auf der Link State Database, in der alle benachbarten Router und deren Link-Status eingetragen sind.
+[[(OSPF) Open Shortest Path First|OSPF]] basiert auf der Link State Database, in der alle benachbarten Router und deren Link-Status eingetragen sind.
 Die Routinginformationen werden alle 30 Minuten  oder bei Änderungen ausgetauscht, dazwischen werden Hello Nachrichten gesendet um zu signalisieren, dass eine Verbindung besteht und es keine Änderungen gibt. Zusätzlich müssen alle Router die Routinginformationen miteinander austauschen in einem Autonomen System sein.
 
 Der Weg wird nach den geringsten Leitungskosten ausgewählt. Je höher die Bandbreite zwischen Quell- und Zielnetz desto geringer sind die Kosten.
